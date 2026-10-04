@@ -50,6 +50,16 @@ android {
         compose = true
         buildConfig = true
     }
+
+    val GITHUB_PAT = "GITHUB_PAT"
+
+    defaultConfig {
+        buildConfigField(
+            "String",
+            GITHUB_PAT,
+            "\"${getLocalProperty(GITHUB_PAT)}\""
+        )
+    }
 }
 
 dependencies {
@@ -81,4 +91,17 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
+}
+
+private fun getLocalProperty(propertyName: String): String? {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+
+    return if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use {
+            properties.load(it)
+        }
+        properties.getProperty(propertyName)
+    } else
+        null
 }
