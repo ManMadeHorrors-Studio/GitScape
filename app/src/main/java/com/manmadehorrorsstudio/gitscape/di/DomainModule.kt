@@ -3,6 +3,7 @@ package com.manmadehorrorsstudio.gitscape.di
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +20,17 @@ object RepositoryModule {
         api: GitHubApis
     ): GitHubRepository {
         return GitHubRepositoryImpl(api)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object UseCaseModule {
+
+    @Provides
+    fun provideGetGitHubRepoListUseCase(
+        repository: GitHubRepository
+    ): GetGitHubRepoListUseCase {
+        return GetGitHubRepoListUseCase(repository)
     }
 }
