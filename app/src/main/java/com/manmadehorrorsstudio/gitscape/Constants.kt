@@ -4,3 +4,4 @@ package com.manmadehorrorsstudio.gitscape
 
 const val GITHUB_BASE_PATH = "api.github.com"
 const val GITHUB_GET_REPOS = "user/repos"
+const val GITHUB_GET_USER = "user"

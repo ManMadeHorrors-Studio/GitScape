@@ -4,6 +4,7 @@ import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,5 +33,12 @@ object UseCaseModule {
         repository: GitHubRepository
     ): GetGitHubRepoListUseCase {
         return GetGitHubRepoListUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetGitHubUserUseCase(
+        repository: GitHubRepository
+    ): GetGitHubUserUseCase {
+        return GetGitHubUserUseCase(repository)
     }
 }

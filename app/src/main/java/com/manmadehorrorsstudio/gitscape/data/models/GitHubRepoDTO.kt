@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class GitHubRepoDTO(
 
-    val id: Long? = null,
+    val id: String? = null,
 
     val name: String? = null,
 
