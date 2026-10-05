@@ -87,6 +87,11 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -98,8 +103,8 @@ private fun getLocalProperty(propertyName: String): String? {
     val localPropertiesFile = rootProject.file("local.properties")
 
     return if (localPropertiesFile.exists()) {
-        localPropertiesFile.inputStream().use {
-            properties.load(it)
+        localPropertiesFile.inputStream().use { lpf ->
+            properties.load(lpf)
         }
         properties.getProperty(propertyName)
     } else
