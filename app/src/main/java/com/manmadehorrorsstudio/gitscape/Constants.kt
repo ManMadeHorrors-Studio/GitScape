@@ -9,6 +9,11 @@ const val GITHUB_BASE_PATH = "api.github.com"
 const val GITHUB_GET_REPOS = "user/repos"
 const val GITHUB_GET_USER = "user"
 
+//DB
+
+const val GITSCAPE_DATABASE = "gitscape_database"
+const val SETTINGS_TABLE_NAME = "settings_table_name"
+
 
 
 //Language

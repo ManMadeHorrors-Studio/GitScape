@@ -22,9 +22,9 @@ fun localizedString(@StringRes id: Int): String {
         AppSettingsEntryPoint::class.java
     )
 
-    val appSettingsSingleton = entryPoint.appSettings()
+    val appSettings = entryPoint.appSettings()
 
-    val language by appSettingsSingleton.appLanguageState.collectAsState()
+    val language by appSettings.appLanguageState.collectAsState()
 
     val config = Configuration(context.resources.configuration).apply {
         setLocales(LocaleList(language.locale))
