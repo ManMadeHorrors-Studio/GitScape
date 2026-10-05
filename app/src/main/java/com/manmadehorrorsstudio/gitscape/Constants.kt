@@ -15,6 +15,14 @@ const val GITHUB_GET_USER = "user"
 const val GITSCAPE_DATABASE = "gitscape_database"
 const val SETTINGS_TABLE_NAME = "settings_table_name"
 
+//Navigation
+
+const val MAIN_NAVIGATION_GROUP = "MAIN_NAVIGATION_GROUP"
+
+sealed class NavigationScreen(val route: String) {
+    data object RepoList : NavigationScreen("repolist")
+    data object Settings : NavigationScreen("settings")
+}
 
 //Language
 
