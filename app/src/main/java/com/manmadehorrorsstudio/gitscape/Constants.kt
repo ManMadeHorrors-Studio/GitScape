@@ -26,7 +26,7 @@ sealed class NavigationScreen(val route: String) {
 
 //UI
 
-val TITLES_SIZE = 20.sp
+val TITLES_SIZE = 22.sp
 val NAVIGATION_ICONS_SIZE = 30.dp
 
 val SPACER_HEIGHT_SIZE = 20.dp

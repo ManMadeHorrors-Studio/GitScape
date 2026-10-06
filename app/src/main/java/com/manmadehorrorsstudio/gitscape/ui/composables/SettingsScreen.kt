@@ -140,7 +140,7 @@ private fun SettingsScreenContent(
         Text(
             text = versionString,
             color = StrongAzure,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp),

@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.R
+import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
 
 @Composable
@@ -44,7 +45,7 @@ fun SettingsItem(
         )
 
         Spacer(
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(SPACER_HEIGHT_SIZE)
         )
 
         Image(

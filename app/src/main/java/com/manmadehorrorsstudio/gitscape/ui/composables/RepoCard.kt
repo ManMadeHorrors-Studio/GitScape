@@ -81,7 +81,7 @@ fun RepoCard(
             Text(
                 text = gitHubRepo.name,
                 color = LightAzure,
-                fontSize = 12.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis
@@ -99,7 +99,7 @@ fun RepoCard(
                     Text(
                         text = language,
                         color = StrongAzure,
-                        fontSize = 10.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -112,7 +112,7 @@ fun RepoCard(
                     imageVector = Icons.Outlined.Star,
                     contentDescription = null,
                     tint = StrongAzure,
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(25.dp)
                 )
 
                 Spacer(
@@ -122,7 +122,7 @@ fun RepoCard(
                 Text(
                     text = gitHubRepo.stars.toString(),
                     color = StrongAzure,
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Medium
                 )
             }

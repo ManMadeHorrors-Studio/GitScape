@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                     val layoutDirection = LocalLayoutDirection.current
                     val customPadding = PaddingValues(
                         start = innerPadding.calculateStartPadding(layoutDirection) + 15.dp,
-                        top = innerPadding.calculateTopPadding() + 10.dp,
+                        top = innerPadding.calculateTopPadding() + 20.dp,
                         end = innerPadding.calculateEndPadding(layoutDirection) + 15.dp,
                         bottom = innerPadding.calculateBottomPadding()
                     )
