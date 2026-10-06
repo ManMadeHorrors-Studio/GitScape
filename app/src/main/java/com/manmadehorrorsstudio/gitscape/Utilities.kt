@@ -1,6 +1,9 @@
 package com.manmadehorrorsstudio.gitscape
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.core.net.toUri
 
 fun gitScapeLog(message: String, errorMessage: Exception? = null) {
     val GITSCAPEDEBUGTAG = "GITSCAPEDEBUGTAG"
@@ -18,4 +21,16 @@ inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
     } else {
         block(this)
     }
+}
+
+fun openBrowser(urlString: String?, context: Context?) {
+    urlString?.let { url ->
+        context?.let { ctx ->
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                url.toUri()
+            )
+            ctx.startActivity(intent)
+        } ?: gitScapeLog("openBrowser", Exception("Missing context"))
+    } ?: gitScapeLog("openBrowser", Exception("Missing url"))
 }
