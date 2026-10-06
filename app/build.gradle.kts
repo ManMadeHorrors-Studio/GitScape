@@ -52,12 +52,18 @@ android {
     }
 
     val GITHUB_PAT = "GITHUB_PAT"
+    val GEMINI_KEY = "GEMINI_KEY"
 
     defaultConfig {
         buildConfigField(
             "String",
             GITHUB_PAT,
             "\"${getLocalProperty(GITHUB_PAT)}\""
+        )
+        buildConfigField(
+            "String",
+            GEMINI_KEY,
+            "\"${getLocalProperty(GEMINI_KEY)}\""
         )
     }
 }
