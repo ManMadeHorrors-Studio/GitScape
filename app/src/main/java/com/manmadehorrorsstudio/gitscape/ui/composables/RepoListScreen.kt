@@ -20,8 +20,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.manmadehorrorsstudio.gitscape.BuildConfig.GITHUB_PAT
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
+import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.models.RepoListState
 import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
@@ -45,6 +47,7 @@ fun RepoListScreen(
         userState = userState,
         errorMessage = errorMessage,
         innerPadding = innerPadding,
+        onAIClick = { gitScapeLog("GITHUB_PAT: $GITHUB_PAT") },
         onSettingsClick = onSettingsClick,
         onRefreshClick = { repoListViewModel.refreshRepoListScreen() }
     )
@@ -68,6 +71,7 @@ private fun RepoListScreenInternal(
     userState: GitHubUser?,
     errorMessage: MutableState<String?>,
     innerPadding: PaddingValues,
+    onAIClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onRefreshClick: () -> Unit
 ) {
@@ -88,8 +92,17 @@ private fun RepoListScreenInternal(
                 modifier = Modifier.height(SPACER_HEIGHT_SIZE)
             )
 
+            HorizontalDivider(
+                color = StrongAzure
+            )
+
+            Spacer(
+                modifier = Modifier.height(SPACER_HEIGHT_SIZE)
+            )
+
 
             RepoListToolbar(
+                onAIClick = onAIClick,
                 onRefreshClick = onRefreshClick,
                 onSettingsClick = onSettingsClick
             )

@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.manmadehorrorsstudio.gitscape.R
-import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.TITLES_SIZE
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
@@ -36,6 +33,7 @@ fun RepoListHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 10.dp)
     ) {
         Box(
             modifier = Modifier
@@ -69,13 +67,6 @@ fun RepoListHeader(
                     .padding(horizontal = avatarSize + 5.dp)
             )
         }
-        Spacer(
-            modifier = Modifier.height(SPACER_HEIGHT_SIZE)
-        )
-
-        HorizontalDivider(
-            color = StrongAzure
-        )
     }
 }
 

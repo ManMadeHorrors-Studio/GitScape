@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">GitScape</string>
 
+    <string name="REPOLISTVIEW.BUTTON.AI.CONTENTDESCRIPTION" translatable="false">AI</string>
     <string name="REPOLISTVIEW.BUTTON.SETTINGS.CONTENTDESCRIPTION">Settings</string>
+    <string name="REPOLISTVIEW.BUTTON.REFRESH.CONTENTDESCRIPTION">Refresh</string>
     <string name="REPOLISTVIEW.EMPTY_LIST">No repository found</string>">
     <string name="REPOLISTVIEW.ERRORS.REPOS">Error during repositories loading</string>
     <string name="SETTINGSVIEW.TITLE">Settings</string>
