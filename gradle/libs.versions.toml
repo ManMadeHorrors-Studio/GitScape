@@ -1,5 +1,6 @@
 [versions]
 coreKtx = "1.18.0"
+coreSplash = "1.2.0"
 lifecycleRuntimeKtx = "2.9.0"
 composeBom = "2025.04.01"
 activityCompose = "1.12.2"
@@ -22,6 +23,7 @@ ksp = "2.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplash" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
