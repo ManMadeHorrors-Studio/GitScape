@@ -2,7 +2,7 @@
 
     <string name="REPOLISTVIEW.BUTTON.SETTINGS.CONTENTDESCRIPTION">Impostazioni</string>
     <string name="REPOLISTVIEW.BUTTON.REFRESH.CONTENTDESCRIPTION">Rilancia</string>
-    <string name="REPOLISTVIEW.EMPTY_LIST">Nessun repository trovato</string>">
+    <string name="REPOLISTVIEW.EMPTY_LIST">Nessun repository trovato</string>
     <string name="REPOLISTVIEW.ERRORS.REPOS">Errore durante il caricamento dei repository</string>
     <string name="SETTINGSVIEW.TITLE">Impostazioni</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Lingua</string>
