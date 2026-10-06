@@ -19,3 +19,7 @@ data class GitHubUserDTO (
     val followers: Int? = null,
     val following: Int? = null
 )
+
+fun GitHubUserDTO.isValid(): Boolean {
+    return id != null && name != null
+}

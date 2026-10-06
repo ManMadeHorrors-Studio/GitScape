@@ -18,8 +18,8 @@ fun GitHubRepoDTO.mapToDomain(): GitHubRepo {
 
 fun GitHubUserDTO.mapToDomain(): GitHubUser {
     return GitHubUser(
-        id = id ?: "Unknown",
-        userName = name,
+        id = id.orEmpty(), //id can't be null because GitHubUser with null id are filtered out in getGitHubUser
+        userName = name.orEmpty(), //name can't be null because GitHubUser with null id are filtered out in getGitHubUser
         avatarUrl = avatarUrl
     )
 }
