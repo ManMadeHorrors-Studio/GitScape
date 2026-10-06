@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape
 
+import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
