@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -57,10 +58,10 @@ fun RepoCard(
 
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                onClick = {openBrowser(gitHubRepo.htmlUrl, context)}
-            )
+            .fillMaxSize()
+            .clickable {
+                openBrowser(gitHubRepo.htmlUrl, context)
+            }
             .drawWithContent {
                 drawGlowBorder(
                     isFullyVisible = isFullyVisible,
@@ -74,27 +75,27 @@ fun RepoCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(16.dp)
         ) {
-
             Text(
                 text = gitHubRepo.name,
                 color = LightAzure,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 3,
+                minLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
 
             Spacer(
-                modifier = Modifier.height(10.dp)
+                modifier = Modifier.weight(1f)
             )
 
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 gitHubRepo.primaryLanguage?.let { language ->
                     Text(
                         text = language,
@@ -104,9 +105,7 @@ fun RepoCard(
                     )
                 }
 
-                Spacer(
-                    modifier = Modifier.weight(1f)
-                )
+                Spacer(modifier = Modifier.weight(1f))
 
                 Icon(
                     imageVector = Icons.Outlined.Star,
@@ -115,9 +114,7 @@ fun RepoCard(
                     modifier = Modifier.size(25.dp)
                 )
 
-                Spacer(
-                    modifier = Modifier.width(4.dp)
-                )
+                Spacer(modifier = Modifier.width(5.dp))
 
                 Text(
                     text = gitHubRepo.stars.toString(),

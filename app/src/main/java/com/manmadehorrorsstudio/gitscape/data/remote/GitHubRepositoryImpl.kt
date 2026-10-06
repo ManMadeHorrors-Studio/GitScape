@@ -14,7 +14,7 @@ class GitHubRepositoryImpl(
     override suspend fun getGitHubRepolist(): ApiResponse<List<GitHubRepo>> {
         return try {
             val result = api.getRepositories()
-            val resultMapped = result.filter { it.isValid() }.map { it.mapToDomain() }.sortedByDescending { it.name.length }
+            val resultMapped = result.filter { it.isValid() }.map { it.mapToDomain() }
             ApiResponse.Success(resultMapped)
         } catch (e: Exception) {
             ApiResponse.Error(e)
