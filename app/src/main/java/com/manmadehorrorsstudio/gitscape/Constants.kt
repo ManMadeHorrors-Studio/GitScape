@@ -1,7 +1,7 @@
 package com.manmadehorrorsstudio.gitscape
 
-import androidx.annotation.DrawableRes
-import java.util.Locale
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 //URLs
 
@@ -24,31 +24,9 @@ sealed class NavigationScreen(val route: String) {
     data object Settings : NavigationScreen("settings")
 }
 
-//Language
+//UI
 
-enum class AppLanguage(
-    val locale: Locale,
-    val description: Int,
-    @DrawableRes
-    val flag:Int
-) {
-    EN(
-        locale = Locale.ENGLISH,
-        description = R.string.SETTINGSVIEW_SETTING_LANGUAGE_ENGLISH,
-        flag = R.drawable.language_uk_logo
-    ),
-    IT(
-        locale = Locale.ITALIAN,
-        description = R.string.SETTINGSVIEW_SETTING_LANGUAGE_ITALIAN,
-        flag = R.drawable.language_ita_logo
-    );
+val TITLES_SIZE = 20.sp
+val NAVIGATION_ICONS_SIZE = 30.dp
 
-    companion object {
-        fun fromLanguageCode(code: String?): AppLanguage {
-            val codeOrLocaleDefault = code ?: Locale.getDefault().language
-            return AppLanguage.entries.find { entry ->
-                entry.locale.language.equals(codeOrLocaleDefault, ignoreCase = true)
-            } ?: EN
-        }
-    }
-}
+val SPACER_HEIGHT_SIZE = 20.dp
