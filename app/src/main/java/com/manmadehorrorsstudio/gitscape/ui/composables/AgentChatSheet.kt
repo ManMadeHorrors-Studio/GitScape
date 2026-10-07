@@ -79,169 +79,180 @@ fun AgentChatSheet(
     ) {
         Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Text(
-                text = localizedString(R.string.AGENTSHEET_TITLE),
-                fontSize = TITLES_SIZE,
-                fontWeight = FontWeight.Bold,
-                color = LightAzure,
-            )
-
-            Spacer(Modifier.width(5.dp))
-
-            Icon(
-                painter = painterResource(R.drawable.ai_icon),
-                contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION),
-                tint = StrongAzure,
-                modifier = Modifier.size(40.dp)
-            )
-        }
-
-        Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
-
-        LazyColumn(
+        Column(
             Modifier
-                .weight(1f, fill = false)
                 .fillMaxWidth()
+                .padding(horizontal = 20.dp)
         ) {
-            val messModifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    horizontal = 20.dp,
-                    vertical = 5.dp
-                )
-            items(agentState.messages) { message ->
-                if (message.role == Role.User)
-                    Text(
-                        text =  "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}${message.text}",
-                        color = LightAzure,
-                        textAlign = TextAlign.End,
-                        modifier = messModifier
-                    )
-                else
-                    Text(
-                        text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}${message.text}",
-                        color = StrongAzure,
-                        textAlign = TextAlign.Start,
-                        modifier = messModifier
-                    )
-            }
-            if (agentState.isLoading)
-                item {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = messModifier
-                    ) {
-                        CircularProgressIndicator(
-                            color = StrongAzure,
-                            modifier = Modifier.size(18.dp)
-                        )
 
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Text(
+                    text = localizedString(R.string.AGENTSHEET_TITLE),
+                    fontSize = TITLES_SIZE,
+                    fontWeight = FontWeight.Bold,
+                    color = LightAzure,
+                )
+
+                Spacer(Modifier.width(5.dp))
+
+                Icon(
+                    painter = painterResource(R.drawable.ai_icon),
+                    contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION),
+                    tint = StrongAzure,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
+
+            Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
+
+            LazyColumn(
+                Modifier
+                    .weight(1f, fill = false)
+                    .fillMaxWidth()
+            ) {
+                val messModifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        vertical = 5.dp
+                    )
+                items(agentState.messages) { message ->
+                    if (message.role == Role.User)
                         Text(
-                            localizedString(R.string.AGENTSHEET_THINKING),
-                            color = StrongAzure
+                            text = "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}  ${message.text}",
+                            color = StrongAzure,
+                            textAlign = TextAlign.End,
+                            modifier = messModifier
+                        )
+                    else
+                        Text(
+                            text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}  ${message.text}",
+                            color = LightAzure,
+                            textAlign = TextAlign.Start,
+                            modifier = messModifier
+                        )
+                }
+                if (agentState.isLoading)
+                    item {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = messModifier
+                        ) {
+                            CircularProgressIndicator(
+                                color = StrongAzure,
+                                modifier = Modifier.size(18.dp)
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(10.dp)
+                            )
+
+                            Text(
+                                localizedString(R.string.AGENTSHEET_THINKING),
+                                color = StrongAzure
+                            )
+                        }
+                    }
+
+                agentState.error?.let { err ->
+                    item {
+                        Text(
+                            err,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = messModifier
                         )
                     }
                 }
-
-            agentState.error?.let { err ->
-                item {
-                    Text(
-                        err,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = messModifier
-                    )
-                }
             }
-        }
 
-        TextField(
-            value = currentInput,
-            onValueChange = {
-                currentInput = it
+            Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
 
-            },
+            TextField(
+                value = currentInput,
+                onValueChange = {
+                    currentInput = it
 
-            enabled = !agentState.isLoading,
+                },
 
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = StrongAzure,
-                    shape = textFieldShape
+                enabled = !agentState.isLoading,
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(
+                        width = 2.dp,
+                        color = StrongAzure,
+                        shape = textFieldShape
+                    ),
+
+                shape = textFieldShape,
+
+                placeholder = {
+                    Text(
+                        text = localizedString(R.string.AGENTSHEET_INPUT_HINT),
+                        color = Color.Gray
+                    )
+                },
+
+                singleLine = true,
+
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = CardBackground,
+                    unfocusedContainerColor = CardBackground,
+
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+
+                    disabledContainerColor = DisabledAzure,
+
+                    cursorColor = StrongAzure,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 ),
 
-            shape = textFieldShape,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
 
-            placeholder = {
-                Text(
-                    text = localizedString(R.string.AGENTSHEET_INPUT_HINT),
-                    color = Color.Gray
-                )
-            },
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        agentViewModel.send(currentInput)
+                        currentInput = ""
+                    }
+                ),
 
-            singleLine = true,
-
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = CardBackground,
-                unfocusedContainerColor = CardBackground,
-
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-
-                disabledContainerColor = DisabledAzure,
-
-                cursorColor = StrongAzure,
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
-            ),
-
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    keyboardController?.hide()
-                    agentViewModel.send(currentInput)
-                    currentInput = ""
+                trailingIcon = {
+                    Row {
+                        if (currentInput.isNotBlank()) {
+                            IconButton(
+                                onClick = { currentInput = "" }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = localizedString(R.string.SEARCH_CLEAR),
+                                    tint = LightAzure
+                                )
+                            }
+                        } else
+                            IconButton(
+                                onClick = launchSpeech//{speechLauncher.launch(speechIntent)}
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.mic_icon),
+                                    contentDescription = localizedString(R.string.SEARCH_VOICE),
+                                    tint = LightAzure
+                                )
+                            }
+                    }
                 }
-            ),
+            )
 
-            trailingIcon = {
-                Row {
-                    if (currentInput.isNotBlank()) {
-                        IconButton(
-                            onClick = { currentInput = "" }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = localizedString(R.string.SEARCH_CLEAR),
-                                tint = LightAzure
-                            )
-                        }
-                    } else
-                        IconButton(
-                            onClick = launchSpeech//{speechLauncher.launch(speechIntent)}
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.mic_icon),
-                                contentDescription = localizedString(R.string.SEARCH_VOICE),
-                                tint = LightAzure
-                            )
-                        }
-                }
-            }
-        )
-
-        Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
+            Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
+        }
     }
 }
 

@@ -21,7 +21,7 @@
     <string name="AGENTSHEET.TITLE">AI agent</string>
     <string name="AGENTSHEET.THINKING">AI is thinking…</string>
     <string name="AGENTSHEET.INPUT_HINT">Ask about your repositories</string>
-    <string name="AGENTSHEET.CHAT.YOU">You: </string>
+    <string name="AGENTSHEET.CHAT.YOU">You:</string>
     <string name="AGENTSHEET.CHAT.AI" translatable="false">AI: </string>
 
 </resources>

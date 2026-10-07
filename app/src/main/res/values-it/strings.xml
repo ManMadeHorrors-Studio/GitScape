@@ -15,6 +15,6 @@
     <string name="AGENTSHEET.TITLE">Agente AI</string>
     <string name="AGENTSHEET.INPUT_HINT">Chiedi dei tuoi repository</string>
     <string name="AGENTSHEET.THINKING">L\'AI sta pensando…</string>
-    <string name="AGENTSHEET.CHAT.YOU">Tu: </string>
+    <string name="AGENTSHEET.CHAT.YOU">Tu:</string>
 
 </resources>
