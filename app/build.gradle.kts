@@ -46,6 +46,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+    packaging {
+        resources.excludes += "META-INF/INDEX.LIST"
+        resources.excludes += "META-INF/DEPENDENCIES"
+    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -100,6 +104,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
     implementation(libs.coil.compose)
+
+    implementation(libs.koog.agents)
+    implementation(libs.koogHttpClientKtor)
+    implementation(libs.koogGoogle)
 
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
