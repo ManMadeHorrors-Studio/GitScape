@@ -1,6 +1,7 @@
 package com.manmadehorrorsstudio.gitscape
 
 import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -27,7 +28,6 @@ sealed class NavigationScreen(val route: String) {
 
 //UI
 
-val TITLES_SIZE = 22.sp
 val NAVIGATION_ICONS_SIZE = 30.dp
 
 val SPACER_HEIGHT_SIZE = 20.dp

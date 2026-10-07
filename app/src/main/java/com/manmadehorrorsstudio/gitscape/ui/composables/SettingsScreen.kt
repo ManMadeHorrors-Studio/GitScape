@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.NAVIGATION_ICONS_SIZE
 import com.manmadehorrorsstudio.gitscape.R
-import com.manmadehorrorsstudio.gitscape.TITLES_SIZE
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
@@ -101,11 +100,8 @@ private fun SettingsScreenContent(
                 )
             }
 
-            Text(
-                text = title,
-                color = LightAzure,
-                fontSize = TITLES_SIZE,
-                textAlign = TextAlign.Center,
+            Title(
+                title = title,
                 modifier = Modifier
                     .padding(horizontal = NAVIGATION_ICONS_SIZE + 5.dp)
             )

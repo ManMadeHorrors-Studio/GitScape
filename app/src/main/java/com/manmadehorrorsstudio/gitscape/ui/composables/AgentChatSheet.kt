@@ -36,14 +36,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
-import com.manmadehorrorsstudio.gitscape.TITLES_SIZE
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
@@ -91,11 +89,8 @@ fun AgentChatSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Text(
-                    text = localizedString(R.string.AGENTSHEET_TITLE),
-                    fontSize = TITLES_SIZE,
-                    fontWeight = FontWeight.Bold,
-                    color = LightAzure,
+                Title(
+                    title = localizedString(R.string.AGENTSHEET_TITLE)
                 )
 
                 Spacer(Modifier.width(5.dp))
