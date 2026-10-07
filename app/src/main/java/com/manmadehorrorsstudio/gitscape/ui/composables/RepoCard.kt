@@ -81,7 +81,7 @@ fun RepoCard(
             Text(
                 text = gitHubRepo.name,
                 color = LightAzure,
-                fontSize = 16.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 3,
                 minLines = 3,
