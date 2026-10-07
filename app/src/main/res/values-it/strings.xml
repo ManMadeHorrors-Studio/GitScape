@@ -1,5 +1,4 @@
 <resources>
-
     <string name="REPOLISTVIEW.BUTTON.SETTINGS.CONTENTDESCRIPTION">Impostazioni</string>
     <string name="REPOLISTVIEW.BUTTON.REFRESH.CONTENTDESCRIPTION">Rilancia</string>
     <string name="REPOLISTVIEW.EMPTY_LIST">Nessun repository trovato</string>
@@ -10,5 +9,12 @@
     <string name="SETTINGSVIEW.VERSION">Versione</string>
     <string name="GENERIC.BACK">Indietro</string>
     <string name="GENERIC.ERROR.TITLE">Attenzione</string>
+    <string name="SEARCH.CLEAR">Cancella</string>
+    <string name="SEARCH.VOICE">Voice search</string>
+    <string name="SEARCH.HINT.GENERIC">Cerca…</string>
+    <string name="AGENTSHEET.TITLE">Agente AI</string>
+    <string name="AGENTSHEET.INPUT_HINT">Chiedi dei tuoi repository</string>
+    <string name="AGENTSHEET.THINKING">L\'AI sta pensando…</string>
+    <string name="AGENTSHEET.CHAT.YOU">Tu: </string>
 
 </resources>

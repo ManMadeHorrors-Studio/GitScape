@@ -15,4 +15,13 @@
     <string name="GENERIC.BACK">Back</string>
     <string name="GENERIC.ERROR.TITLE">Warning</string>
     <string name="GENERIC.ERROR.OK" translatable="false">OK</string>
+    <string name="SEARCH.CLEAR">Clear</string>
+    <string name="SEARCH.VOICE">Ricerca vocale</string>
+    <string name="SEARCH.HINT.GENERIC">Search…</string>
+    <string name="AGENTSHEET.TITLE">AI agent</string>
+    <string name="AGENTSHEET.THINKING">AI is thinking…</string>
+    <string name="AGENTSHEET.INPUT_HINT">Ask about your repositories</string>
+    <string name="AGENTSHEET.CHAT.YOU">You: </string>
+    <string name="AGENTSHEET.CHAT.AI" translatable="false">AI: </string>
+
 </resources>
