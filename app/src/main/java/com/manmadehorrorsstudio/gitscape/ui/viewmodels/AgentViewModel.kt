@@ -1,11 +1,13 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import ai.koog.prompt.message.Message
+import ai.koog.prompt.message.MessagePart
+import ai.koog.prompt.message.RequestMetaInfo
+import ai.koog.prompt.message.ResponseMetaInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
-import com.manmadehorrorsstudio.gitscape.ui.models.AgentMessage
 import com.manmadehorrorsstudio.gitscape.ui.models.AgentState
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Clock
 
 @HiltViewModel
 class AgentViewModel @Inject constructor(
@@ -32,7 +35,14 @@ class AgentViewModel @Inject constructor(
         if (prompt.isNotBlank() && !_agentState.value.isLoading) {
             _agentState.update { agst ->
                 agst.copy(
-                    messages = agst.messages + AgentMessage(Message.Role.User, prompt.trim()),
+                    messages = agst.messages + Message.User(
+                        parts = listOf(
+                            MessagePart.Text(prompt.trim())
+                        ),
+                        metaInfo = RequestMetaInfo(
+                            timestamp = Clock.System.now()
+                        )
+                    ),
                     isLoading = true,
                     error = null
                 )
@@ -40,15 +50,21 @@ class AgentViewModel @Inject constructor(
             viewModelScope.launch {
                 runCatching {
                     agentRepository.ask(
-                        question = prompt,
-                        messagesCount = (_agentState.value.messages.size -1),
+                        messages = _agentState.value.messages,
                         repositories = repos
                     )
                 }
                     .onSuccess { answer ->
-                        _agentState.update {
-                            it.copy(
-                                messages = it.messages + AgentMessage(Message.Role.Assistant, answer),
+                        _agentState.update { agst ->
+                            agst.copy(
+                                messages = agst.messages + Message.Assistant(
+                                    parts = listOf(
+                                        MessagePart.Text(answer.trim())
+                                    ),
+                                    metaInfo = ResponseMetaInfo(
+                                        timestamp = Clock.System.now()
+                                    )
+                                ),
                                 isLoading = false
                             )
                         }

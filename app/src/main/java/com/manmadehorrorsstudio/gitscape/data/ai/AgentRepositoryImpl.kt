@@ -2,9 +2,18 @@ package com.manmadehorrorsstudio.gitscape.data.ai
 
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.agent.GraphAIAgent
+import ai.koog.agents.core.dsl.builder.node
+import ai.koog.agents.core.dsl.builder.strategy
+import ai.koog.agents.core.dsl.extension.nodeExecuteTools
+import ai.koog.agents.core.dsl.extension.nodeLLMRequestForceOneTool
+import ai.koog.agents.core.dsl.extension.nodeLLMSendToolResults
+import ai.koog.agents.core.dsl.extension.onTextMessage
+import ai.koog.agents.core.dsl.extension.onToolCalls
+import ai.koog.agents.core.tools.ToolDescriptor
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.agents.features.eventHandler.feature.handleEvents
+import ai.koog.prompt.message.Message
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
@@ -16,29 +25,41 @@ class AgentRepositoryImpl @Inject constructor(
     private val promptExecutor: MultiLLMPromptExecutor
 ) : AgentRepository {
     override suspend fun ask(
-        question: String,
-        messagesCount: Int,
-        repositories: List<GitHubRepo>): String {
+        messages: List<Message>,
+        repositories: List<GitHubRepo>
+
+    ): String {
         val key = BuildConfig.AI_KEY.trim()
         check(key.isNotEmpty() && key != "null") {
             "AI API key is not configured."
         }
 
         val tools = AgentTools(repositories)
+
+        val toolRegistry = ToolRegistry {
+            tools(tools)
+        }
+
+        val listReposDescriptor =
+            toolRegistry.getTool("list_repos").descriptor
+
         val agent = AIAgent(
             promptExecutor = promptExecutor,
             llmModel = LLM_MODEL,
             toolRegistry = ToolRegistry {
                 tools(tools)
             },
-            systemPrompt = getBasePrompt(messagesCount),
-            maxIterations = 20
+            systemPrompt = getBasePrompt(messages.size),
+            maxIterations = 20,
+            strategy = gitScapeStrategy(
+                listReposToolDescriptor = listReposDescriptor
+            )
         ) {
             logAgentEvents()
         }
 
         return agent.run(
-            "\nQuestion: $question?"
+            agentInput = messages
         )
     }
 
@@ -56,6 +77,66 @@ class AgentRepositoryImpl @Inject constructor(
             ).joinToString(".\n")
         else
             null
+    }
+
+    private fun gitScapeStrategy(
+        listReposToolDescriptor: ToolDescriptor
+    ) = strategy<List<Message>, String>("gitscape") {
+
+        val prepareHistory by node<List<Message>, String>("prepareHistory") { sms ->
+
+            llm.writeSession {
+                appendPrompt {
+                    messages(sms)
+                }
+            }
+
+            "Load the current repository list using list_repos before answering the user."
+        }
+
+        val preloadRepositories by nodeLLMRequestForceOneTool(
+            name = "preloadRepositories",
+            tool = listReposToolDescriptor
+        )
+
+        val executeTool by nodeExecuteTools(
+            name = "executeTool"
+        )
+
+        val sendToolResult by nodeLLMSendToolResults(
+            name = "sendToolResult"
+        )
+
+        edge(
+            nodeStart forwardTo prepareHistory
+        )
+
+        edge(
+            prepareHistory forwardTo preloadRepositories
+        )
+
+        // preloadRepositories produce una tool call for list_repos
+        edge(
+            preloadRepositories forwardTo executeTool
+                    onToolCalls { true }
+        )
+
+        // Execute list_repos and send its result back to the LLM
+        edge(
+            executeTool forwardTo sendToolResult
+        )
+
+        // The LLM has produced the final answer
+        edge(
+            sendToolResult forwardTo nodeFinish
+                    onTextMessage { true }
+        )
+
+        // The LLM wants another tool
+        edge(
+            sendToolResult forwardTo executeTool
+                    onToolCalls { true }
+        )
     }
 
     private fun GraphAIAgent.FeatureContext.logAgentEvents() {

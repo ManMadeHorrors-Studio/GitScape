@@ -43,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
+import com.manmadehorrorsstudio.gitscape.ui.models.toText
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
 
@@ -118,14 +119,14 @@ fun AgentChatSheet(
                 items(agentState.messages) { message ->
                     if (message.role == Role.User)
                         Text(
-                            text = "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}  ${message.text}",
+                            text = "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}  ${message.toText()}",
                             color = StrongAzure,
                             textAlign = TextAlign.End,
                             modifier = messModifier
                         )
                     else
                         Text(
-                            text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}  ${message.text}",
+                            text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}  ${message.toText()}",
                             color = LightAzure,
                             textAlign = TextAlign.Start,
                             modifier = messModifier
