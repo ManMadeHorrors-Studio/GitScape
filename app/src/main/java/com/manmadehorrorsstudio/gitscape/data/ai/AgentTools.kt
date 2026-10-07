@@ -1,16 +1,21 @@
-package com.manmadehorrorsstudio.gitscape.domain.ai
+package com.manmadehorrorsstudio.gitscape.data.ai
 
 import ai.koog.agents.core.tools.annotations.Tool
 import ai.koog.agents.core.tools.reflect.ToolSet
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.squareup.moshi.Moshi
 
 
 class AgentTools(private val repositories: List<GitHubRepo>) : ToolSet {
+    private val repoAdapter =
+        Moshi.Builder()
+            .build()
+            .adapter(GitHubRepo::class.java)
+
     @Tool
     fun list_repos(language: String? = null, max_results: Int = 10): String {
         val limit = max_results.coerceIn(1, 50)
         val result = repositories.asSequence()
-            .filter { language.isNullOrBlank() || it.primaryLanguage.equals(language.trim(), ignoreCase = true) }
             .take(limit)
             .map(::repoJson)
             .toList()
@@ -24,11 +29,5 @@ class AgentTools(private val repositories: List<GitHubRepo>) : ToolSet {
         return "{\"repository\":${repoJson(repo)}}"
     }
 
-    private fun repoJson(repo: GitHubRepo): String =
-        "{\"name\":${json(repo.name)},\"stars\":${repo.stars}," +
-                "\"primary_language\":${json(repo.primaryLanguage ?: "unknown")}," +
-                "\"url\":${json(repo.htmlUrl ?: "")}}"
-
-    private fun json(value: String): String =
-        "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+    private fun repoJson(repo: GitHubRepo): String = repoAdapter.toJson(repo)
 }
