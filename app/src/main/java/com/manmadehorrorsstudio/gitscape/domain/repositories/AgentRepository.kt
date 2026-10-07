@@ -1,4 +1,4 @@
-package com.manmadehorrorsstudio.gitscape.domain.ai
+package com.manmadehorrorsstudio.gitscape.domain.repositories
 
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 

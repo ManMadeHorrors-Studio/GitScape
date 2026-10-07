@@ -2,7 +2,7 @@ package com.manmadehorrorsstudio.gitscape.di
 
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
-import com.manmadehorrorsstudio.gitscape.domain.ai.AgentRepository
+import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.ai.AgentRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase

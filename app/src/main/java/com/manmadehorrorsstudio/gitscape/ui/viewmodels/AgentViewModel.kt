@@ -3,7 +3,7 @@ package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 import ai.koog.prompt.message.Message
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.manmadehorrorsstudio.gitscape.domain.ai.AgentRepository
+import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.ui.models.AgentMessage
 import com.manmadehorrorsstudio.gitscape.ui.models.AgentState
