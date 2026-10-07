@@ -2,8 +2,6 @@ package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.manmadehorrorsstudio.gitscape.data.models.ApiResponse
-import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
@@ -48,64 +46,48 @@ class RepoListViewModel @Inject constructor(
             else
                 null
             val repoDeferred = async { loadRepositories() }
-
             userDeferred?.await()
             repoDeferred.await()
         }
     }
 
     private fun startLoading() {
-        _repoListState.update {
-            it.copy(
-                isLoading = true
-            )
-        }
+        _repoListState.update { it.copy(isLoading = true) }
     }
 
     private suspend fun loadRepositories() {
-        val result: ApiResponse<List<GitHubRepo>> = getGitHubRepoListUseCase()
-        when (result) {
-            is ApiResponse.Success -> {
-                gitScapeLog("loadRepositories result: ${result.data}")
+        runCatching { getGitHubRepoListUseCase() }
+            .onSuccess { repositories ->
+                gitScapeLog("loadRepositories result: $repositories")
                 _repoListState.update {
                     it.copy(
-                        repositories = result.data,
+                        repositories = repositories,
                         isLoading = false
                     )
                 }
             }
-            is ApiResponse.Error -> {
-                gitScapeLog("LoadRepositories error", result.exception)
+            .onFailure { exception ->
+                gitScapeLog("LoadRepositories error", exception as? Exception)
                 _repoListState.update {
                     it.copy(
                         isLoading = false
                     )
                 }
                 _repoListEvents.send(
-                    UIEvents.ShowError(
-                        result.exception.message
-                    )
+                    UIEvents.ShowError(exception.message)
                 )
             }
-        }
     }
 
     private suspend fun loadUser() {
-        val result: ApiResponse<GitHubUser> = getGitHubUserUseCase()
-        when (result) {
-            is ApiResponse.Success -> {
-                gitScapeLog("loadUser result: ${result.data}")
-                _userState.value =
-                    GitHubUser(
-                        id = result.data.id,
-                        userName = result.data.userName,
-                        avatarUrl = result.data.avatarUrl
-                    )
+        runCatching { getGitHubUserUseCase() }
+            .onSuccess { user ->
+                gitScapeLog("loadUser result: $user")
+                _userState.value = user
             }
-            is ApiResponse.Error -> {
-                gitScapeLog("loadUser error", result.exception)
+            .onFailure { exception ->
+                gitScapeLog("loadUser error", exception as? Exception)
                 _userState.value = null
             }
-        }
     }
 }

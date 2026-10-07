@@ -1,11 +1,9 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
-
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockedException
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockedUser
 import com.manmadehorrorsstudio.gitscape.TestUtils.unmockGitScapeLog
-import com.manmadehorrorsstudio.gitscape.data.models.ApiResponse
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
@@ -21,201 +19,88 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class RepoListViewModelTest {
-
     private val testDispatcher = StandardTestDispatcher()
+    private lateinit var repos: GetGitHubRepoListUseCase
+    private lateinit var user: GetGitHubUserUseCase
 
-    private lateinit var getGitHubRepoListUseCase: GetGitHubRepoListUseCase
-    private lateinit var getGitHubUserUseCase: GetGitHubUserUseCase
+    @BeforeEach fun setUp() { Dispatchers.setMain(testDispatcher); repos = mockk(); user = mockk(); mockGitScapeLog() }
+    @AfterEach fun tearDown() { unmockGitScapeLog(); Dispatchers.resetMain() }
 
-    @BeforeEach
-    fun setUp() {
-        Dispatchers.setMain(testDispatcher)
-
-        getGitHubRepoListUseCase = mockk()
-        getGitHubUserUseCase = mockk()
-
-        mockGitScapeLog()
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockGitScapeLog()
-        Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `initialization loads repositories and user`() = runTest {
-
-        coEvery {
-            getGitHubRepoListUseCase()
-        } returns ApiResponse.Success(emptyList())
-
-        coEvery {
-            getGitHubUserUseCase()
-        } returns ApiResponse.Success(
-            mockedUser
+    @Test fun `initialization loads repositories and user`() = runTest {
+        coEvery { repos() } returns emptyList()
+        coEvery { user() } returns mockedUser
+        RepoListViewModel(
+            repos,
+            user
         )
-
-        val viewModel = RepoListViewModel(
-            getGitHubRepoListUseCase,
-            getGitHubUserUseCase
-        )
-
         advanceUntilIdle()
-
-        coVerify(exactly = 1) {
-            getGitHubRepoListUseCase()
-        }
-
-        coVerify(exactly = 1) {
-            getGitHubUserUseCase()
-        }
+        coVerify(exactly = 1) { repos() }
+        coVerify(exactly = 1) { user() }
     }
-
-    @Test
-    fun `repository list is loaded successfully`() = runTest {
-
+    @Test fun `repository list is loaded successfully`() = runTest {
         val repositories = listOf(
             GitHubRepo(
-                id = "1",
-                name = "GitScape",
-                primaryLanguage = "Kotlin",
-                stars = 10,
-                htmlUrl = "https://github.com/example/gitscape"
-            ),
-            GitHubRepo(
-                id = "2",
-                name = "TestRepo",
-                primaryLanguage = "Java",
-                stars = 5,
-                htmlUrl = "https://github.com/example/testrepo"
+                "1",
+                "GitScape",
+                "Kotlin",
+                10,
+                "https://github.com/example/gitscape"
             )
         )
-
-        coEvery {
-            getGitHubRepoListUseCase()
-        } returns ApiResponse.Success(repositories)
-
-        coEvery {
-            getGitHubUserUseCase()
-        } returns ApiResponse.Success(
-            mockedUser
-        )
-
-        val viewModel = RepoListViewModel(
-            getGitHubRepoListUseCase,
-            getGitHubUserUseCase
-        )
-
+        coEvery { repos() } returns repositories
+        coEvery { user() } returns mockedUser
+        val vm = RepoListViewModel(repos, user)
         advanceUntilIdle()
-
-        assertEquals(
-            repositories,
-            viewModel.repoListstate.value.repositories
-        )
-
-        assertFalse(
-            viewModel.repoListstate.value.isLoading
-        )
+        assertEquals(repositories, vm.repoListstate.value.repositories)
+        assertFalse(vm.repoListstate.value.isLoading)
     }
-
-    @Test
-    fun `repository error clears loading and emits error event`() = runTest {
-
-        coEvery {
-            getGitHubRepoListUseCase()
-        } returns ApiResponse.Error(mockedException)
-
-        coEvery {
-            getGitHubUserUseCase()
-        } returns ApiResponse.Success(
-            mockedUser
+    @Test fun `repository error clears loading and emits error event`() = runTest {
+        coEvery { repos() } throws mockedException
+        coEvery { user() } returns mockedUser
+        val vm = RepoListViewModel(
+            repos,
+            user
         )
-
-        val viewModel = RepoListViewModel(
-            getGitHubRepoListUseCase,
-            getGitHubUserUseCase
-        )
-
         advanceUntilIdle()
-
-        assertFalse(
-            viewModel.repoListstate.value.isLoading
-        )
-
-        val event = viewModel.repoListEvents.first()
-
-        assertTrue(
-            event is UIEvents.ShowError
-        )
-
+        assertFalse(vm.repoListstate.value.isLoading)
+        val event = vm.repoListEvents.first()
+        assertTrue(event is UIEvents.ShowError)
         assertEquals(
             mockedException.message,
             (event as UIEvents.ShowError).message
         )
     }
-
-    @Test
-    fun `user is loaded successfully`() = runTest {
-
-        coEvery {
-            getGitHubRepoListUseCase()
-        } returns ApiResponse.Success(emptyList())
-
-        coEvery {
-            getGitHubUserUseCase()
-        } returns ApiResponse.Success(mockedUser)
-
-        val viewModel = RepoListViewModel(
-            getGitHubRepoListUseCase,
-            getGitHubUserUseCase
-        )
-
+    @Test fun `user is loaded successfully`() = runTest {
+        coEvery { repos() } returns emptyList()
+        coEvery { user() } returns mockedUser
+        val vm = RepoListViewModel(
+            repos,
+            user)
         advanceUntilIdle()
-
         assertEquals(
             mockedUser,
-            viewModel.userState.value
+            vm.userState.value
         )
     }
-
-    @Test
-    fun `refresh reloads repositories but not user`() = runTest {
-
-        coEvery {
-            getGitHubRepoListUseCase()
-        } returns ApiResponse.Success(emptyList())
-
-        coEvery {
-            getGitHubUserUseCase()
-        } returns ApiResponse.Success(mockedUser)
-
-        val viewModel = RepoListViewModel(
-            getGitHubRepoListUseCase,
-            getGitHubUserUseCase
+    @Test fun `refresh reloads repositories but not user`() = runTest {
+        coEvery { repos() } returns emptyList()
+        coEvery { user() } returns mockedUser
+        val vm = RepoListViewModel(
+            repos, user
         )
-
         advanceUntilIdle()
-
-        viewModel.refreshRepoListScreen()
-
+        vm.refreshRepoListScreen()
         advanceUntilIdle()
-
-        coVerify(exactly = 2) {
-            getGitHubRepoListUseCase()
-        }
-
-        coVerify(exactly = 1) {
-            getGitHubUserUseCase()
-        }
+        coVerify(exactly = 2) { repos() }
+        coVerify(exactly = 1) { user() }
     }
 }

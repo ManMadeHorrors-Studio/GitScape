@@ -1,7 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.data.mappers.mapToDomain
-import com.manmadehorrorsstudio.gitscape.data.models.ApiResponse
 import com.manmadehorrorsstudio.gitscape.data.models.isValid
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
@@ -11,25 +10,17 @@ class GitHubRepositoryImpl(
     private val api: GitHubApis
 ) : GitHubRepository {
 
-    override suspend fun getGitHubRepolist(): ApiResponse<List<GitHubRepo>> {
-        return try {
-            val result = api.getRepositories()
-            val resultMapped = result.filter { it.isValid() }.map { it.mapToDomain() }
-            ApiResponse.Success(resultMapped)
-        } catch (e: Exception) {
-            ApiResponse.Error(e)
-        }
-    }
+    override suspend fun getGitHubRepolist(): List<GitHubRepo> = runCatching {
+        api.getRepositories()
+            .filter { it.isValid() }
+            .map { it.mapToDomain() }
+            .sortedByDescending { it.name.length }
+    }.getOrThrow()
 
-    override suspend fun getGitHubUser(): ApiResponse<GitHubUser> {
-        return try {
-            val result = api.getUser()
-            if (!result.isValid())
-                throw Exception("Invalid user")
-            val resultMapped = result.mapToDomain()
-            ApiResponse.Success(resultMapped)
-        } catch (e: Exception) {
-            ApiResponse.Error(e)
-        }
-    }
+    override suspend fun getGitHubUser(): GitHubUser = runCatching {
+        val result = api.getUser()
+        if (!result.isValid())
+            throw Exception("Invalid user")
+        result.mapToDomain()
+    }.getOrThrow()
 }
