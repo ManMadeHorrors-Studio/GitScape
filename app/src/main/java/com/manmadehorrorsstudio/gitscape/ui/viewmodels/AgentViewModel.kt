@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
+import ai.koog.prompt.message.Message
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.domain.ai.AgentRepository
@@ -30,7 +31,7 @@ class AgentViewModel @Inject constructor(
         if (prompt.isNotBlank() && !_agentState.value.isLoading) {
             _agentState.update {
                 it.copy(
-                    messages = it.messages + AgentMessage(true, prompt.trim()),
+                    messages = it.messages + AgentMessage(Message.Role.User, prompt.trim()),
                     isLoading = true,
                     error = null
                 )
@@ -42,7 +43,7 @@ class AgentViewModel @Inject constructor(
                     .onSuccess { answer ->
                         _agentState.update {
                             it.copy(
-                                messages = it.messages + AgentMessage(false, answer),
+                                messages = it.messages + AgentMessage(Message.Role.Assistant, answer),
                                 isLoading = false
                             )
                         }

@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.ui.composables
 
+import ai.koog.prompt.message.Message.Role
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -115,7 +116,7 @@ fun AgentChatSheet(
                     vertical = 5.dp
                 )
             items(agentState.messages) { message ->
-                if (message.isUser)
+                if (message.role == Role.User)
                     Text(
                         text =  "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}${message.text}",
                         color = LightAzure,
