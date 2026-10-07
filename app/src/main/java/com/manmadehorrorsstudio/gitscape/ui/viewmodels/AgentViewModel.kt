@@ -21,6 +21,7 @@ class AgentViewModel @Inject constructor(
     private val agentRepository: AgentRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
+
     private val _agentState = MutableStateFlow(AgentState())
     val agentState: StateFlow<AgentState> = _agentState.asStateFlow()
     private var repos: List<GitHubRepo> = emptyList()
@@ -29,16 +30,20 @@ class AgentViewModel @Inject constructor(
     fun setRepositories(value: List<GitHubRepo>) { repos = value.toList() }
     fun send(prompt: String) {
         if (prompt.isNotBlank() && !_agentState.value.isLoading) {
-            _agentState.update {
-                it.copy(
-                    messages = it.messages + AgentMessage(Message.Role.User, prompt.trim()),
+            _agentState.update { agst ->
+                agst.copy(
+                    messages = agst.messages + AgentMessage(Message.Role.User, prompt.trim()),
                     isLoading = true,
                     error = null
                 )
             }
             viewModelScope.launch {
                 runCatching {
-                    agentRepository.ask(prompt, repos)
+                    agentRepository.ask(
+                        question = prompt,
+                        messagesCount = (_agentState.value.messages.size -1),
+                        repositories = repos
+                    )
                 }
                     .onSuccess { answer ->
                         _agentState.update {
