@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape
 
+import ai.koog.prompt.executor.clients.google.GoogleModels
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -30,3 +31,7 @@ val TITLES_SIZE = 22.sp
 val NAVIGATION_ICONS_SIZE = 30.dp
 
 val SPACER_HEIGHT_SIZE = 20.dp
+
+//AI
+
+val LLM_MODEL = GoogleModels.Gemini3_7Flash

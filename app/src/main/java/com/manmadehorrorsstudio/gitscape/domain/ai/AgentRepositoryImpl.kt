@@ -7,9 +7,9 @@ import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.http.client.ktor.KtorKoogHttpClient
-import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
 import com.manmadehorrorsstudio.gitscape.BuildConfig
+import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
@@ -17,8 +17,9 @@ import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor() : AgentRepository {
     override suspend fun ask(question: String, repositories: List<GitHubRepo>): String {
-        val key = BuildConfig.GEMINI_KEY.trim()
-        check(key.isNotEmpty() && key != "null") { "AI API key is not configured." }
+        val key = BuildConfig.AI_KEY.trim()
+        check(key.isNotEmpty() && key != "null")
+            { "AI API key is not configured." }
 
         val tools = AgentTools(repositories)
         val agent = AIAgent(
@@ -32,7 +33,7 @@ class AgentRepositoryImpl @Inject constructor() : AgentRepository {
                     httpClientFactory = KtorKoogHttpClient.Factory()
                 )
             ),
-            llmModel = GoogleModels.Gemini3_7Flash,
+            llmModel = LLM_MODEL,
             toolRegistry = ToolRegistry {
                 tools(tools)
             },
