@@ -1,7 +1,9 @@
 package com.manmadehorrorsstudio.gitscape.data.mappers
 
+import com.manmadehorrorsstudio.gitscape.data.models.GitHubReadMeDTO
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubRepoDTO
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubUserDTO
+import com.manmadehorrorsstudio.gitscape.domain.models.GitHubReadMe
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import kotlin.text.orEmpty
@@ -20,9 +22,16 @@ fun GitHubRepoDTO.mapToDomain(): GitHubRepo {
 
 fun GitHubUserDTO.mapToDomain(): GitHubUser {
     return GitHubUser(
-        id = id.orEmpty(), //id can't be null because GitHubUser with null id are filtered out in getGitHubUser
-        userName = name.orEmpty(), //name can't be null because GitHubUser with null id are filtered out in getGitHubUser
+        id = id.orEmpty(), //id can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
+        userName = name.orEmpty(), //name can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
         avatarUrl = avatarUrl
+    )
+}
+
+fun GitHubReadMeDTO.mapToDomain(repoId: String): GitHubReadMe {
+    return GitHubReadMe(
+        repoId = repoId,
+        content = content.orEmpty()
     )
 }
 
