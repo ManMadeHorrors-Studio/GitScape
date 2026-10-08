@@ -12,7 +12,8 @@ fun GitHubRepoDTO.mapToDomain(): GitHubRepo {
         name = name.orEmpty(),
         primaryLanguage = language,
         stars = stargazersCount ?: 0,
-        htmlUrl = htmlUrl
+        htmlUrl = htmlUrl,
+        description = description
     )
 }
 
