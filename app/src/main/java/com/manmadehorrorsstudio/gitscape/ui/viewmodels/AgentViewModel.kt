@@ -8,12 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import com.manmadehorrorsstudio.gitscape.ui.models.AgentState
+import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,6 +32,10 @@ class AgentViewModel @Inject constructor(
 
     private val _agentState = MutableStateFlow(AgentState())
     val agentState: StateFlow<AgentState> = _agentState.asStateFlow()
+
+    private val _agentEvents = Channel<UIEvents>(Channel.CONFLATED)
+    val agentEvents = _agentEvents.receiveAsFlow()
+
     private var repos: List<GitHubRepo> = emptyList()
 
     fun getCurrentLanguageTag() = settingsRepository.getLanguage().value.locale.toLanguageTag()
@@ -51,7 +60,15 @@ class AgentViewModel @Inject constructor(
                 runCatching {
                     agentRepository.ask(
                         messages = _agentState.value.messages,
-                        repositories = repos
+                        repositories = repos,
+                        onUiCommand = { command ->
+                            when (command) {
+                                is AgentUiCommand.PointToRepo -> {
+                                    gitScapeLog("gridState tool viewModel: $command.repoId")
+                                    _agentEvents.trySend(UIEvents.PontToRepo(command.repoId))
+                                }
+                            }
+                        }
                     )
                 }
                     .onSuccess { answer ->

@@ -19,6 +19,7 @@ import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor(
@@ -26,7 +27,8 @@ class AgentRepositoryImpl @Inject constructor(
 ) : AgentRepository {
     override suspend fun ask(
         messages: List<Message>,
-        repositories: List<GitHubRepo>
+        repositories: List<GitHubRepo>,
+        onUiCommand: (AgentUiCommand) -> Unit
 
     ): String {
         val key = BuildConfig.AI_KEY.trim()
@@ -34,7 +36,10 @@ class AgentRepositoryImpl @Inject constructor(
             "AI API key is not configured."
         }
 
-        val tools = AgentTools(repositories)
+        val tools = AgentTools(
+            repositories = repositories,
+            onUiCommand = onUiCommand
+        )
 
         val toolRegistry = ToolRegistry {
             tools(tools)

@@ -32,6 +32,7 @@ import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.RepoListViewModel
+import kotlinx.coroutines.flow.merge
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,8 +48,12 @@ fun RepoListScreen(
 
     val errorMessage = remember { mutableStateOf<String?>(null) }
 
+    var pointToRepoInGrid = remember { mutableStateOf<Int?>(null) }
+
     var showAgent by remember { mutableStateOf(false) }
+
     val agentViewModel: AgentViewModel = hiltViewModel()
+
     if (showAgent) {
         agentViewModel.setRepositories(repoListState.repositories)
         ModalBottomSheet(
@@ -66,6 +71,7 @@ fun RepoListScreen(
         userState = userState,
         errorMessage = errorMessage,
         innerPadding = innerPadding,
+        pointToRepoInGrid = pointToRepoInGrid,
         onAIClick = { showAgent = true },
         onSettingsClick = onSettingsClick,
         onRefreshClick = { repoListViewModel.refreshRepoListScreen() }
@@ -73,10 +79,22 @@ fun RepoListScreen(
 
     LaunchedEffect(Unit) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            repoListViewModel.repoListEvents.collect { event ->
+            merge(
+                repoListViewModel.repoListEvents,
+                agentViewModel.agentEvents
+            ).collect { event ->
                 when (event) {
                     is UIEvents.ShowError -> {
                         errorMessage.value = event.message
+                    }
+                    is UIEvents.PontToRepo -> { event.id
+                        val index = repoListViewModel.repoListstate.value.repositories
+                            .indexOfFirst { repo -> repo.id == event.id }
+
+                        if (index in repoListState.repositories.indices) {
+                            showAgent = false
+                            pointToRepoInGrid.value = index
+                        }
                     }
                 }
             }
@@ -90,6 +108,7 @@ private fun RepoListScreenInternal(
     userState: GitHubUser?,
     errorMessage: MutableState<String?>,
     innerPadding: PaddingValues,
+    pointToRepoInGrid: MutableState<Int?>,
     onAIClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onRefreshClick: () -> Unit
@@ -155,7 +174,8 @@ private fun RepoListScreenInternal(
 
                 else -> {
                     RepoListGrid(
-                        gitHubRepos = repoListState.repositories
+                        gitHubRepos = repoListState.repositories,
+                        pointToRepoInGrid = pointToRepoInGrid
                     )
                 }
             }

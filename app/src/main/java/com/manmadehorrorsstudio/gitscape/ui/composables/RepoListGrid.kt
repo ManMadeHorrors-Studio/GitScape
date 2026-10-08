@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -18,7 +20,8 @@ import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 
 @Composable
 fun RepoListGrid(
-    gitHubRepos: List<GitHubRepo>
+    gitHubRepos: List<GitHubRepo>,
+    pointToRepoInGrid: MutableState<Int?>
 ) {
     val gridState = rememberLazyGridState()
 
@@ -56,6 +59,13 @@ fun RepoListGrid(
                 gitHubRepo = gitHubRepo,
                 isFullyVisible = index in fullyVisibleItemIndexes
             )
+        }
+    }
+
+    LaunchedEffect(pointToRepoInGrid.value) {
+        pointToRepoInGrid.value?.let { index ->
+            gridState.animateScrollToItem(index)
+            pointToRepoInGrid.value = null
         }
     }
 }
