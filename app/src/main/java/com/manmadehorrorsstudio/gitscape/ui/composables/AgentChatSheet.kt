@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,6 +64,8 @@ fun AgentChatSheet(
         hint = localizedString(R.string.AGENTSHEET_INPUT_HINT),
         languageTag = agentViewModel.getCurrentLanguageTag()
     )
+
+    val listState = rememberLazyListState()
 
     Column(
         Modifier
@@ -107,7 +111,8 @@ fun AgentChatSheet(
             Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
 
             LazyColumn(
-                Modifier
+                state = listState,
+                modifier = Modifier
                     .weight(1f, fill = false)
                     .fillMaxWidth()
             ) {
@@ -254,6 +259,11 @@ fun AgentChatSheet(
 
             Spacer(Modifier.height(SPACER_HEIGHT_SIZE))
         }
+    }
+
+    LaunchedEffect(agentState.messages.size) {
+        if(agentState.messages.lastIndex > 0)
+            listState.animateScrollToItem(agentState.messages.lastIndex)
     }
 }
 
