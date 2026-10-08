@@ -18,6 +18,7 @@ import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class AgentRepositoryImpl @Inject constructor(
 ) : AgentRepository {
     override suspend fun ask(
         messages: List<Message>,
+        getGitHubReadMeUseCase: GetGitHubReadMeUseCase,
         repositories: List<GitHubRepo>,
         onUiCommand: (AgentUiCommand) -> Unit
 
@@ -37,6 +39,7 @@ class AgentRepositoryImpl @Inject constructor(
         }
 
         val tools = AgentTools(
+            getGitHubReadMeUseCase = getGitHubReadMeUseCase,
             repositories = repositories,
             onUiCommand = onUiCommand
         )

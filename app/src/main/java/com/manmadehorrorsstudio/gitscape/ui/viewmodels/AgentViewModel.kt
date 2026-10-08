@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import com.manmadehorrorsstudio.gitscape.ui.models.AgentState
@@ -26,6 +27,7 @@ import kotlin.time.Clock
 
 @HiltViewModel
 class AgentViewModel @Inject constructor(
+    private val getGitHubReadMeUseCase: GetGitHubReadMeUseCase,
     private val agentRepository: AgentRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
@@ -60,6 +62,7 @@ class AgentViewModel @Inject constructor(
                 runCatching {
                     agentRepository.ask(
                         messages = _agentState.value.messages,
+                        getGitHubReadMeUseCase = getGitHubReadMeUseCase,
                         repositories = repos,
                         onUiCommand = { command ->
                             when (command) {

@@ -2,7 +2,9 @@ package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
@@ -17,13 +19,37 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
 class RepoListViewModel @Inject constructor(
     private val getGitHubRepoListUseCase: GetGitHubRepoListUseCase,
     private val getGitHubUserUseCase: GetGitHubUserUseCase,
+    private val getGitHubReadMeUseCase: GetGitHubReadMeUseCase
 ) : ViewModel() {
+
+
+    fun coso () {
+        for (repo in _repoListState.value.repositories)
+            callGetReadMeUseCase(repo)
+
+
+    }
+
+    fun callGetReadMeUseCase(gitHubRepo: GitHubRepo?) {
+        gitHubRepo?.let { ghr ->
+            runBlocking {
+                runCatching { getGitHubReadMeUseCase(gitHubRepo) }
+                    .onSuccess { readMe ->
+                        gitScapeLog("callGetReadMeUseCase for repo ${gitHubRepo.name}: $readMe")
+                    }
+                    .onFailure { exception ->
+                        gitScapeLog("callGetReadMeUseCase for repo ${gitHubRepo.name} error: $exception")
+                    }
+            }
+        }
+    }
 
     private val _repoListState = MutableStateFlow(RepoListState())
     val repoListstate: StateFlow<RepoListState> = _repoListState.asStateFlow()
