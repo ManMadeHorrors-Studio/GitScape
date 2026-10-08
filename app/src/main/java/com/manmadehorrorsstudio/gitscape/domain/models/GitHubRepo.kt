@@ -9,5 +9,6 @@ data class GitHubRepo(
     val primaryLanguage: String?,
     val stars: Int,
     val htmlUrl: String?,
-    val description: String?
+    val description: String?,
+    val ownerLogin: String?
 )

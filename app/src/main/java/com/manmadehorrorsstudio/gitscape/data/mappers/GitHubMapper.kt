@@ -13,7 +13,8 @@ fun GitHubRepoDTO.mapToDomain(): GitHubRepo {
         primaryLanguage = language,
         stars = stargazersCount ?: 0,
         htmlUrl = htmlUrl,
-        description = description
+        description = description,
+        ownerLogin = owner?.login
     )
 }
 
@@ -24,3 +25,5 @@ fun GitHubUserDTO.mapToDomain(): GitHubUser {
         avatarUrl = avatarUrl
     )
 }
+
+
