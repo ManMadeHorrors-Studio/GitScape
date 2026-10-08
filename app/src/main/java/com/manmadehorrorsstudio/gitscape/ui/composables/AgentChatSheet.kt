@@ -186,9 +186,14 @@ fun AgentChatSheet(
 
                 shape = textFieldShape,
 
+
                 placeholder = {
                     Text(
-                        text = localizedString(R.string.AGENTSHEET_INPUT_HINT),
+                        text =
+                            if (!agentState.isLoading)
+                                localizedString(R.string.AGENTSHEET_INPUT_HINT)
+                            else
+                                "",
                         color = Color.Gray
                     )
                 },
@@ -235,7 +240,7 @@ fun AgentChatSheet(
                             }
                         } else
                             IconButton(
-                                onClick = launchSpeech//{speechLauncher.launch(speechIntent)}
+                                onClick = launchSpeech
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.mic_icon),
