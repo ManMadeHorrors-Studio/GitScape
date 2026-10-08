@@ -10,6 +10,7 @@ import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.data.ai.AgentRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import dagger.Module
@@ -77,5 +78,12 @@ object UseCaseModule {
         repository: GitHubRepository
     ): GetGitHubUserUseCase {
         return GetGitHubUserUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetGitHubReadMeUseCase(
+        repository: GitHubRepository
+    ): GetGitHubReadMeUseCase {
+        return GetGitHubReadMeUseCase(repository)
     }
 }

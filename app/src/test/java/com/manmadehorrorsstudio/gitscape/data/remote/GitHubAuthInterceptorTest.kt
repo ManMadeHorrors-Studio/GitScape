@@ -2,7 +2,7 @@ package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.GITHUB_BASE_PATH
-import com.manmadehorrorsstudio.gitscape.GITHUB_GET_USER
+import com.manmadehorrorsstudio.gitscape.GITHUB_GET_USER_PATH
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -32,7 +32,7 @@ class GitHubAuthInterceptorTest {
     fun `GitHub request adds authentication headers`() {
 
         val request = Request.Builder()
-            .url("https://$GITHUB_BASE_PATH/$GITHUB_GET_USER")
+            .url("https://$GITHUB_BASE_PATH/$GITHUB_GET_USER_PATH")
             .build()
 
         every {

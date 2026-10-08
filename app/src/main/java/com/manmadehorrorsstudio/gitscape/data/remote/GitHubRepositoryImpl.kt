@@ -2,6 +2,7 @@ package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.data.mappers.mapToDomain
 import com.manmadehorrorsstudio.gitscape.data.models.isValid
+import com.manmadehorrorsstudio.gitscape.domain.models.GitHubReadMe
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
@@ -21,5 +22,14 @@ class GitHubRepositoryImpl(
         if (!result.isValid())
             throw Exception("Invalid user")
         result.mapToDomain()
+    }
+
+    override suspend fun getGitHubReadMe(gitHubRepo: GitHubRepo): GitHubReadMe = run {
+        gitHubRepo.ownerLogin?.let { login ->
+            val result = api.getGitHubReadMe(login, gitHubRepo.name)
+            if (!result.isValid())
+                throw Exception("Invalid ReadMe")
+            result.mapToDomain(gitHubRepo.id)
+        } ?: throw Exception("Missing owner login")
     }
 }

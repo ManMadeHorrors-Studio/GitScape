@@ -6,6 +6,5 @@ import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 class GetGitHubUserUseCase(
     private val repository: GitHubRepository
 ) {
-
     suspend operator fun invoke(): GitHubUser = repository.getGitHubUser()
 }

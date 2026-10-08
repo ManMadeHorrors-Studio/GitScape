@@ -3,12 +3,18 @@ package com.manmadehorrorsstudio.gitscape
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import androidx.compose.ui.unit.dp
 
+//Remote
+
+const val MAX_REPOS_NUMBER = 50
+const val GITHUB_OWNER = "owner"
+const val GITHUB_REPO = "repo"
+
 //URLs
 
 const val GITHUB_BASE_PATH = "api.github.com"
-const val GITHUB_GET_REPOS = "user/repos"
-const val MAX_REPOS_NUMBER = 50
-const val GITHUB_GET_USER = "user"
+const val GITHUB_GET_REPOS_PATH = "user/repos"
+const val GITHUB_GET_USER_PATH = "user"
+const val GITHUB_GET_README = "repos/{$GITHUB_OWNER}/{$GITHUB_REPO}/readme"
 
 //DB
 
