@@ -28,9 +28,9 @@ class AgentTools(
         @LLMDescription("The name of the repository you are looking for")
         repo_name: String
     ): String {
-        val repo = repositories.firstOrNull { it.name.equals(repo_name.trim(), ignoreCase = true) }
-            ?: return "{\"error\":\"Repository not found in the loaded list\"}"
-        return "{\"repository\":${repoJson(repo)}}"
+        return repositories.firstOrNull { it.name.equals(repo_name.trim(), ignoreCase = true) }?.let { repo ->
+            "{\"repository\":${repoJson(repo)}}"
+        } ?: "{\"error\":\"Repository with name $repo_name not found in the loaded list\"}"
     }
 
     @Tool
@@ -39,9 +39,9 @@ class AgentTools(
         @LLMDescription("The id of the repository you are looking for")
         repo_id: String
     ): String {
-        val repo = repositories.firstOrNull { it.id.equals(repo_id.trim(), ignoreCase = true) }
-            ?: return "{\"error\":\"Repository not found in the loaded list\"}"
-        return "{\"repository\":${repoJson(repo)}}"
+        return getRepoById(repo_id)?.let { repo ->
+            "{\"repository\":${repoJson(repo)}}"
+        } ?: noRepoFound(repo_id)
     }
 
     @Tool
@@ -50,11 +50,18 @@ class AgentTools(
         @LLMDescription("The id of the repository you have to point, to select, or to show")
         repo_id: String
     ): String {
-        return repositories.firstOrNull { it.id.equals(repo_id.trim(), ignoreCase = true) }?.let { repo ->
+        return getRepoById(repo_id)?.let { repo ->
             onUiCommand(AgentUiCommand.PointToRepo(repo.id))
             "Repository with id:$repo_id pointed with success"
-        } ?: "{\"error\":\"Repository with id:$repo_id not found\"}"
+        } ?: noRepoFound(repo_id)
     }
+
+    private fun getRepoById(repoId: String): GitHubRepo? =
+        repositories.firstOrNull { repo ->
+            repo.id.equals(repoId.trim(), ignoreCase = true)
+        }
+
+    private fun noRepoFound(repo_id: String) = "{\"error\":\"Repository with id:$repo_id not found in the loaded list\"}"
 
     private val repoAdapter by lazy {
         Moshi.Builder()
