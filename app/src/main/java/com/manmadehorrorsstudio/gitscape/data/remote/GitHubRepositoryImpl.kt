@@ -10,17 +10,16 @@ class GitHubRepositoryImpl(
     private val api: GitHubApis
 ) : GitHubRepository {
 
-    override suspend fun getGitHubRepolist(): List<GitHubRepo> = runCatching {
+    override suspend fun getGitHubRepolist(): List<GitHubRepo> = run {
         api.getRepositories()
             .filter { it.isValid() }
             .map { it.mapToDomain() }
-            .sortedByDescending { it.name.length }
-    }.getOrThrow()
+    }
 
-    override suspend fun getGitHubUser(): GitHubUser = runCatching {
+    override suspend fun getGitHubUser(): GitHubUser = run {
         val result = api.getUser()
         if (!result.isValid())
             throw Exception("Invalid user")
         result.mapToDomain()
-    }.getOrThrow()
+    }
 }
