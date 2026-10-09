@@ -14,6 +14,7 @@ class GitHubRepositoryImpl(
     override suspend fun getGitHubRepolist(): List<GitHubRepo> = run {
         api.getRepositories()
             .filter { it.isValid() }
+            .sortedByDescending{ it.id }
             .map { it.mapToDomain() }
     }
 

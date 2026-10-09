@@ -14,4 +14,9 @@ interface SettingsRepository {
 
     fun getRepoListEnabled(): StateFlow<Boolean>
     suspend fun saveRepoListEnabled(isEnabled: Boolean)
+
+    suspend fun getRepoListHash(): String?
+    suspend fun saveRepoListHash(hash: String?)
+
+    suspend fun clearRepoList()
 }

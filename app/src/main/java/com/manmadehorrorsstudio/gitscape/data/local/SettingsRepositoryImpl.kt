@@ -48,8 +48,27 @@ class SettingsRepositoryImpl  @Inject constructor(
     override suspend fun saveRepoListEnabled(isEnabled: Boolean) {
         dao.observeSettings().firstOrNull()?.let { currentSettings ->
             dao.saveSettings(
-                currentSettings.copy(repoListEnabled = isEnabled)
+                if (isEnabled)
+                    currentSettings.copy(repoListEnabled = true)
+                else
+                    currentSettings.copy(repoListEnabled = false, repoListHash = null)
             )
         }
+    }
+
+     override suspend fun getRepoListHash(): String? {
+         return dao.getSettings().repoListHash
+    }
+
+    override suspend fun saveRepoListHash(hash: String?) {
+        dao.observeSettings().firstOrNull()?.let { currentSettings ->
+            dao.saveSettings(
+                currentSettings.copy(repoListHash = hash)
+            )
+        }
+    }
+
+    override suspend fun clearRepoList() {
+        saveRepoListHash(null)
     }
 }
