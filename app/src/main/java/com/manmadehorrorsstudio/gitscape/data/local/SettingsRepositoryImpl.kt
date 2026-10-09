@@ -40,4 +40,15 @@ class SettingsRepositoryImpl  @Inject constructor(
             currentSettings?.copy(language = language.locale.language) ?: SettingsEntity(language = language.locale.language)
         )
     }
+
+    override suspend fun getRepoListSave(): Boolean {
+        return dao.getSettings().repoListSave
+    }
+
+    override suspend fun saveRepoListSave(toSave: Boolean) {
+        val currentSettings = dao.observeSettings().firstOrNull()
+        dao.saveSettings(
+            currentSettings?.copy(repoListSave = toSave) ?: SettingsEntity(repoListSave = toSave)
+        )
+    }
 }

@@ -8,9 +8,16 @@ import com.manmadehorrorsstudio.gitscape.SETTINGS_TABLE_NAME
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface SettingsDao { //data local
+interface SettingsDao {
     @Query("SELECT * FROM $SETTINGS_TABLE_NAME WHERE id = 0")
     fun observeSettings(): Flow<SettingsEntity?>
+
+    @Query("""
+        SELECT *
+        FROM $SETTINGS_TABLE_NAME
+        WHERE id = 0
+    """)
+    suspend fun getSettings(): SettingsEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveSettings(settings: SettingsEntity)
