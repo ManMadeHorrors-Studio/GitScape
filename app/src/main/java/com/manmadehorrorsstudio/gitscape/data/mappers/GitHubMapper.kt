@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.data.mappers
 
+import com.manmadehorrorsstudio.gitscape.data.local.GitHubRepoEntity
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubReadMeDTO
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubRepoDTO
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubUserDTO
@@ -35,4 +36,26 @@ fun GitHubReadMeDTO.mapToDomain(repoId: String): GitHubReadMe {
         content = content.orEmpty()
     )
 }
+
+fun GitHubRepoEntity.mapToDomain(): GitHubRepo =
+    GitHubRepo(
+        id = id,
+        name = name,
+        description = description,
+        primaryLanguage = primaryLanguage,
+        stars = stars,
+        htmlUrl = htmlUrl,
+        ownerLogin = ownerLogin
+    )
+
+fun GitHubRepo.mapToEntity(): GitHubRepoEntity =
+    GitHubRepoEntity(
+        id = id,
+        name = name,
+        description = description,
+        primaryLanguage = primaryLanguage,
+        stars = stars,
+        htmlUrl = htmlUrl,
+        ownerLogin = ownerLogin
+    )
 
