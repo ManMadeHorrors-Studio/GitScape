@@ -68,7 +68,7 @@ class AgentViewModel @Inject constructor(
                             when (command) {
                                 is AgentUiCommand.PointToRepo -> {
                                     gitScapeLog("gridState tool viewModel: $command.repoId")
-                                    _agentEvents.trySend(UIEvents.PontToRepo(command.repoId))
+                                    _agentEvents.trySend(UIEvents.PointToRepo(command.repoId))
                                 }
                             }
                         }

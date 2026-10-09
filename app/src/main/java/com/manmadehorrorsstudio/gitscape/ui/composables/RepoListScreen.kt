@@ -47,7 +47,7 @@ fun RepoListScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val errorMessage = remember { mutableStateOf<String?>(null) }
+    val errorAlert = remember { mutableStateOf<Pair<Int?, (() -> Unit)?>?>(null) }
 
     val pointToRepoInGrid = remember { mutableStateOf<Int?>(null) }
 
@@ -75,7 +75,7 @@ fun RepoListScreen(
     RepoListScreenInternal(
         repoListState = repoListState,
         userState = userState,
-        errorMessage = errorMessage,
+        errorAlert = errorAlert,
         innerPadding = innerPadding,
         pointToRepoInGrid = pointToRepoInGrid,
         onAIClick = { showAgent = true },
@@ -91,9 +91,9 @@ fun RepoListScreen(
             ).collect { event ->
                 when (event) {
                     is UIEvents.ShowError -> {
-                        errorMessage.value = event.message
+                        errorAlert.value = Pair(event.message, event.onAlertConfirm)
                     }
-                    is UIEvents.PontToRepo -> { event.id
+                    is UIEvents.PointToRepo -> { event.id
                         val index = repoListViewModel.repoListstate.value.repositories
                             .indexOfFirst { repo -> repo.id == event.id }
 
@@ -112,7 +112,7 @@ fun RepoListScreen(
 private fun RepoListScreenInternal(
     repoListState: RepoListState,
     userState: GitHubUser?,
-    errorMessage: MutableState<String?>,
+    errorAlert: MutableState<Pair<Int?, (() -> Unit)?>?>,
     innerPadding: PaddingValues,
     pointToRepoInGrid: MutableState<Int?>,
     onAIClick: () -> Unit,
@@ -187,7 +187,7 @@ private fun RepoListScreenInternal(
             }
 
             AlertMessage(
-                alertMessage = errorMessage
+                errorAlert = errorAlert
             )
         }
     }
