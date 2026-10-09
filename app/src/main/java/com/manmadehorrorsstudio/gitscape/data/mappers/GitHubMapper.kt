@@ -24,7 +24,8 @@ fun GitHubUserDTO.mapToDomain(): GitHubUser {
     return GitHubUser(
         id = id.orEmpty(), //id can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
         userName = name.orEmpty(), //name can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
-        avatarUrl = avatarUrl
+        avatarUrl = avatarUrl,
+        homePageUrl = htmlUrl
     )
 }
 
@@ -34,5 +35,4 @@ fun GitHubReadMeDTO.mapToDomain(repoId: String): GitHubReadMe {
         content = content.orEmpty()
     )
 }
-
 
