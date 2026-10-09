@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
+import com.manmadehorrorsstudio.gitscape.domain.models.calculateHash
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
@@ -45,6 +46,7 @@ class RepoListViewModel @Inject constructor(
     }
 
     fun refreshRepoListScreen() {
+        upDateRepoList(emptyList())
         startLoading()
         viewModelScope.launch {
             val userDeferred = if (_userState.value == null)
@@ -58,12 +60,21 @@ class RepoListViewModel @Inject constructor(
     }
 
     private suspend fun loadRepositories() {
+        val hashFromLocal = settingsRepository.getRepoListHash()
         runCatching { getGitHubRepoListUseCase() }
             .onSuccess { repositories ->
                 gitScapeLog("loadRepositories result: $repositories")
                 upDateRepoList(repositories)
-                if (settingsRepository.getRepoListEnabled().value)
-                    localGitHubRepository.saveGitHubRepositories(repositories)
+
+                if (settingsRepository.getRepoListEnabled().value) {
+                    val hashFromRemote = repositories.calculateHash()
+                    if (hashFromLocal != hashFromRemote) {
+                        gitScapeLog("LoadRepositories hashFromLocal and hashFromRemote are different")
+                        localGitHubRepository.saveGitHubRepositories(repositories)
+                        settingsRepository.saveRepoListHash(hashFromRemote)
+                    } else
+                        gitScapeLog("LoadRepositories hashFromLocal and hashFromRemote are the same")
+                }
             }
             .onFailure { exception ->
                 gitScapeLog("LoadRepositories error", exception as? Exception)
@@ -73,17 +84,22 @@ class RepoListViewModel @Inject constructor(
                     )
                 }
 
-                _repoListEvents.send(
-            if (settingsRepository.getRepoListEnabled().value)
+                val errorToShow = when {
+                    settingsRepository.getRepoListEnabled().value && hashFromLocal != null ->
                         UIEvents.ShowError(
                             message = R.string.REPOLISTVIEW_ERRORS_REPOS_YES_LOAD_FROM_LOCAL,
                             onAlertConfirm = { updateRepoListFromLocal() }
                         )
-                    else
+                    settingsRepository.getRepoListEnabled().value && hashFromLocal == null ->
                         UIEvents.ShowError(
-                            message = R.string.REPOLISTVIEW_ERRORS_REPOS_NO_LOAD_FROM_LOCAL
+                            message = R.string.REPOLISTVIEW_ERRORS_REPOS_NO_SAVED_LOCAL
                         )
-                )
+                    else ->
+                        UIEvents.ShowError(
+                        message = R.string.REPOLISTVIEW_ERRORS_REPOS_NO_LOAD_FROM_LOCAL
+                    )
+                }
+                _repoListEvents.send(errorToShow)
             }
     }
 
@@ -106,7 +122,19 @@ class RepoListViewModel @Inject constructor(
     private fun updateRepoListFromLocal() {
         startLoading()
         viewModelScope.launch {
-            upDateRepoList(localGitHubRepository.getGitHubRepositories())
+            try {
+                upDateRepoList(localGitHubRepository.getGitHubRepositories())
+            } catch (e: Exception) {
+                upDateRepoList(emptyList())
+                gitScapeLog("updateRepoListFromLocal error", e)
+                localGitHubRepository.clearGitHubRepositories()
+                settingsRepository.clearRepoList()
+                _repoListEvents.send(
+                    UIEvents.ShowError(
+                        message = R.string.REPOLISTVIEW_ERRORS_REPOS_CORRUPTED_LOCAL
+                    )
+                )
+            }
         }
     }
 

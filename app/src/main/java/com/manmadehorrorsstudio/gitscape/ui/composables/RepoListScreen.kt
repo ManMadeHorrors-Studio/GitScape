@@ -144,7 +144,6 @@ private fun RepoListScreenInternal(
                 modifier = Modifier.height(SPACER_HEIGHT_SIZE)
             )
 
-
             RepoListToolbar(
                 onAIClick = onAIClick,
                 onRefreshClick = onRefreshClick,
@@ -186,6 +185,33 @@ private fun RepoListScreenInternal(
                 }
             }
 
+
+            /*
+
+
+ if(repoListState.isLoading) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularLoader()
+                    }
+            } else {
+                if (repoListState.repositories.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        EmptyListFiller()
+                    }
+                } else {
+                    RepoListGrid(
+                        gitHubRepos = repoListState.repositories,
+                        pointToRepoInGrid = pointToRepoInGrid
+                    )
+                }
+            }
+             */
             AlertMessage(
                 errorAlert = errorAlert
             )

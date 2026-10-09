@@ -4,6 +4,8 @@
     <string name="REPOLISTVIEW.EMPTY_LIST">Nessun repository trovato</string>
     <string name="REPOLISTVIEW.ERRORS.REPOS.NO_LOAD_FROM_LOCAL">Errore durante il caricamento dei repository.</string>
     <string name="REPOLISTVIEW.ERRORS.REPOS.YES_LOAD_FROM_LOCAL">Errore durante il caricamento dei repository da remoto.\nCaricare i repository presenti in locale?</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.NO_SAVED_LOCAL">Errore durante il caricamento dei repository da remoto.\nNessun repository presente in locale</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.CORRUPTED_LOCAL">Errore durante il caricamento dei repository da locale.\nI repository sono corrotti</string>
     <string name="SETTINGSVIEW.TITLE">Impostazioni</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Lingua</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Lingua selezionata</string>

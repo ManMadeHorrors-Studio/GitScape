@@ -7,6 +7,8 @@
     <string name="REPOLISTVIEW.EMPTY_LIST">No repository found</string>
     <string name="REPOLISTVIEW.ERRORS.REPOS.NO_LOAD_FROM_LOCAL">Error during repositories loading.</string>
     <string name="REPOLISTVIEW.ERRORS.REPOS.YES_LOAD_FROM_LOCAL">Error during repositories remote loading.\nLoad the local repositories?</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.NO_SAVED_LOCAL">Error during repositories remote loading.\nNo saved local repositories</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.CORRUPTED_LOCAL">Error during repositories local loading.\nThe local repositories are corrupted</string>
     <string name="SETTINGSVIEW.TITLE">Settings</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Language</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Selected language</string>
