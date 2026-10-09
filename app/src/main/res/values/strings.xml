@@ -5,7 +5,8 @@
     <string name="REPOLISTVIEW.BUTTON.SETTINGS.CONTENTDESCRIPTION">Settings</string>
     <string name="REPOLISTVIEW.BUTTON.REFRESH.CONTENTDESCRIPTION">Refresh</string>
     <string name="REPOLISTVIEW.EMPTY_LIST">No repository found</string>
-    <string name="REPOLISTVIEW.ERRORS.REPOS">Error during repositories loading</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.NO_LOAD_FROM_LOCAL">Error during repositories loading.</string>
+    <string name="REPOLISTVIEW.ERRORS.REPOS.YES_LOAD_FROM_LOCAL">Error during repositories remote loading.\nLoad the local repositories?</string>
     <string name="SETTINGSVIEW.TITLE">Settings</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Language</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Selected language</string>
@@ -15,6 +16,7 @@
     <string name="GENERIC.BACK">Back</string>
     <string name="GENERIC.ERROR.TITLE">Warning</string>
     <string name="GENERIC.ERROR.OK" translatable="false">OK</string>
+    <string name="GENERIC.ERROR.CANCEL" translatable="false">Cancel</string>
     <string name="SEARCH.CLEAR">Clear</string>
     <string name="SEARCH.VOICE">Ricerca vocale</string>
     <string name="SEARCH.HINT.GENERIC">Search…</string>
