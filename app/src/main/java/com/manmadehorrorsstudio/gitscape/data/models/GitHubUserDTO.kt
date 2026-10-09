@@ -21,5 +21,5 @@ data class GitHubUserDTO (
 )
 
 fun GitHubUserDTO.isValid(): Boolean {
-    return id != null && name != null
+    return id != null && login != null
 }

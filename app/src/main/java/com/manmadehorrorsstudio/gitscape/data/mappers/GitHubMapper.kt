@@ -24,7 +24,7 @@ fun GitHubRepoDTO.mapToDomain(): GitHubRepo {
 fun GitHubUserDTO.mapToDomain(): GitHubUser {
     return GitHubUser(
         id = id.orEmpty(), //id can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
-        userName = name.orEmpty(), //name can't be null because GitHubUser with null id are filtered out in getGitHubUserDTO.isValid
+        userName = name ?: login.orEmpty(), //login cannot be null because GitHubUser with null id or login are filtered out in getGitHubUserDTO.isValid
         avatarUrl = avatarUrl,
         homePageUrl = htmlUrl
     )
