@@ -5,8 +5,11 @@ import androidx.room.Room
 import com.manmadehorrorsstudio.gitscape.AppSettings
 import com.manmadehorrorsstudio.gitscape.GITSCAPE_DATABASE
 import com.manmadehorrorsstudio.gitscape.data.local.AppDatabase
+import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
+import com.manmadehorrorsstudio.gitscape.data.local.LocalGitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.Binds
 import dagger.Module
@@ -44,7 +47,14 @@ object DatabaseModule {
     fun provideSettingsDao(
         database: AppDatabase
     ): SettingsDao {
-        return database.settingsDao()
+        return database.getSettingsDao()
+    }
+
+    @Provides
+    fun provideGitHubDao(
+        database: AppDatabase
+    ): GitHubDao {
+        return database.getGitHubDao()
     }
 }
 
@@ -57,4 +67,15 @@ abstract class SettingsModule {
     abstract fun bindSettingsRepository(
         implementation: SettingsRepositoryImpl
     ): SettingsRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class LocalGitHubModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindLocalGitHubRepository(
+        implementation: LocalGitHubRepositoryImpl
+    ): LocalGitHubRepository
 }

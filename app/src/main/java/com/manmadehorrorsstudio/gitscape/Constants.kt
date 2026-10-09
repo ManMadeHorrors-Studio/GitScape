@@ -20,6 +20,7 @@ const val GITHUB_GET_README = "repos/{$GITHUB_OWNER}/{$GITHUB_REPO}/readme"
 
 const val GITSCAPE_DATABASE = "gitscape_database"
 const val SETTINGS_TABLE_NAME = "settings_table_name"
+const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table_name"
 
 //Navigation
 
