@@ -7,8 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,13 +52,12 @@ fun RepoCard(
     isFullyVisible: Boolean
 ) {
     val progress = remember { Animatable(0f) }
-    var firstTime by rememberSaveable() { mutableStateOf(true) }
+    var firstTime by rememberSaveable { mutableStateOf(true) }
 
     val context = LocalContext.current
 
     Card(
         modifier = Modifier
-            .fillMaxSize()
             .clickable {
                 openBrowser(gitHubRepo.htmlUrl, context)
             }
@@ -74,8 +74,7 @@ fun RepoCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+                .padding(10.dp)
         ) {
             Text(
                 text = gitHubRepo.name,
@@ -87,43 +86,47 @@ fun RepoCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
+            Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                gitHubRepo.primaryLanguage?.let { language ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    Icon(
+                        imageVector = Icons.Outlined.Star,
+                        contentDescription = null,
+                        tint = StrongAzure,
+                        modifier = Modifier.size(25.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(5.dp))
+
                     Text(
-                        text = language,
+                        text = gitHubRepo.stars.toString(),
                         color = StrongAzure,
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(1f)
+                        textAlign = TextAlign.End
                     )
                 }
 
                 Spacer(modifier = Modifier.width(5.dp))
 
-                Icon(
-                    imageVector = Icons.Outlined.Star,
-                    contentDescription = null,
-                    tint = StrongAzure,
-                    modifier = Modifier.size(25.dp)
-                )
-
-                Spacer(modifier = Modifier.width(5.dp))
-
-                Text(
-                    text = gitHubRepo.stars.toString(),
-                    color = StrongAzure,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
+                gitHubRepo.primaryLanguage?.let { language ->
+                    Text(
+                        text = language,
+                        color = StrongAzure,
+                        fontSize = 14.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.weight(1f),
+                        textAlign = TextAlign.End
+                    )
+                }
             }
         }
     }
