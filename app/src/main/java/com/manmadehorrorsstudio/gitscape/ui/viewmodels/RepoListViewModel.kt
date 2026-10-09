@@ -62,7 +62,7 @@ class RepoListViewModel @Inject constructor(
             .onSuccess { repositories ->
                 gitScapeLog("loadRepositories result: $repositories")
                 upDateRepoList(repositories)
-                if (settingsRepository.getRepoListSave())
+                if (settingsRepository.getRepoListEnabled().value)
                     localGitHubRepository.saveGitHubRepositories(repositories)
             }
             .onFailure { exception ->
@@ -74,7 +74,7 @@ class RepoListViewModel @Inject constructor(
                 }
 
                 _repoListEvents.send(
-            if (settingsRepository.getRepoListSave())
+            if (settingsRepository.getRepoListEnabled().value)
                         UIEvents.ShowError(
                             message = R.string.REPOLISTVIEW_ERRORS_REPOS_YES_LOAD_FROM_LOCAL,
                             onAlertConfirm = { updateRepoListFromLocal() }

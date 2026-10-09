@@ -12,6 +12,6 @@ interface SettingsRepository {
     fun getLanguage(): StateFlow<AppLanguage>
     suspend fun saveLanguage(language: AppLanguage)
 
-    suspend fun getRepoListSave(): Boolean
-    suspend fun saveRepoListSave(toSave: Boolean)
+    fun getRepoListEnabled(): StateFlow<Boolean>
+    suspend fun saveRepoListEnabled(isEnabled: Boolean)
 }

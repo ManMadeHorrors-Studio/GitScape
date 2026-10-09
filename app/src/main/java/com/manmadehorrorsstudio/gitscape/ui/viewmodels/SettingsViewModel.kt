@@ -20,4 +20,12 @@ class SettingsViewModel  @Inject constructor(
             settingsRepository.saveLanguage(language)
         }
     }
+
+    fun getRepoListEnabledState() = settingsRepository.getRepoListEnabled()
+
+    fun changeRepoListEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveRepoListEnabled(isEnabled)
+        }
+    }
 }

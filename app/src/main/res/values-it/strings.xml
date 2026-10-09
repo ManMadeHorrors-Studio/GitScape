@@ -7,6 +7,7 @@
     <string name="SETTINGSVIEW.TITLE">Impostazioni</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Lingua</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Lingua selezionata</string>
+    <string name="SETTINGSVIEW.REPOLIST.ENABLED">Repository locali</string>
     <string name="SETTINGSVIEW.VERSION">Versione</string>
     <string name="GENERIC.BACK">Indietro</string>
     <string name="GENERIC.ERROR.TITLE">Attenzione</string>

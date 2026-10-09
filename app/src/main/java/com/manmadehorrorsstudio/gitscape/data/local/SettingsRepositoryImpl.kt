@@ -28,6 +28,7 @@ class SettingsRepositoryImpl  @Inject constructor(
             .onEach { settings ->
                 settings?.let { sett ->
                     appSettings.setLanguageState(fromLanguageCode(sett.language))
+                    appSettings.setRepoListEnabledState(sett.repoListEnabled)
                 }
             }
 
@@ -35,20 +36,20 @@ class SettingsRepositoryImpl  @Inject constructor(
 
     override suspend fun saveLanguage(language: AppLanguage) {
         gitScapeLog("Language ${language.name} selected")
-        val currentSettings = dao.observeSettings().firstOrNull()
-        dao.saveSettings(
-            currentSettings?.copy(language = language.locale.language) ?: SettingsEntity(language = language.locale.language)
-        )
+        dao.observeSettings().firstOrNull()?.let { currentSettings ->
+            dao.saveSettings(
+                currentSettings.copy(language = language.locale.language)
+            )
+        }
     }
 
-    override suspend fun getRepoListSave(): Boolean {
-        return dao.getSettings().repoListSave
-    }
+    override fun getRepoListEnabled(): StateFlow<Boolean> = appSettings.repoListEnabled
 
-    override suspend fun saveRepoListSave(toSave: Boolean) {
-        val currentSettings = dao.observeSettings().firstOrNull()
-        dao.saveSettings(
-            currentSettings?.copy(repoListSave = toSave) ?: SettingsEntity(repoListSave = toSave)
-        )
+    override suspend fun saveRepoListEnabled(isEnabled: Boolean) {
+        dao.observeSettings().firstOrNull()?.let { currentSettings ->
+            dao.saveSettings(
+                currentSettings.copy(repoListEnabled = isEnabled)
+            )
+        }
     }
 }

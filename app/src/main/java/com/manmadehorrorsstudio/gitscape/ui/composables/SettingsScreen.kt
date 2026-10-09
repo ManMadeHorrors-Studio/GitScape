@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -49,6 +50,7 @@ fun SettingsScreen(
     onBackClick: () -> Unit
 ) {
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
+    val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -56,10 +58,15 @@ fun SettingsScreen(
         languageLabel = localizedString(R.string.SETTINGSVIEW_LIST_LANGUAGE),
         languageContentDescription = localizedString(R.string.SETTINGSVIEW_LIST_LANGUAGE_CONTENTDESCRIPTION),
         currentLanguage = currentLanguage,
+        currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
+        currentRepoListEnabled = currentRepoListEnabled,
         versionString = getVersionString(),
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
             settingsViewModel.changeLanguage(language)
+        },
+        onRepoListEnabledSelected = { isEnabled ->
+            settingsViewModel.changeRepoListEnabled(isEnabled)
         }
     )
 }
@@ -71,9 +78,12 @@ private fun SettingsScreenContent(
     languageLabel: String,
     languageContentDescription: String,
     currentLanguage: AppLanguage,
+    currentRepoListEnabledLabel: String,
+    currentRepoListEnabled: Boolean,
     versionString: String,
     onBackClick: () -> Unit,
-    onLanguageSelected: (AppLanguage) -> Unit
+    onLanguageSelected: (AppLanguage) -> Unit,
+    onRepoListEnabledSelected: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -115,33 +125,66 @@ private fun SettingsScreenContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        ExpandableSelector(
-            currentItem = currentLanguage,
-            items = AppLanguage.entries,
-            label = languageLabel,
-            contentDescription = languageContentDescription,
-            itemText = { language ->
-                localizedString(language.description)
-            },
-            itemImage = { language ->
-                language.flag
-            },
-            onItemSelected = { language ->
-                onLanguageSelected(language)
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Text(
-            text = versionString,
-            color = StrongAzure,
-            fontSize = 14.sp,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            textAlign = TextAlign.Center
-        )
+                .padding(horizontal = 30.dp)
+        ) {
+            ExpandableSelector(
+                currentItem = currentLanguage,
+                items = AppLanguage.entries,
+                label = languageLabel,
+                contentDescription = languageContentDescription,
+                itemText = { language ->
+                    localizedString(language.description)
+                },
+                itemImage = { language ->
+                    language.flag
+                },
+                onItemSelected = { language ->
+                    onLanguageSelected(language)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onRepoListEnabledSelected(!currentRepoListEnabled)
+                    }
+            ) {
+
+                Text(
+                    text = currentRepoListEnabledLabel,
+                    color = LightAzure,
+                    fontSize = 18.sp,
+                    modifier = Modifier,
+                    textAlign = TextAlign.Start
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Switch(
+                    checked = currentRepoListEnabled,
+                    onCheckedChange = null
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = versionString,
+                color = StrongAzure,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -153,15 +196,13 @@ private fun <T> ExpandableSelector(
     contentDescription: String,
     itemText: @Composable (T) -> String,
     itemImage: (T) -> Int,
-    onItemSelected: (T) -> Unit,
-    modifier: Modifier = Modifier
+    onItemSelected: (T) -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 30.dp)
     ) {
 
         Row(
@@ -227,8 +268,11 @@ private fun SettingsScreenPreview() {
         languageLabel = "Language",
         languageContentDescription = "Select Language",
         currentLanguage = AppLanguage.EN,
+        currentRepoListEnabledLabel = "Local Repositories",
+        currentRepoListEnabled = true,
         versionString = "Version Debug 666 (6.6.6)",
         onBackClick = {},
-        onLanguageSelected = {}
+        onLanguageSelected = {},
+        onRepoListEnabledSelected = {},
     )
 }
