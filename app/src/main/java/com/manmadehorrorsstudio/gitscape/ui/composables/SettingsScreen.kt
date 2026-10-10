@@ -1,6 +1,7 @@
 package com.manmadehorrorsstudio.gitscape.ui.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,7 +31,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,11 +43,9 @@ import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
-import com.manmadehorrorsstudio.gitscape.ui.theme.DisabledAzure
-import com.manmadehorrorsstudio.gitscape.ui.theme.LightAzure
-import com.manmadehorrorsstudio.gitscape.ui.theme.StrongAzure
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
+import com.manmadehorrorsstudio.gitscape.ui.theme.GrayBackground
 
 @Composable
 fun SettingsScreen(
@@ -58,8 +56,6 @@ fun SettingsScreen(
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
     val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
 
-    val colors = MaterialTheme.colorScheme
-
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
         innerPadding = innerPadding,
@@ -69,9 +65,6 @@ fun SettingsScreen(
         currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
         currentRepoListEnabled = currentRepoListEnabled,
         versionString = getVersionString(),
-        primaryColor = colors.primary,
-        secondaryColor = colors.secondary,
-        disabledColor = colors.tertiary,
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
             settingsViewModel.changeLanguage(language)
@@ -92,19 +85,18 @@ private fun SettingsScreenContent(
     currentRepoListEnabledLabel: String,
     currentRepoListEnabled: Boolean,
     versionString: String,
-    primaryColor: Color,
-    secondaryColor: Color,
-    disabledColor: Color,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit
 ) {
+    val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
+            .background(GrayBackground)
     ) {
         Box(
             modifier = Modifier
@@ -120,7 +112,7 @@ private fun SettingsScreenContent(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = localizedString(R.string.GENERIC_BACK),
-                    tint = primaryColor,
+                    tint = colors.primary,
                     modifier = Modifier
                         .size(NAVIGATION_ICONS_SIZE)
                 )
@@ -136,7 +128,7 @@ private fun SettingsScreenContent(
         Spacer(modifier = Modifier.height(15.dp))
 
         HorizontalDivider(
-            color = primaryColor
+            color = colors.primary
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -151,9 +143,6 @@ private fun SettingsScreenContent(
                 items = AppLanguage.entries,
                 label = languageLabel,
                 contentDescription = languageContentDescription,
-                primaryColor = primaryColor,
-                secondaryColor = secondaryColor,
-                disabledColor = disabledColor,
                 itemText = { language ->
                     localizedString(language.description)
                 },
@@ -178,7 +167,7 @@ private fun SettingsScreenContent(
 
                 Text(
                     text = currentRepoListEnabledLabel,
-                    color = primaryColor,
+                    color = colors.primary,
                     style = types.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -198,7 +187,7 @@ private fun SettingsScreenContent(
 
             Text(
                 text = versionString,
-                color = primaryColor,
+                color = colors.primary,
                 style = types.bodySmall,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -215,14 +204,12 @@ private fun <T> ExpandableSelector(
     items: List<T>,
     label: String,
     contentDescription: String,
-    primaryColor: Color,
-    secondaryColor: Color,
-    disabledColor: Color,
     itemText: @Composable (T) -> String,
     itemImage: (T) -> Int,
     onItemSelected: (T) -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val colors = MaterialTheme.colorScheme
 
     Column(
         modifier = Modifier
@@ -241,7 +228,7 @@ private fun <T> ExpandableSelector(
 
             Text(
                 text = label,
-                color = primaryColor,
+                color = colors.primary,
                 style = MaterialTheme.typography.titleMedium
             )
 
@@ -262,8 +249,6 @@ private fun <T> ExpandableSelector(
                         text = itemText(item),
                         image = itemImage(item),
                         selected = currentItem == item,
-                        secondaryColor = secondaryColor,
-                        disabledColor = disabledColor
                     ) {
                         onItemSelected(item)
                         expanded = false
@@ -298,9 +283,6 @@ private fun SettingsScreenPreview() {
             currentRepoListEnabledLabel = "Local Repositories",
             currentRepoListEnabled = true,
             versionString = "Version Debug 666 (6.6.6)",
-            primaryColor = StrongAzure,
-            secondaryColor = LightAzure,
-            disabledColor = DisabledAzure,
             onBackClick = {},
             onLanguageSelected = {},
             onRepoListEnabledSelected = {},

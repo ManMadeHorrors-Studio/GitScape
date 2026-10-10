@@ -13,24 +13,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
+import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 
 @Composable
 fun SettingsItem(
     text: String,
     image: Int,
     selected: Boolean,
-    secondaryColor: Color,
-    disabledColor: Color,
     onClick: () -> Unit
 ) {
+    val colors = MaterialTheme.colorScheme
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,7 +40,7 @@ fun SettingsItem(
     ) {
         Text(
             text = text,
-            color = if(selected) secondaryColor else disabledColor,
+            color = if(selected) colors.secondary else colors.tertiary,
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Start
         )
@@ -62,12 +61,12 @@ fun SettingsItem(
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 fun SettingsItemPreview() {
-    SettingsItem(
-        text = "Impostazioni",
-        image = R.drawable.language_ita_logo,
-        selected = true,
-        secondaryColor = LightAzure,
-        disabledColor = DisabledAzure,
-        onClick = {}
-    )
+    GitScapeTheme {
+        SettingsItem(
+            text = "Impostazioni",
+            image = R.drawable.language_ita_logo,
+            selected = true,
+            onClick = {}
+        )
+    }
 }
