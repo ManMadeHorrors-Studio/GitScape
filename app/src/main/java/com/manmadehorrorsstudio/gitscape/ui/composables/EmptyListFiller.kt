@@ -13,10 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 
@@ -42,8 +40,7 @@ fun EmptyListFiller() {
 
         Text(
             text = localizedString(R.string.REPOLISTVIEW_EMPTY_LIST),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.bodyLarge,
             color = colors.primary,
             textAlign = TextAlign.Center
         )

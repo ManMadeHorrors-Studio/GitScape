@@ -38,11 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.openBrowser
 
@@ -58,6 +56,7 @@ fun RepoCard(
     val context = LocalContext.current
 
     val colors = MaterialTheme.colorScheme
+    val types = MaterialTheme.typography
 
     Card(
         modifier = Modifier
@@ -83,8 +82,7 @@ fun RepoCard(
             Text(
                 text = gitHubRepo.name,
                 color = colors.primary,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+                style = types.titleMedium,
                 maxLines = 3,
                 minLines = 3,
                 overflow = TextOverflow.Ellipsis
@@ -111,8 +109,7 @@ fun RepoCard(
                     Text(
                         text = gitHubRepo.stars.toString(),
                         color = colors.secondary,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = types.bodyMedium,
                         textAlign = TextAlign.End
                     )
                 }
@@ -123,10 +120,9 @@ fun RepoCard(
                     Text(
                         text = language,
                         color = colors.secondary,
-                        fontSize = 14.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.Medium,
+                        style = types.bodySmall,
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.End
                     )

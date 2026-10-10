@@ -66,6 +66,7 @@ fun AgentChatSheet(
     val listState = rememberLazyListState()
 
     val colors = MaterialTheme.colorScheme
+    val types = MaterialTheme.typography
 
     Column(
         Modifier
@@ -116,32 +117,44 @@ fun AgentChatSheet(
                     .weight(1f, fill = false)
                     .fillMaxWidth()
             ) {
-                val messModifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        vertical = 5.dp
-                    )
                 items(agentState.messages) { message ->
                     if (message.role == Role.User)
                         Text(
                             text = "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}  ${message.toText()}",
                             color = colors.primary,
                             textAlign = TextAlign.End,
-                            modifier = messModifier
+                            style = types.labelLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = 20.dp,
+                                    bottom = 20.dp
+                                )
                         )
                     else
                         Text(
                             text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}  ${message.toText()}",
                             color = colors.secondary,
                             textAlign = TextAlign.Start,
-                            modifier = messModifier
+                            style = types.labelMedium,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    end = 20.dp,
+                                    bottom = 20.dp
+                                )
                         )
                 }
                 if (agentState.isLoading)
                     item {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = messModifier
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    top = 10.dp,
+                                    bottom = 20.dp
+                                )
                         ) {
                             CircularLoader(18)
 
@@ -152,6 +165,7 @@ fun AgentChatSheet(
                             Text(
                                 localizedString(R.string.AGENTSHEET_THINKING),
                                 color = colors.primary,
+                                style = types.labelMedium,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -163,8 +177,10 @@ fun AgentChatSheet(
                     item {
                         Text(
                             err,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = messModifier
+                            color = colors.error,
+                            style = types.labelLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
                         )
                     }
                 }
@@ -199,7 +215,8 @@ fun AgentChatSheet(
                                 localizedString(R.string.AGENTSHEET_INPUT_HINT)
                             else
                                 "",
-                        color = colors.tertiary
+                        color = colors.tertiary,
+                        style = types.labelMedium
                     )
                 },
 

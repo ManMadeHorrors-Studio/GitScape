@@ -27,7 +27,7 @@ fun GitScapeTheme(
 
     MaterialTheme(
         colorScheme = getGitScapeColorScheme(colorSchemeType, context),
-        typography = Typography,
+        typography = GitScapeTypography,
         content = content
     )
 }

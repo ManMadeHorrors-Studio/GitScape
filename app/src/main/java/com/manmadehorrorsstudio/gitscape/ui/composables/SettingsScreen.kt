@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.NAVIGATION_ICONS_SIZE
 import com.manmadehorrorsstudio.gitscape.R
@@ -48,6 +47,7 @@ import com.manmadehorrorsstudio.gitscape.ui.theme.DisabledAzure
 import com.manmadehorrorsstudio.gitscape.ui.theme.LightAzure
 import com.manmadehorrorsstudio.gitscape.ui.theme.StrongAzure
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
+import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 
 @Composable
 fun SettingsScreen(
@@ -99,6 +99,8 @@ private fun SettingsScreenContent(
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit
 ) {
+    val types = MaterialTheme.typography
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -177,7 +179,7 @@ private fun SettingsScreenContent(
                 Text(
                     text = currentRepoListEnabledLabel,
                     color = primaryColor,
-                    fontSize = 18.sp,
+                    style = types.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     textAlign = TextAlign.Start,
@@ -197,7 +199,7 @@ private fun SettingsScreenContent(
             Text(
                 text = versionString,
                 color = primaryColor,
-                fontSize = 14.sp,
+                style = types.bodySmall,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 20.dp),
@@ -240,7 +242,7 @@ private fun <T> ExpandableSelector(
             Text(
                 text = label,
                 color = primaryColor,
-                fontSize = 18.sp
+                style = MaterialTheme.typography.titleMedium
             )
 
             Image(
@@ -286,20 +288,22 @@ private fun getVersionString(): String {
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    SettingsScreenContent(
-        title = "Settings",
-        innerPadding = PaddingValues(15.dp),
-        languageLabel = "Language",
-        languageContentDescription = "Select Language",
-        currentLanguage = AppLanguage.EN,
-        currentRepoListEnabledLabel = "Local Repositories",
-        currentRepoListEnabled = true,
-        versionString = "Version Debug 666 (6.6.6)",
-        primaryColor = StrongAzure,
-        secondaryColor = LightAzure,
-        disabledColor = DisabledAzure,
-        onBackClick = {},
-        onLanguageSelected = {},
-        onRepoListEnabledSelected = {},
-    )
+    GitScapeTheme {
+        SettingsScreenContent(
+            title = "Settings",
+            innerPadding = PaddingValues(15.dp),
+            languageLabel = "Language",
+            languageContentDescription = "Select Language",
+            currentLanguage = AppLanguage.EN,
+            currentRepoListEnabledLabel = "Local Repositories",
+            currentRepoListEnabled = true,
+            versionString = "Version Debug 666 (6.6.6)",
+            primaryColor = StrongAzure,
+            secondaryColor = LightAzure,
+            disabledColor = DisabledAzure,
+            onBackClick = {},
+            onLanguageSelected = {},
+            onRepoListEnabledSelected = {},
+        )
+    }
 }

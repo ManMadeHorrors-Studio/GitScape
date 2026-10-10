@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +18,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.ui.theme.*
@@ -42,7 +42,7 @@ fun SettingsItem(
         Text(
             text = text,
             color = if(selected) secondaryColor else disabledColor,
-            fontSize = 16.sp,
+            style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Start
         )
 
