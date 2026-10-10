@@ -49,7 +49,8 @@ import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
 
 @Composable
 fun AgentChatSheet(
-    agentViewModel: AgentViewModel
+    agentViewModel: AgentViewModel,
+    modifier: Modifier
 ) {
     val agentState by agentViewModel.agentState.collectAsStateWithLifecycle()
     var currentInput by remember { mutableStateOf("") }
@@ -69,7 +70,7 @@ fun AgentChatSheet(
     val types = MaterialTheme.typography
 
     Column(
-        Modifier
+        modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .background(

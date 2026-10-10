@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -22,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -57,10 +59,12 @@ fun RepoListScreen(
     val agentViewModel: AgentViewModel = hiltViewModel()
 
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true // Evita che il foglio si fermi a metà schermo
+        skipPartiallyExpanded = true
     )
 
     val colors = MaterialTheme.colorScheme
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     if (showAgent) {
         agentViewModel.setRepositories(repoListState.repositories)
@@ -71,7 +75,11 @@ fun RepoListScreen(
             modifier = Modifier
                 .padding(horizontal = 15.dp)
         ) {
-            AgentChatSheet(agentViewModel)
+            AgentChatSheet(
+                agentViewModel,
+                modifier = Modifier
+                    .heightIn(max = screenHeight * 0.7f)
+            )
         }
     }
 
