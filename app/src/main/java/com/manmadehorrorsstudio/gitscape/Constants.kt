@@ -37,6 +37,8 @@ val NAVIGATION_ICONS_SIZE = 30.dp
 
 val SPACER_HEIGHT_SIZE = 20.dp
 
+const val DYNAMIC_COLOR = true
+
 //AI
 
 val LLM_MODEL = GoogleModels.Gemini3_7Flash
