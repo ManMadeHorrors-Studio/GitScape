@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -30,7 +32,6 @@ import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.ui.models.RepoListState
 import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.RepoListViewModel
 import kotlinx.coroutines.flow.merge
@@ -59,10 +60,12 @@ fun RepoListScreen(
         skipPartiallyExpanded = true // Evita che il foglio si fermi a metà schermo
     )
 
+    val colors = MaterialTheme.colorScheme
+
     if (showAgent) {
         agentViewModel.setRepositories(repoListState.repositories)
         ModalBottomSheet(
-            containerColor = StrongAzure,
+            containerColor = colors.primary,
             onDismissRequest = { showAgent = false },
             sheetState = sheetState,
             modifier = Modifier
@@ -77,6 +80,7 @@ fun RepoListScreen(
         userState = userState,
         errorAlert = errorAlert,
         innerPadding = innerPadding,
+        dividerColor = colors.primary,
         pointToRepoInGrid = pointToRepoInGrid,
         onAIClick = { showAgent = true },
         onSettingsClick = onSettingsClick,
@@ -114,6 +118,7 @@ private fun RepoListScreenInternal(
     userState: GitHubUser?,
     errorAlert: MutableState<Pair<Int?, (() -> Unit)?>?>,
     innerPadding: PaddingValues,
+    dividerColor: Color,
     pointToRepoInGrid: MutableState<Int?>,
     onAIClick: () -> Unit,
     onSettingsClick: () -> Unit,
@@ -137,7 +142,7 @@ private fun RepoListScreenInternal(
             )
 
             HorizontalDivider(
-                color = StrongAzure
+                color = dividerColor
             )
 
             Spacer(
@@ -155,7 +160,7 @@ private fun RepoListScreenInternal(
             )
 
             HorizontalDivider(
-                color = StrongAzure
+                color = dividerColor
             )
 
             when {
@@ -185,33 +190,6 @@ private fun RepoListScreenInternal(
                 }
             }
 
-
-            /*
-
-
- if(repoListState.isLoading) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularLoader()
-                    }
-            } else {
-                if (repoListState.repositories.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        EmptyListFiller()
-                    }
-                } else {
-                    RepoListGrid(
-                        gitHubRepos = repoListState.repositories,
-                        pointToRepoInGrid = pointToRepoInGrid
-                    )
-                }
-            }
-             */
             AlertMessage(
                 errorAlert = errorAlert
             )

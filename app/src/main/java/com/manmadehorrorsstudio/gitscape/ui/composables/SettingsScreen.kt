@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -42,7 +44,9 @@ import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
+import com.manmadehorrorsstudio.gitscape.ui.theme.DisabledAzure
+import com.manmadehorrorsstudio.gitscape.ui.theme.LightAzure
+import com.manmadehorrorsstudio.gitscape.ui.theme.StrongAzure
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 
 @Composable
@@ -54,6 +58,8 @@ fun SettingsScreen(
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
     val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
 
+    val colors = MaterialTheme.colorScheme
+
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
         innerPadding = innerPadding,
@@ -63,6 +69,9 @@ fun SettingsScreen(
         currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
         currentRepoListEnabled = currentRepoListEnabled,
         versionString = getVersionString(),
+        primaryColor = colors.primary,
+        secondaryColor = colors.secondary,
+        disabledColor = colors.tertiary,
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
             settingsViewModel.changeLanguage(language)
@@ -83,6 +92,9 @@ private fun SettingsScreenContent(
     currentRepoListEnabledLabel: String,
     currentRepoListEnabled: Boolean,
     versionString: String,
+    primaryColor: Color,
+    secondaryColor: Color,
+    disabledColor: Color,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit
@@ -106,7 +118,7 @@ private fun SettingsScreenContent(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = localizedString(R.string.GENERIC_BACK),
-                    tint = StrongAzure,
+                    tint = primaryColor,
                     modifier = Modifier
                         .size(NAVIGATION_ICONS_SIZE)
                 )
@@ -122,7 +134,7 @@ private fun SettingsScreenContent(
         Spacer(modifier = Modifier.height(15.dp))
 
         HorizontalDivider(
-            color = StrongAzure
+            color = primaryColor
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -137,6 +149,9 @@ private fun SettingsScreenContent(
                 items = AppLanguage.entries,
                 label = languageLabel,
                 contentDescription = languageContentDescription,
+                primaryColor = primaryColor,
+                secondaryColor = secondaryColor,
+                disabledColor = disabledColor,
                 itemText = { language ->
                     localizedString(language.description)
                 },
@@ -161,7 +176,7 @@ private fun SettingsScreenContent(
 
                 Text(
                     text = currentRepoListEnabledLabel,
-                    color = LightAzure,
+                    color = primaryColor,
                     fontSize = 18.sp,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -181,7 +196,7 @@ private fun SettingsScreenContent(
 
             Text(
                 text = versionString,
-                color = StrongAzure,
+                color = primaryColor,
                 fontSize = 14.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -198,6 +213,9 @@ private fun <T> ExpandableSelector(
     items: List<T>,
     label: String,
     contentDescription: String,
+    primaryColor: Color,
+    secondaryColor: Color,
+    disabledColor: Color,
     itemText: @Composable (T) -> String,
     itemImage: (T) -> Int,
     onItemSelected: (T) -> Unit
@@ -221,7 +239,7 @@ private fun <T> ExpandableSelector(
 
             Text(
                 text = label,
-                color = LightAzure,
+                color = primaryColor,
                 fontSize = 18.sp
             )
 
@@ -241,7 +259,9 @@ private fun <T> ExpandableSelector(
                     SettingsItem(
                         text = itemText(item),
                         image = itemImage(item),
-                        selected = currentItem == item
+                        selected = currentItem == item,
+                        secondaryColor = secondaryColor,
+                        disabledColor = disabledColor
                     ) {
                         onItemSelected(item)
                         expanded = false
@@ -275,6 +295,9 @@ private fun SettingsScreenPreview() {
         currentRepoListEnabledLabel = "Local Repositories",
         currentRepoListEnabled = true,
         versionString = "Version Debug 666 (6.6.6)",
+        primaryColor = StrongAzure,
+        secondaryColor = LightAzure,
+        disabledColor = DisabledAzure,
         onBackClick = {},
         onLanguageSelected = {},
         onRepoListEnabledSelected = {},

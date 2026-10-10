@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,10 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
 
 @Composable
 fun EmptyListFiller() {
+    val colors = MaterialTheme.colorScheme
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -42,7 +44,7 @@ fun EmptyListFiller() {
             text = localizedString(R.string.REPOLISTVIEW_EMPTY_LIST),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            color = StrongAzure,
+            color = colors.primary,
             textAlign = TextAlign.Center
         )
     }

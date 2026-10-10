@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -46,7 +45,6 @@ import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.toText
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
 
 @Composable
@@ -67,12 +65,14 @@ fun AgentChatSheet(
 
     val listState = rememberLazyListState()
 
+    val colors = MaterialTheme.colorScheme
+
     Column(
         Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
             .background(
-                color = GrayBackground,
+                color = colors.onPrimary,
                 shape = RoundedCornerShape(
                     topStart = 24.dp,
                     topEnd = 24.dp)
@@ -103,7 +103,7 @@ fun AgentChatSheet(
                 Icon(
                     painter = painterResource(R.drawable.ai_icon),
                     contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION),
-                    tint = StrongAzure,
+                    tint = colors.primary,
                     modifier = Modifier.size(40.dp)
                 )
             }
@@ -125,14 +125,14 @@ fun AgentChatSheet(
                     if (message.role == Role.User)
                         Text(
                             text = "${localizedString(R.string.AGENTSHEET_CHAT_YOU)}  ${message.toText()}",
-                            color = StrongAzure,
+                            color = colors.primary,
                             textAlign = TextAlign.End,
                             modifier = messModifier
                         )
                     else
                         Text(
                             text = "${localizedString(R.string.AGENTSHEET_CHAT_AI)}  ${message.toText()}",
-                            color = LightAzure,
+                            color = colors.secondary,
                             textAlign = TextAlign.Start,
                             modifier = messModifier
                         )
@@ -143,10 +143,7 @@ fun AgentChatSheet(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = messModifier
                         ) {
-                            CircularProgressIndicator(
-                                color = StrongAzure,
-                                modifier = Modifier.size(18.dp)
-                            )
+                            CircularLoader(18)
 
                             Spacer(
                                 modifier = Modifier.width(10.dp)
@@ -154,7 +151,10 @@ fun AgentChatSheet(
 
                             Text(
                                 localizedString(R.string.AGENTSHEET_THINKING),
-                                color = StrongAzure
+                                color = colors.primary,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
                             )
                         }
                     }
@@ -185,7 +185,7 @@ fun AgentChatSheet(
                     .fillMaxWidth()
                     .border(
                         width = 2.dp,
-                        color = StrongAzure,
+                        color = colors.primary,
                         shape = textFieldShape
                     ),
 
@@ -199,24 +199,24 @@ fun AgentChatSheet(
                                 localizedString(R.string.AGENTSHEET_INPUT_HINT)
                             else
                                 "",
-                        color = Color.Gray
+                        color = colors.tertiary
                     )
                 },
 
                 singleLine = true,
 
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = CardBackground,
-                    unfocusedContainerColor = CardBackground,
+                    focusedContainerColor = colors.surfaceContainerHigh,
+                    unfocusedContainerColor = colors.surfaceContainerHigh,
 
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
 
-                    disabledContainerColor = DisabledAzure,
+                    disabledContainerColor = colors.surfaceContainerLow,
 
-                    cursorColor = StrongAzure,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
+                    cursorColor = colors.primary,
+                    focusedTextColor = colors.secondary,
+                    unfocusedTextColor = colors.secondary
                 ),
 
                 keyboardOptions = KeyboardOptions(
@@ -240,7 +240,7 @@ fun AgentChatSheet(
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = localizedString(R.string.SEARCH_CLEAR),
-                                    tint = LightAzure
+                                    tint = colors.primary
                                 )
                             }
                         } else
@@ -250,7 +250,7 @@ fun AgentChatSheet(
                                 Icon(
                                     painter = painterResource(R.drawable.mic_icon),
                                     contentDescription = localizedString(R.string.SEARCH_VOICE),
-                                    tint = LightAzure
+                                    tint = colors.primary
                                 )
                             }
                     }

@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,9 +27,10 @@ fun SettingsItem(
     text: String,
     image: Int,
     selected: Boolean,
-    onClick: () -> Unit = {}
+    secondaryColor: Color,
+    disabledColor: Color,
+    onClick: () -> Unit
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +41,7 @@ fun SettingsItem(
     ) {
         Text(
             text = text,
-            color = if(selected) LightAzure else DisabledAzure,
+            color = if(selected) secondaryColor else disabledColor,
             fontSize = 16.sp,
             textAlign = TextAlign.Start
         )
@@ -63,6 +65,9 @@ fun SettingsItemPreview() {
     SettingsItem(
         text = "Impostazioni",
         image = R.drawable.language_ita_logo,
-        selected = true
+        selected = true,
+        secondaryColor = LightAzure,
+        disabledColor = DisabledAzure,
+        onClick = {}
     )
 }

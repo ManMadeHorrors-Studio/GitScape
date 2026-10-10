@@ -17,7 +17,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.openBrowser
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
 
 
 @Composable
@@ -56,6 +57,8 @@ fun RepoCard(
 
     val context = LocalContext.current
 
+    val colors = MaterialTheme.colorScheme
+
     Card(
         modifier = Modifier
             .clickable {
@@ -64,12 +67,13 @@ fun RepoCard(
             .drawWithContent {
                 drawGlowBorder(
                     isFullyVisible = isFullyVisible,
-                    progressValue = progress.value
+                    progressValue = progress.value,
+                    colors = colors
                 )
             },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = CardBackground
+            containerColor = colors.surfaceVariant
         )
     ) {
         Column(
@@ -78,7 +82,7 @@ fun RepoCard(
         ) {
             Text(
                 text = gitHubRepo.name,
-                color = LightAzure,
+                color = colors.primary,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 3,
@@ -98,7 +102,7 @@ fun RepoCard(
                     Icon(
                         imageVector = Icons.Outlined.Star,
                         contentDescription = null,
-                        tint = StrongAzure,
+                        tint = colors.primary,
                         modifier = Modifier.size(25.dp)
                     )
 
@@ -106,7 +110,7 @@ fun RepoCard(
 
                     Text(
                         text = gitHubRepo.stars.toString(),
-                        color = StrongAzure,
+                        color = colors.secondary,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.End
@@ -118,7 +122,7 @@ fun RepoCard(
                 gitHubRepo.primaryLanguage?.let { language ->
                     Text(
                         text = language,
-                        color = StrongAzure,
+                        color = colors.secondary,
                         fontSize = 14.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
@@ -153,7 +157,8 @@ fun RepoCard(
 
 private fun ContentDrawScope.drawGlowBorder(
     isFullyVisible: Boolean,
-    progressValue: Float
+    progressValue: Float,
+    colors: ColorScheme
 ) {
     drawContent()
 
@@ -168,8 +173,8 @@ private fun ContentDrawScope.drawGlowBorder(
             brush = Brush.linearGradient(
                 colors = listOf(
                     Color.Transparent,
-                    StrongAzure,
-                    LightAzure,
+                    colors.primary,
+                    colors.secondary,
                     Color.Transparent
                 ),
                 start = Offset(x - glowWidth, 0f),

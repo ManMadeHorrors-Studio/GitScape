@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -33,10 +34,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             GitScapeTheme {
+                val colors = MaterialTheme.colorScheme
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize(),
-                    containerColor = GrayBackground
+                    containerColor = colors.background
                 ) { innerPadding ->
                     val layoutDirection = LocalLayoutDirection.current
                     val customPadding = PaddingValues(

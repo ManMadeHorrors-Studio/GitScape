@@ -1,6 +1,7 @@
 package com.manmadehorrorsstudio.gitscape
 
 import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import androidx.compose.ui.unit.dp
 
 //Remote
@@ -41,4 +42,4 @@ const val DYNAMIC_COLOR = true
 
 //AI
 
-val LLM_MODEL = GoogleModels.Gemini3_7Flash
+val LLM_MODEL = OpenAIModels.Chat.GPT4_1Mini
