@@ -1,29 +1,20 @@
 package com.manmadehorrorsstudio.gitscape.ui.composables
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.R
-import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
-import com.manmadehorrorsstudio.gitscape.ui.theme.*
 
 
 @Composable
@@ -32,8 +23,6 @@ fun RepoListToolbar(
     onRefreshClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
-    val shape = RoundedCornerShape(12.dp)
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,80 +30,31 @@ fun RepoListToolbar(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        IconButton(
+        ToolButton(
             onClick = onAIClick,
-            modifier = Modifier
-                .size(50.dp)
-                .background(
-                    color = CardBackground,
-                    shape = shape
-                )
-                .border(
-                    width = 2.dp,
-                    color = StrongAzure,
-                    shape = shape
-                )
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ai_icon),
-                contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION),
-                tint = StrongAzure,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+            contentDescription = R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION,
+            painter = R.drawable.ai_icon
+        )
 
         Spacer(
             modifier = Modifier.weight(1f)
         )
 
-
-        IconButton(
+        ToolButton(
             onClick = onRefreshClick,
-            modifier = Modifier
-                .size(50.dp)
-                .background(
-                    color = CardBackground,
-                    shape = shape
-                )
-                .border(
-                    width = 2.dp,
-                    color = StrongAzure,
-                    shape = shape
-                )
-        ) {
-            Icon(
-                imageVector = Icons.Default.Refresh,
-                contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_REFRESH_CONTENTDESCRIPTION),
-                tint = StrongAzure,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+            contentDescription = R.string.REPOLISTVIEW_BUTTON_REFRESH_CONTENTDESCRIPTION,
+            imageVector = Icons.Default.Refresh
+        )
 
         Spacer(
             modifier = Modifier.width(15.dp)
         )
 
-        IconButton(
+        ToolButton(
             onClick = onSettingsClick,
-            modifier = Modifier
-                .size(50.dp)
-                .background(
-                    color = CardBackground,
-                    shape = shape
-                )
-                .border(
-                    width = 2.dp,
-                    color = StrongAzure,
-                    shape = shape
-                )
-        ) {
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = localizedString(R.string.REPOLISTVIEW_BUTTON_SETTINGS_CONTENTDESCRIPTION),
-                tint = StrongAzure,
-                modifier = Modifier.size(24.dp)
-            )
-        }
+            contentDescription = R.string.REPOLISTVIEW_BUTTON_SETTINGS_CONTENTDESCRIPTION,
+            imageVector = Icons.Default.Settings
+        )
     }
 }
 
