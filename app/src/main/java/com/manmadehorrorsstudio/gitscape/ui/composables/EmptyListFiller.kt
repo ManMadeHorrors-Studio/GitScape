@@ -45,7 +45,7 @@ fun EmptyListFiller() {
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
                 colorFilter = ColorFilter.tint(
-                    MaterialTheme.colorScheme.primary
+                    colors.primary
                 )
             )
 
