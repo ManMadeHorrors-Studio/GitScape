@@ -251,26 +251,27 @@ fun AgentChatSheet(
 
                 trailingIcon = {
                     Row {
-                        if (currentInput.isNotBlank()) {
-                            IconButton(
-                                onClick = { currentInput = "" }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = localizedString(R.string.SEARCH_CLEAR),
-                                    tint = colors.primary
-                                )
-                            }
-                        } else
-                            IconButton(
-                                onClick = launchSpeech
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.mic_icon),
-                                    contentDescription = localizedString(R.string.SEARCH_VOICE),
-                                    tint = colors.primary
-                                )
-                            }
+                        if (!agentState.isLoading)
+                            if (currentInput.isNotBlank()) {
+                                IconButton(
+                                    onClick = { currentInput = "" }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = localizedString(R.string.SEARCH_CLEAR),
+                                        tint = colors.primary
+                                    )
+                                }
+                            } else
+                                IconButton(
+                                    onClick = launchSpeech
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.mic_icon),
+                                        contentDescription = localizedString(R.string.SEARCH_VOICE),
+                                        tint = colors.primary
+                                    )
+                                }
                     }
                 }
             )
