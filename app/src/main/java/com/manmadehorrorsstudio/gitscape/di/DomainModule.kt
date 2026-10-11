@@ -9,6 +9,7 @@ import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.data.ai.AgentRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
@@ -26,9 +27,13 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideGitHubRepository(
-        api: GitHubApis
+        api: GitHubApis,
+        readMeCache: GitHubReadMeCache
     ): GitHubRepository {
-        return GitHubRepositoryImpl(api)
+        return GitHubRepositoryImpl(
+            api,
+            readMeCache
+        )
     }
 }
 

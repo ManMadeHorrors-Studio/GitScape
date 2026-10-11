@@ -1,5 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
+import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
 import com.manmadehorrorsstudio.gitscape.data.mappers.mapToDomain
 import com.manmadehorrorsstudio.gitscape.data.models.isValid
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubReadMe
@@ -8,7 +9,8 @@ import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 
 class GitHubRepositoryImpl(
-    private val api: GitHubApis
+    private val api: GitHubApis,
+    private val readMeCache: GitHubReadMeCache
 ) : GitHubRepository {
 
     override suspend fun getGitHubRepolist(): List<GitHubRepo> = run {
@@ -25,12 +27,22 @@ class GitHubRepositoryImpl(
         result.mapToDomain()
     }
 
-    override suspend fun getGitHubReadMe(gitHubRepo: GitHubRepo): GitHubReadMe = run {
-        gitHubRepo.ownerLogin?.let { login ->
-            val result = api.getGitHubReadMe(login, gitHubRepo.name)
-            if (!result.isValid())
-                throw Exception("Invalid ReadMe")
-            result.mapToDomain(gitHubRepo.id)
-        } ?: throw Exception("Missing owner login")
+    override suspend fun getGitHubReadMe(
+        gitHubRepo: GitHubRepo
+    ): GitHubReadMe = run {
+        readMeCache.getOrLoad(gitHubRepo.id) {
+            gitHubRepo.ownerLogin?.let { login ->
+                val result = api.getGitHubReadMe(
+                    login,
+                    gitHubRepo.name
+                )
+
+                if (!result.isValid()) {
+                    throw Exception("Invalid ReadMe")
+                }
+
+                result.mapToDomain(gitHubRepo.id)
+            } ?: throw Exception("Missing owner login")
+        }
     }
 }

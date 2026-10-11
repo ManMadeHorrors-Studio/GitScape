@@ -1,7 +1,12 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockedException
+import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
+import com.manmadehorrorsstudio.gitscape.data.models.GitHubReadMeDTO
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubRepoDTO
+import com.manmadehorrorsstudio.gitscape.TestUtils.mockGitScapeLog
+import com.manmadehorrorsstudio.gitscape.TestUtils.unmockGitScapeLog
+import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.data.models.GitHubUserDTO
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,11 +18,19 @@ import org.junit.jupiter.api.Test
 
 class GitHubRepositoryImplTest {
     private lateinit var api: GitHubApis
+    private lateinit var readMeCache: GitHubReadMeCache
     private lateinit var repository: GitHubRepositoryImpl
 
     @BeforeEach fun setUp() {
+        mockGitScapeLog()
         api = mockk()
-        repository = GitHubRepositoryImpl(api)
+        readMeCache = GitHubReadMeCache()
+        repository = GitHubRepositoryImpl(api, readMeCache)
+    }
+
+    @org.junit.jupiter.api.AfterEach
+    fun tearDown() {
+        unmockGitScapeLog()
     }
 
     @Test fun `getGitHubRepoList returns valid repositories mapped and sorted`() = runTest {
@@ -143,5 +156,61 @@ class GitHubRepositoryImplTest {
         } catch (actual: Exception) {
             assertEquals(mockedException, actual)
         }
+    }
+
+    @Test fun `getGitHubReadMe loads and maps README`() = runTest {
+        val repo = GitHubRepo(
+            id = "repo-1",
+            name = "GitScape",
+            description = null,
+            primaryLanguage = "Kotlin",
+            stars = 3,
+            htmlUrl = "https://github.com/user/gitscape",
+            ownerLogin = "user"
+        )
+        coEvery { api.getGitHubReadMe("user", "GitScape") } returns GitHubReadMeDTO(
+            type = "file", encoding = "base64", size = 4, name = "README.md",
+            path = "README.md", content = "cmVhZA==", sha = "sha", htmlUrl = null, downloadUrl = null
+        )
+
+        val readMe = repository.getGitHubReadMe(repo)
+
+        assertEquals("repo-1", readMe.repoId)
+        assertEquals("cmVhZA==", readMe.content)
+        coVerify(exactly = 1) { api.getGitHubReadMe("user", "GitScape") }
+    }
+
+    @Test fun `getGitHubReadMe uses cache and does not call API twice`() = runTest {
+        val repo = GitHubRepo(
+            id = "repo-1", name = "GitScape", description = null,
+            primaryLanguage = "Kotlin", stars = 3,
+            htmlUrl = "https://github.com/user/gitscape", ownerLogin = "user"
+        )
+        coEvery { api.getGitHubReadMe(any(), any()) } returns GitHubReadMeDTO(
+            type = "file", encoding = "base64", size = 4, name = "README.md",
+            path = "README.md", content = "cmVhZA==", sha = "sha", htmlUrl = null, downloadUrl = null
+        )
+
+        val first = repository.getGitHubReadMe(repo)
+        val second = repository.getGitHubReadMe(repo)
+
+        assertEquals(first, second)
+        coVerify(exactly = 1) { api.getGitHubReadMe("user", "GitScape") }
+    }
+
+    @Test fun `getGitHubReadMe throws when owner login is missing`() = runTest {
+        val repo = GitHubRepo(
+            id = "repo-1", name = "GitScape", description = null,
+            primaryLanguage = "Kotlin", stars = 3,
+            htmlUrl = null, ownerLogin = null
+        )
+
+        try {
+            repository.getGitHubReadMe(repo)
+            error("Expected exception")
+        } catch (actual: Exception) {
+            assertEquals("Missing owner login", actual.message)
+        }
+        coVerify(exactly = 0) { api.getGitHubReadMe(any(), any()) }
     }
 }
