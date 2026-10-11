@@ -29,7 +29,7 @@ fun ToolButton (
         modifier = Modifier
             .size(50.dp)
             .background(
-                color = color.surface,
+                color = color.surfaceVariant,
                 shape = shape
             )
             .border(

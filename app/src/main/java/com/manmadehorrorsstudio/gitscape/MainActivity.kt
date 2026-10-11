@@ -5,12 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -18,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.manmadehorrorsstudio.gitscape.ui.composables.GitScapeNavigation
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
-import com.manmadehorrorsstudio.gitscape.ui.theme.GrayBackground
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,14 +28,31 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(GrayBackground.toArgb()),
-            navigationBarStyle = SystemBarStyle.dark(GrayBackground.toArgb())
-        )
-
         setContent {
-            GitScapeTheme {
+            val isDarkTheme = isSystemInDarkTheme()
+
+            GitScapeTheme(
+                isDarkTheme = isDarkTheme
+            ) {
                 val colors = MaterialTheme.colorScheme
+
+                SideEffect {
+                    val barStyle =
+                        if (isDarkTheme) {
+                            SystemBarStyle.dark(colors.background.toArgb())
+                        } else {
+                            SystemBarStyle.light(
+                                colors.background.toArgb(),
+                                colors.background.toArgb()
+                            )
+                        }
+
+                    enableEdgeToEdge(
+                        statusBarStyle = barStyle,
+                        navigationBarStyle = barStyle
+                    )
+                }
+
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize(),

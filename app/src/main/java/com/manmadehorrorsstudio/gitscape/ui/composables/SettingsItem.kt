@@ -61,7 +61,7 @@ fun SettingsItem(
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 @Composable
 fun SettingsItemPreview() {
-    GitScapeTheme {
+    GitScapeTheme(true) {
         SettingsItem(
             text = "Impostazioni",
             image = R.drawable.language_ita_logo,

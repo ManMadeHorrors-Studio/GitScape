@@ -45,7 +45,6 @@ import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
-import com.manmadehorrorsstudio.gitscape.ui.theme.GrayBackground
 
 @Composable
 fun SettingsScreen(
@@ -96,7 +95,7 @@ private fun SettingsScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .background(GrayBackground)
+            .background(colors.background)
     ) {
         Box(
             modifier = Modifier
@@ -273,7 +272,7 @@ private fun getVersionString(): String {
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    GitScapeTheme {
+    GitScapeTheme(true) {
         SettingsScreenContent(
             title = "Settings",
             innerPadding = PaddingValues(15.dp),

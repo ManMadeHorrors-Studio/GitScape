@@ -5,55 +5,55 @@ import com.manmadehorrorsstudio.gitscape.ui.theme.*
 enum class ColorSchemeType(val colorSystem: ColorSystem, val darkScheme: Boolean) {
     AZURE_DARK(
         colorSystem = ColorSystem(
-            primary = StrongAzure,
-            onPrimary = GrayBackground,
+            primary = StrongAzure_dark,
+            onPrimary = GrayBackground_dark,
 
-            secondary = LightAzure,
-            onSecondary = CardBackground,
+            secondary = LightAzure_dark,
+            onSecondary = CardBackground_dark,
 
-            tertiary = DisabledAzure,
-            onTertiary = CardBackground,
+            tertiary = DisabledAzure_dark,
+            onTertiary = CardBackground_dark,
 
-            background = GrayBackground,
-            onBackground = StrongAzure,
+            background = GrayBackground_dark,
+            onBackground = StrongAzure_dark,
 
-            surface = GrayBackground,
-            onSurface = StrongAzure,
+            surface = GrayBackground_dark,
+            onSurface = StrongAzure_dark,
 
-            surfaceVariant = CardBackground,
-            onSurfaceVariant = LightAzure,
+            surfaceVariant = CardBackground_dark,
+            onSurfaceVariant = LightAzure_dark,
 
             scrim = DarkAzure,
 
-            surfaceContainerHigh = DarkAzure,
-            surfaceContainerLow = DisabledAzure
+            surfaceContainerHigh = CardBackground_dark,
+            surfaceContainerLow = DisabledAzure_dark
         ),
         darkScheme = true
     ),
     AZURE_LIGHT(
         colorSystem = ColorSystem(
-            primary = StrongAzure,
-            onPrimary = GrayBackground,
+            primary = StrongAzure_light,
+            onPrimary = GrayBackground_light,
 
-            secondary = LightAzure,
-            onSecondary = CardBackground,
+            secondary = LightAzure_light,
+            onSecondary = CardBackground_light,
 
-            tertiary = DisabledAzure,
-            onTertiary = CardBackground,
+            tertiary = DisabledAzure_light,
+            onTertiary = CardBackground_light,
 
-            background = GrayBackground,
-            onBackground = StrongAzure,
+            background = GrayBackground_light,
+            onBackground = StrongAzure_light,
 
-            surface = GrayBackground,
-            onSurface = StrongAzure,
+            surface = GrayBackground_light,
+            onSurface = StrongAzure_light,
 
-            surfaceVariant = CardBackground,
-            onSurfaceVariant = LightAzure,
+            surfaceVariant = CardBackground_light,
+            onSurfaceVariant = LightAzure_light,
 
             scrim = DarkAzure,
 
-            surfaceContainerHigh = DarkAzure,
-            surfaceContainerLow = DisabledAzure
+            surfaceContainerHigh = CardBackground_light,
+            surfaceContainerLow = DisabledAzure_light
         ),
         darkScheme = false
     )
