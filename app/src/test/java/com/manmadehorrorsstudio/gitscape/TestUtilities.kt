@@ -12,7 +12,8 @@ object TestUtils {
     val mockedUser = GitHubUser(
         id = "666",
         userName = "Man Made Horrors Studio",
-        avatarUrl = "https://avatars.githubusercontent.com/u/263767797?v=4"
+        avatarUrl = "https://avatars.githubusercontent.com/u/263767797?v=4",
+        homePageUrl = null
     )
 
     val mockedException = Exception("Errore di rete")

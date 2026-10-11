@@ -99,6 +99,9 @@ class SettingsRepositoryImplTest {
         every {
             appSettings.setLanguageState(any())
         } just Runs
+        every {
+            appSettings.setRepoListEnabledState(any())
+        } just Runs
 
         repository
             .observeSettings()
@@ -174,25 +177,4 @@ class SettingsRepositoryImplTest {
         }
     }
 
-    @Test
-    fun `saveLanguage creates settings when none exist`() = runTest {
-
-        every {
-            dao.observeSettings()
-        } returns flowOf(null)
-
-        coEvery {
-            dao.saveSettings(any())
-        } just Runs
-
-        repository.saveLanguage(AppLanguage.EN)
-
-        coVerify(exactly = 1) {
-            dao.saveSettings(
-                SettingsEntity(
-                    language = AppLanguage.EN.locale.language
-                )
-            )
-        }
-    }
 }

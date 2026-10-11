@@ -2,6 +2,7 @@ package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
+import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,12 +29,14 @@ class SettingsViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
 
     private lateinit var settingsRepository: SettingsRepository
+    private lateinit var localGitHubRepository: LocalGitHubRepository
 
     @BeforeEach
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
         settingsRepository = mockk()
+        localGitHubRepository = mockk(relaxed = true)
     }
 
     @AfterEach
@@ -49,7 +52,7 @@ class SettingsViewModelTest {
             settingsRepository.getLanguage()
         } returns languageFlow
 
-        val viewModel = SettingsViewModel(settingsRepository)
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
 
         assertEquals(
             languageFlow,
@@ -68,7 +71,7 @@ class SettingsViewModelTest {
             settingsRepository.saveLanguage(AppLanguage.EN)
         } just Runs
 
-        val viewModel = SettingsViewModel(settingsRepository)
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
 
         viewModel.changeLanguage(AppLanguage.EN)
 

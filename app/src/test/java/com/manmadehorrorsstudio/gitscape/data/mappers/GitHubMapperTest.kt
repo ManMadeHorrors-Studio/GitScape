@@ -29,7 +29,9 @@ class GitHubMapperTest {
                 name = "GitScape",
                 primaryLanguage = "Kotlin",
                 stars = 42,
-                htmlUrl = "https://github.com/example/gitscape"
+                htmlUrl = "https://github.com/example/gitscape",
+                description = null,
+                ownerLogin = null
             ),
             result
         )
@@ -59,7 +61,8 @@ class GitHubMapperTest {
             name = null,
             language = null,
             stargazersCount = null,
-            htmlUrl = null
+            htmlUrl = null,
+            description = null
         )
 
         val result = dto.mapToDomain()
@@ -86,7 +89,8 @@ class GitHubMapperTest {
             GitHubUser(
                 id = "123",
                 userName = "Man Made Horrors Studio",
-                avatarUrl = "https://github.com/avatar.jpg"
+                avatarUrl = "https://github.com/avatar.jpg",
+                homePageUrl = null
             ),
             result
         )

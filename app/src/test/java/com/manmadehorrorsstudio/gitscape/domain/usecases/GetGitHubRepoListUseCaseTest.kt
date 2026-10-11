@@ -20,14 +20,18 @@ class GetGitHubRepoListUseCaseTest {
                 "GitScape",
                 "Kotlin",
                 10,
-                "https://github.com/example/gitscape"
+                "https://github.com/example/gitscape",
+                null,
+                null
             ),
             GitHubRepo(
                 "2",
                 "TestRepo",
                 "Java",
                 5,
-                "https://github.com/example/testrepo"
+                "https://github.com/example/testrepo",
+                null,
+                null
             )
         )
         coEvery {

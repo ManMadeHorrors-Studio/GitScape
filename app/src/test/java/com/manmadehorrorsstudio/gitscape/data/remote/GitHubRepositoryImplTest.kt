@@ -100,7 +100,8 @@ class GitHubRepositoryImplTest {
     @Test fun `getGitHubUser returns mapped user`() = runTest {
         val dto = GitHubUserDTO(
             id = "123",
-            name = "Man Made Horrors",
+            login = "man-made-horrors-studio",
+            name = "Man Made Horrors Studio",
             avatarUrl = "https://github.com/avatar.jpg"
         )
         coEvery { api.getUser() } returns dto
