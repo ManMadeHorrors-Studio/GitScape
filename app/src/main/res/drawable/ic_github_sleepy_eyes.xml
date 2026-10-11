@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="249dp"
+    android:height="224dp"
+    android:viewportWidth="497"
+    android:viewportHeight="447">
+    <path
+        android:name="eyes"
+        android:fillColor="#FF2A2A2A"
+        android:fillType="nonZero"
+        android:pathData="M202 219 L199 218 L197 220 L197 223 L193 233 L184 243 L175 248 L168 250 L151 250 L150 251 L150 254 L158 258 L172 259 L185 255 L191 251 L197 245 L200 240 L202 234 L202 230 L203 229 Z M298 155 L296 153 L293 155 L292 163 L289 169 L286 173 L279 179 L270 183 L252 183 L251 186 L254 189 L260 191 L265 191 L266 192 L277 191 L286 187 L294 179 L297 174 L299 167 L299 158 Z" />
+</vector>
