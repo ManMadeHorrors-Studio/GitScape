@@ -1,9 +1,7 @@
 package com.manmadehorrorsstudio.gitscape.ui.composables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,13 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +37,7 @@ import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
+import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 
@@ -54,6 +49,7 @@ fun SettingsScreen(
 ) {
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
     val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
+    val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -63,6 +59,7 @@ fun SettingsScreen(
         currentLanguage = currentLanguage,
         currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
         currentRepoListEnabled = currentRepoListEnabled,
+        currentColorStyle = currentColorStyle,
         versionString = getVersionString(),
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
@@ -70,6 +67,9 @@ fun SettingsScreen(
         },
         onRepoListEnabledSelected = { isEnabled ->
             settingsViewModel.changeRepoListEnabled(isEnabled)
+        },
+        onColorStyleSelected = { colorStyle ->
+            settingsViewModel.changeColorStyle(colorStyle)
         }
     )
 }
@@ -83,10 +83,12 @@ private fun SettingsScreenContent(
     currentLanguage: AppLanguage,
     currentRepoListEnabledLabel: String,
     currentRepoListEnabled: Boolean,
+    currentColorStyle: ColorStyle,
     versionString: String,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
-    onRepoListEnabledSelected: (Boolean) -> Unit
+    onRepoListEnabledSelected: (Boolean) -> Unit,
+    onColorStyleSelected: (ColorStyle) -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
@@ -141,7 +143,7 @@ private fun SettingsScreenContent(
                 currentItem = currentLanguage,
                 items = AppLanguage.entries,
                 label = languageLabel,
-                contentDescription = languageContentDescription,
+                contDesc = languageContentDescription,
                 itemText = { language ->
                     localizedString(language.description)
                 },
@@ -182,6 +184,27 @@ private fun SettingsScreenContent(
                 )
             }
 
+            Spacer(modifier = Modifier.height(30.dp))
+
+            ExpandableSelector(
+                currentItem = currentColorStyle,
+                items = ColorStyle.entries,
+                label = localizedString(R.string.SETTINGSVIEW_COLORSTYLE),
+                contDesc = localizedString(R.string.SETTINGSVIEW_COLORSTYLE),
+                itemText = { color ->
+                    localizedString(color.description)
+                },
+                itemImage = {
+                    R.drawable.ic_color_setting
+                },
+                itemColor = { colorStyle ->
+                    colorStyle.representiveColor
+                },
+                onItemSelected = { colorStyle ->
+                    onColorStyleSelected(colorStyle)
+                }
+            )
+
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
@@ -193,67 +216,6 @@ private fun SettingsScreenContent(
                     .padding(bottom = 20.dp),
                 textAlign = TextAlign.Center
             )
-        }
-    }
-}
-
-@Composable
-private fun <T> ExpandableSelector(
-    currentItem: T,
-    items: List<T>,
-    label: String,
-    contentDescription: String,
-    itemText: @Composable (T) -> String,
-    itemImage: (T) -> Int,
-    onItemSelected: (T) -> Unit
-) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    val colors = MaterialTheme.colorScheme
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    expanded = !expanded
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Text(
-                text = label,
-                color = colors.primary,
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Image(
-                painter = painterResource(itemImage(currentItem)),
-                contentDescription = contentDescription,
-                modifier = Modifier.size(40.dp)
-            )
-        }
-
-        if (expanded) {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 15.dp)
-            ) {
-                items.forEach { item ->
-                    SettingsItem(
-                        text = itemText(item),
-                        image = itemImage(item),
-                        selected = currentItem == item,
-                    ) {
-                        onItemSelected(item)
-                        expanded = false
-                    }
-                }
-            }
         }
     }
 }
@@ -272,7 +234,10 @@ private fun getVersionString(): String {
 @Preview
 @Composable
 private fun SettingsScreenPreview() {
-    GitScapeTheme(true) {
+    GitScapeTheme(
+        true,
+        ColorStyle.GREEN_STYLE
+    ) {
         SettingsScreenContent(
             title = "Settings",
             innerPadding = PaddingValues(15.dp),
@@ -281,10 +246,12 @@ private fun SettingsScreenPreview() {
             currentLanguage = AppLanguage.EN,
             currentRepoListEnabledLabel = "Local Repositories",
             currentRepoListEnabled = true,
+            currentColorStyle = ColorStyle.AZURE_STYLE,
             versionString = "Version Debug 666 (6.6.6)",
             onBackClick = {},
             onLanguageSelected = {},
             onRepoListEnabledSelected = {},
+            onColorStyleSelected = {}
         )
     }
 }

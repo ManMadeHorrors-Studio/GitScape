@@ -13,6 +13,12 @@
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Language</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Selected language</string>
     <string name="SETTINGSVIEW.REPOLIST.ENABLED">Local Repositories</string>
+    <string name="SETTINGSVIEW.COLORSTYLE">Color style</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.AZURE">Azure</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.GREEN">Green</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.RED">Red</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.PINK">Pink</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.YELLOW">Yellow</string>
     <string name="SETTINGSVIEW.SETTING.LANGUAGE.ENGLISH" translatable="false">English</string>
     <string name="SETTINGSVIEW.SETTING.LANGUAGE.ITALIAN" translatable="false">Italiano</string>
     <string name="SETTINGSVIEW.VERSION">Version</string>

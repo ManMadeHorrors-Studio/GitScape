@@ -10,6 +10,12 @@
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Lingua</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Lingua selezionata</string>
     <string name="SETTINGSVIEW.REPOLIST.ENABLED">Repository locali</string>
+    <string name="SETTINGSVIEW.COLORSTYLE">Stile di colore</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.AZURE">Azzurro</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.GREEN">Verde</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.RED">Rosso</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.PINK">Rosa</string>
+    <string name="SETTINGSVIEW.COLORSTYLE.YELLOW">Giallo</string>
     <string name="SETTINGSVIEW.VERSION">Versione</string>
     <string name="GENERIC.BACK">Indietro</string>
     <string name="GENERIC.ERROR.TITLE">Attenzione</string>

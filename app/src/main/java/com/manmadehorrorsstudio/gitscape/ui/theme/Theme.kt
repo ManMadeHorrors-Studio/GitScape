@@ -11,19 +11,26 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.manmadehorrorsstudio.gitscape.DYNAMIC_COLOR
+import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorSchemeType
+import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
+import javax.inject.Inject
+
+
 
 @Composable
 fun GitScapeTheme(
     isDarkTheme: Boolean,
+    colorStyle: ColorStyle,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val colorSchemeType =
         if(isDarkTheme)
-            ColorSchemeType.AZURE_DARK
+            colorStyle.dark
         else
-            ColorSchemeType.AZURE_LIGHT
+            colorStyle.light
 
     MaterialTheme(
         colorScheme = getGitScapeColorScheme(colorSchemeType, context),

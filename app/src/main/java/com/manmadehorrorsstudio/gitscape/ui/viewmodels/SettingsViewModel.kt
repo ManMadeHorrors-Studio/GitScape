@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
+import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -31,6 +32,14 @@ class SettingsViewModel  @Inject constructor(
             if (!isEnabled) {
                 localGitHubRepository.clearGitHubRepositories()
             }
+        }
+    }
+
+    fun getColorStyle() = settingsRepository.getColorStyle()
+
+    fun changeColorStyle(colorStyle: ColorStyle) {
+        viewModelScope.launch {
+            settingsRepository.saveColorStyle(colorStyle)
         }
     }
 }

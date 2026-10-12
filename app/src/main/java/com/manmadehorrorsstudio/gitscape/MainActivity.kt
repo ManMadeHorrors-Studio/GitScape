@@ -19,11 +19,18 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.manmadehorrorsstudio.gitscape.ui.composables.GitScapeNavigation
+import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+import androidx.compose.runtime.collectAsState
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var settingsRepository: SettingsRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -32,7 +39,8 @@ class MainActivity : ComponentActivity() {
             val isDarkTheme = isSystemInDarkTheme()
 
             GitScapeTheme(
-                isDarkTheme = isDarkTheme
+                isDarkTheme = isDarkTheme,
+                colorStyle = settingsRepository.getColorStyle().collectAsState().value
             ) {
                 val colors = MaterialTheme.colorScheme
 
