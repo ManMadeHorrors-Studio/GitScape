@@ -55,7 +55,14 @@ coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coi
 
 koog-agents = { group = "ai.koog", name = "koog-agents", version.ref = "koog" }
 koogHttpClientKtor = { group = "ai.koog", name = "http-client-ktor", version.ref = "koog" }
-koogGoogle = { group = "ai.koog", name = "prompt-executor-google-client", version = "1.3.0-beta" }
+#Uncomment the implementation for the LLM provider you want to use
+koog-google = { group = "ai.koog", name = "prompt-executor-google-client", version = "1.3.0-beta" }
+#koog-anthropic = { group = "ai.koog", name = "prompt-executor-anthropic-client", version.ref = "koog" }
+#koog-deepseek = { group = "ai.koog", name = "prompt-executor-deepseek-client", version.ref = "koog" }
+#koog-openrouter = { group = "ai.koog", name = "prompt-executor-openrouter-client", version.ref = "koog" }
+#koog-mistralai = { group = "ai.koog", name = "prompt-executor-mistralai-client", version.ref = "koog" }
+#koog-dashscope-qwen = { group = "ai.koog", name = "prompt-executor-dashscope-client", version.ref = "koog" }
+#koog-ollama = { group = "ai.koog", name = "prompt-executor-ollama-client", version.ref = "koog" }
 
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junitPlatform" }

@@ -41,4 +41,5 @@ const val DYNAMIC_COLOR = true
 
 //AI
 
+//Set here the LLM provider you want to use
 val LLM_MODEL = GoogleModels.Gemini3_7Flash

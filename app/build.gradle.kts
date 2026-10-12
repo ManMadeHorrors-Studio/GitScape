@@ -111,7 +111,14 @@ dependencies {
 
     implementation(libs.koog.agents)
     implementation(libs.koogHttpClientKtor)
-    implementation(libs.koogGoogle)
+    // Uncomment the implementation for the LLM provider you want to use
+    implementation(libs.koog.google)
+    /*implementation(libs.koog.anthropic)
+    implementation(libs.koog.deepseek)
+    implementation(libs.koog.openrouter)
+    implementation(libs.koog.mistralai)
+    implementation(libs.koog.dashscope)
+    implementation(libs.koog.ollama)*/
 
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

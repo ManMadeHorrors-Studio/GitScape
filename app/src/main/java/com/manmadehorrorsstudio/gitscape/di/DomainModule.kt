@@ -2,7 +2,6 @@ package com.manmadehorrorsstudio.gitscape.di
 
 import ai.koog.http.client.ktor.KtorKoogHttpClient
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
-import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.executor.model.PromptExecutor
 import com.manmadehorrorsstudio.gitscape.BuildConfig
@@ -48,14 +47,47 @@ object AgentModule {
         val key = BuildConfig.AI_KEY.trim()
 
         return MultiLLMPromptExecutor(
+            // Gemini
             GoogleLLMClient(
                 apiKey = key,
                 httpClientFactory = KtorKoogHttpClient.Factory()
-            ),
+            )/*,
+            Uncomment the implementation for the LLM provider you want to use
+            // OpenAI
             OpenAILLMClient(
                 apiKey = key,
                 httpClientFactory = KtorKoogHttpClient.Factory()
-            )
+            ),
+            // Claude
+            AnthropicLLMClient(
+                apiKey = key,
+                httpClientFactory = KtorKoogHttpClient.Factory()
+            ),
+            // DeepSeek
+            DeepSeekLLMClient(
+                apiKey = key,
+                httpClientFactory = httpFactory
+            ),
+            // OpenRouter
+            OpenRouterLLMClient(
+                apiKey = key,
+                httpClientFactory = httpFactory
+            ),
+            // Mistral
+            MistralAILLMClient(
+                apiKey = key,
+                httpClientFactory = httpFactory
+            ),
+            //DashScope Qwen
+            DashscopeLLMClient(
+                apiKey = key,
+                httpClientFactory = httpFactory
+            ),
+            //Ollama
+            OllamaClient(
+                baseUrl = URL_SERVER,
+                httpClientFactory = httpFactory,
+            )*/
         )
     }
 
