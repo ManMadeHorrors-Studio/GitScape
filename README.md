@@ -23,10 +23,10 @@ GitScape uses the GitHub REST API to retrieve your user profile, list repositori
    - **Only select repositories** to restrict access to specific repositories.
 5. Under **Repository permissions**, configure the following permissions:
 
-   | Permission | Access | Purpose |
-         |---|---|---|
-   | **Metadata** | Read-only | Required to list repositories. This permission is granted automatically when creating a fine-grained token. |
-   | **Contents** | Read-only | Required to read repository README files. |
+| Permission | Access | Purpose |
+|---|---|---|
+| **Metadata** | Read-only | Required to list repositories. This permission is granted automatically when creating a fine-grained token. |
+| **Contents** | Read-only | Required to read repository README files. |
 
 6. Leave all other permissions unset.
 7. Click **Generate token** and copy the token. GitHub will not display the complete token again.
