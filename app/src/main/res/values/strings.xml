@@ -13,6 +13,7 @@
     <string name="SETTINGSVIEW.LIST.LANGUAGE">Language</string>
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Selected language</string>
     <string name="SETTINGSVIEW.REPOLIST.ENABLED">Local Repositories</string>
+    <string name="SETTINGSVIEW.GLOW.ENABLED">Glow effect on scroll</string>
     <string name="SETTINGSVIEW.COLORSTYLE">Color style</string>
     <string name="SETTINGSVIEW.COLORSTYLE.AZURE">Azure</string>
     <string name="SETTINGSVIEW.COLORSTYLE.GREEN">Green</string>

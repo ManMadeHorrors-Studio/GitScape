@@ -50,6 +50,7 @@ fun SettingsScreen(
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
     val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
     val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
+    val currentGlowEffectOnScrollEnabled by settingsViewModel.getGlowEffectOnScrollEnabledState().collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -60,6 +61,8 @@ fun SettingsScreen(
         currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
         currentRepoListEnabled = currentRepoListEnabled,
         currentColorStyle = currentColorStyle,
+        glowEffectOnScrollEnabledLabel = localizedString(R.string.SETTINGSVIEW_GLOW_ENABLED),
+        currentGlowEffectOnScrollEnabled = currentGlowEffectOnScrollEnabled,
         versionString = getVersionString(),
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
@@ -70,6 +73,9 @@ fun SettingsScreen(
         },
         onColorStyleSelected = { colorStyle ->
             settingsViewModel.changeColorStyle(colorStyle)
+        },
+        onGlowEffectOnScrollEnabledSelected = { isEnabled ->
+            settingsViewModel.changeGlowEffectOnScrollEnabled(isEnabled)
         }
     )
 }
@@ -84,11 +90,14 @@ private fun SettingsScreenContent(
     currentRepoListEnabledLabel: String,
     currentRepoListEnabled: Boolean,
     currentColorStyle: ColorStyle,
+    glowEffectOnScrollEnabledLabel: String,
+    currentGlowEffectOnScrollEnabled: Boolean,
     versionString: String,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit,
-    onColorStyleSelected: (ColorStyle) -> Unit
+    onColorStyleSelected: (ColorStyle) -> Unit,
+    onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
@@ -118,6 +127,8 @@ private fun SettingsScreenContent(
                         .size(NAVIGATION_ICONS_SIZE)
                 )
             }
+
+            Spacer(modifier = Modifier.width(10.dp))
 
             Title(
                 title = title,
@@ -205,6 +216,34 @@ private fun SettingsScreenContent(
                 }
             )
 
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onGlowEffectOnScrollEnabledSelected(!currentGlowEffectOnScrollEnabled)
+                    }
+            ) {
+                Text(
+                    text = glowEffectOnScrollEnabledLabel,
+                    color = colors.primary,
+                    style = types.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                Switch(
+                    checked = currentGlowEffectOnScrollEnabled,
+                    onCheckedChange = null
+                )
+            }
+
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
@@ -246,11 +285,14 @@ private fun SettingsScreenPreview() {
             currentLanguage = AppLanguage.EN,
             currentRepoListEnabledLabel = "Local Repositories",
             currentRepoListEnabled = true,
+            glowEffectOnScrollEnabledLabel = "Scroll glow effect",
+            currentGlowEffectOnScrollEnabled = true,
             currentColorStyle = ColorStyle.AZURE_STYLE,
             versionString = "Version Debug 666 (6.6.6)",
             onBackClick = {},
             onLanguageSelected = {},
             onRepoListEnabledSelected = {},
+            onGlowEffectOnScrollEnabledSelected = {},
             onColorStyleSelected = {}
         )
     }

@@ -42,4 +42,12 @@ class SettingsViewModel  @Inject constructor(
             settingsRepository.saveColorStyle(colorStyle)
         }
     }
+
+    fun getGlowEffectOnScrollEnabledState() = settingsRepository.getGlowEffectOnScrollEnabled()
+
+    fun changeGlowEffectOnScrollEnabled(isEnabled: Boolean) {
+        viewModelScope.launch {
+            settingsRepository.saveGlowEffectOnScrollEnabled(isEnabled)
+        }
+    }
 }

@@ -31,6 +31,7 @@ class SettingsRepositoryImpl  @Inject constructor(
                     appSettings.setLanguageState(fromLanguageCode(sett.language))
                     appSettings.setRepoListEnabledState(sett.repoListEnabled)
                     appSettings.setColorStyleState(sett.colorStyle)
+                    appSettings.setGlowEffectOnScrollEnabledState(sett.glowEffectOnScrollEnabled)
                 }
             }
 
@@ -81,6 +82,14 @@ class SettingsRepositoryImpl  @Inject constructor(
             dao.saveSettings(
                 currentSettings.copy(colorStyle = colorStyle)
             )
+        }
+    }
+
+    override fun getGlowEffectOnScrollEnabled(): StateFlow<Boolean> = appSettings.glowEffectOnScrollEnabled
+
+    override suspend fun saveGlowEffectOnScrollEnabled(isEnabled: Boolean) {
+        dao.observeSettings().firstOrNull()?.let { currentSettings ->
+            dao.saveSettings(currentSettings.copy(glowEffectOnScrollEnabled = isEnabled))
         }
     }
 }

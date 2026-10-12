@@ -52,6 +52,8 @@ fun RepoListScreen(
 
     val errorAlert = remember { mutableStateOf<Pair<Int?, (() -> Unit)?>?>(null) }
 
+    val glowEffectOnScrollEnabled by repoListViewModel.getGlowEffectOnScrollEnabledState().collectAsStateWithLifecycle()
+
     val pointToRepoInGrid = remember { mutableStateOf<Int?>(null) }
 
     var showAgent by remember { mutableStateOf(false) }
@@ -92,7 +94,8 @@ fun RepoListScreen(
         pointToRepoInGrid = pointToRepoInGrid,
         onAIClick = { showAgent = true },
         onSettingsClick = onSettingsClick,
-        onRefreshClick = { repoListViewModel.refreshRepoListScreen() }
+        onRefreshClick = { repoListViewModel.refreshRepoListScreen() },
+        glowEffectOnScrollEnabled = glowEffectOnScrollEnabled
     )
 
     LaunchedEffect(Unit) {
@@ -130,7 +133,8 @@ private fun RepoListScreenInternal(
     pointToRepoInGrid: MutableState<Int?>,
     onAIClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onRefreshClick: () -> Unit
+    onRefreshClick: () -> Unit,
+    glowEffectOnScrollEnabled: Boolean
 ) {
     Box(
         modifier = Modifier
@@ -193,7 +197,8 @@ private fun RepoListScreenInternal(
                 else -> {
                     RepoListGrid(
                         gitHubRepos = repoListState.repositories,
-                        pointToRepoInGrid = pointToRepoInGrid
+                        pointToRepoInGrid = pointToRepoInGrid,
+                        glowEffectOnScrollEnabled = glowEffectOnScrollEnabled
                     )
                 }
             }

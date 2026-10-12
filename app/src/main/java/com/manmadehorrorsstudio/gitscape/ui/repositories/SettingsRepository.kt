@@ -23,4 +23,7 @@ interface SettingsRepository {
 
     fun getColorStyle(): StateFlow<ColorStyle>
     suspend fun saveColorStyle(colorStyle: ColorStyle)
+
+    fun getGlowEffectOnScrollEnabled(): StateFlow<Boolean>
+    suspend fun saveGlowEffectOnScrollEnabled(isEnabled: Boolean)
 }

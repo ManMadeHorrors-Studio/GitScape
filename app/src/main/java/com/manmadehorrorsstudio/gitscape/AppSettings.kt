@@ -16,6 +16,9 @@ class AppSettings @Inject constructor(
     private val _repoListEnabled = MutableStateFlow(true)
     val repoListEnabled = _repoListEnabled.asStateFlow()
 
+    private val _glowEffectOnSCrollEnabled = MutableStateFlow(true)
+    val glowEffectOnScrollEnabled = _glowEffectOnSCrollEnabled.asStateFlow()
+
     private val _colorStyle = MutableStateFlow(ColorStyle.AZURE_STYLE)
     val colorStyle = _colorStyle.asStateFlow()
 
@@ -31,5 +34,9 @@ class AppSettings @Inject constructor(
 
     fun setColorStyleState(colorStyle: ColorStyle) {
         _colorStyle.value = colorStyle
+    }
+
+    fun setGlowEffectOnScrollEnabledState(isEnabled: Boolean) {
+        _glowEffectOnSCrollEnabled.value = isEnabled
     }
 }

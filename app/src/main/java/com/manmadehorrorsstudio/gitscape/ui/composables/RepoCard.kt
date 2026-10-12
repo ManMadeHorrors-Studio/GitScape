@@ -83,6 +83,7 @@ fun RepoCard(
                 gitHubRepo.htmlUrl,
                 context
             )
+            gitScapeLog("Card ${gitHubRepo.name} shown")
             shouldOpenBrowser = false
         }
     }
@@ -91,7 +92,7 @@ fun RepoCard(
         modifier = Modifier
             .clickable {
                 if(progress.value == 0f) {
-                    gitScapeLog("Card clicked")
+                    gitScapeLog("Card ${gitHubRepo.name} clicked")
                     shouldOpenBrowser = true
                     scope.launch {
                         performAnimation()
@@ -100,7 +101,7 @@ fun RepoCard(
             }
             .drawWithContent {
                 drawGlowBorder(
-                    isHighlighted = isFullyVisible || forcedAnimationTrigger != null,
+                    isHighlighted = isFullyVisible || forcedAnimationTrigger != null || shouldOpenBrowser,
                     progressValue = progress.value,
                     colors = colors
                 )
@@ -112,7 +113,7 @@ fun RepoCard(
     ) {
         Column(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(15.dp)
         ) {
             Text(
                 text = gitHubRepo.name,

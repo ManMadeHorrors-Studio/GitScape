@@ -10,6 +10,7 @@ data class SettingsEntity(
     @PrimaryKey val id: Int = 0,
     val language: String? = null,
     val repoListEnabled: Boolean = true,
+    val glowEffectOnScrollEnabled: Boolean = true,
     val repoListHash: String? = null,
     val colorStyle: ColorStyle = ColorStyle.AZURE_STYLE
 )

@@ -24,7 +24,8 @@ import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 @Composable
 fun RepoListGrid(
     gitHubRepos: List<GitHubRepo>,
-    pointToRepoInGrid: MutableState<Int?>
+    pointToRepoInGrid: MutableState<Int?>,
+    glowEffectOnScrollEnabled: Boolean
 ) {
     val gridState = rememberLazyGridState()
 
@@ -39,18 +40,21 @@ fun RepoListGrid(
     }
     val fullyVisibleItemIndexes by remember {
         derivedStateOf {
-            val layoutInfo = gridState.layoutInfo
+            if(glowEffectOnScrollEnabled) {
+                val layoutInfo = gridState.layoutInfo
 
-            layoutInfo.visibleItemsInfo
-                .filter { item ->
-                    val itemTop = item.offset.y
-                    val itemBottom = itemTop + item.size.height
+                layoutInfo.visibleItemsInfo
+                    .filter { item ->
+                        val itemTop = item.offset.y
+                        val itemBottom = itemTop + item.size.height
 
-                    itemTop >= layoutInfo.viewportStartOffset &&
-                            itemBottom <= layoutInfo.viewportEndOffset
-                }
-                .map { it.index }
-                .toSet()
+                        itemTop >= layoutInfo.viewportStartOffset &&
+                                itemBottom <= layoutInfo.viewportEndOffset
+                    }
+                    .map { it.index }
+                    .toSet()
+            } else
+                emptySet()
         }
     }
 

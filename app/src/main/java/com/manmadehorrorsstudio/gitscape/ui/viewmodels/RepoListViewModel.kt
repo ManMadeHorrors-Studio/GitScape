@@ -38,6 +38,8 @@ class RepoListViewModel @Inject constructor(
     private val _userState = MutableStateFlow<GitHubUser?>(null)
     val userState: StateFlow<GitHubUser?> = _userState.asStateFlow()
 
+    fun getGlowEffectOnScrollEnabledState() = settingsRepository.getGlowEffectOnScrollEnabled()
+
     private val _repoListEvents = Channel<UIEvents>(Channel.CONFLATED)
     val repoListEvents = _repoListEvents.receiveAsFlow()
 
