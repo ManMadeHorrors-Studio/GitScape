@@ -12,7 +12,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
@@ -25,6 +28,15 @@ fun RepoListGrid(
 ) {
     val gridState = rememberLazyGridState()
 
+    var forcedAnimationIndex by remember {
+        mutableStateOf<Int?>(null)
+    }
+    var forcedAnimationTrigger by remember {
+        mutableIntStateOf(0)
+    }
+    var isProgrammaticScroll by remember {
+        mutableStateOf(false)
+    }
     val fullyVisibleItemIndexes by remember {
         derivedStateOf {
             val layoutInfo = gridState.layoutInfo
@@ -48,23 +60,37 @@ fun RepoListGrid(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        contentPadding = PaddingValues(top = SPACER_HEIGHT_SIZE)
+        contentPadding = PaddingValues(
+            top = SPACER_HEIGHT_SIZE
+        )
     ) {
         itemsIndexed(
             items = gitHubRepos,
-            key = { _, gitHubRepo -> gitHubRepo.id }
+            key = { _, gitHubRepo ->
+                gitHubRepo.id
+            }
         ) { index, gitHubRepo ->
-
             RepoCard(
                 gitHubRepo = gitHubRepo,
-                isFullyVisible = index in fullyVisibleItemIndexes
+                isFullyVisible = index in fullyVisibleItemIndexes,
+                forcedAnimationTrigger =
+                    if (forcedAnimationIndex == index) {
+                        forcedAnimationTrigger
+                    } else {
+                        null
+                    },
+                ignoreVisibilityAnimation = isProgrammaticScroll
             )
         }
     }
 
     LaunchedEffect(pointToRepoInGrid.value) {
         pointToRepoInGrid.value?.let { index ->
+            forcedAnimationIndex = index
+            forcedAnimationTrigger++
+            isProgrammaticScroll = true
             gridState.animateScrollToItem(index)
+            isProgrammaticScroll = false
             pointToRepoInGrid.value = null
         }
     }

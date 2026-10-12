@@ -26,7 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,30 +42,65 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.openBrowser
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun RepoCard(
     gitHubRepo: GitHubRepo,
-    isFullyVisible: Boolean
+    isFullyVisible: Boolean,
+    forcedAnimationTrigger: Int?,   //cannot be a Boolean otherwise it will not trigger the animation twice on the same target
+    ignoreVisibilityAnimation: Boolean
 ) {
-    val progress = remember { Animatable(0f) }
-    var firstTime by rememberSaveable { mutableStateOf(true) }
-
     val context = LocalContext.current
 
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
 
+    val scope = rememberCoroutineScope()
+
+    val progress = remember {
+        Animatable(0f)
+    }
+
+    var shouldOpenBrowser by remember { mutableStateOf(false) }
+
+    suspend fun performAnimation() {
+        progress.snapTo(0f)
+        progress.animateTo(
+            targetValue = 1f,
+            animationSpec = tween(
+                durationMillis = 2500,
+                easing = LinearEasing
+            )
+        )
+        progress.snapTo(0f)
+
+        if(shouldOpenBrowser) {
+            openBrowser(
+                gitHubRepo.htmlUrl,
+                context
+            )
+            shouldOpenBrowser = false
+        }
+    }
+
     Card(
         modifier = Modifier
             .clickable {
-                openBrowser(gitHubRepo.htmlUrl, context)
+                if(progress.value == 0f) {
+                    gitScapeLog("Card clicked")
+                    shouldOpenBrowser = true
+                    scope.launch {
+                        performAnimation()
+                    }
+                }
             }
             .drawWithContent {
                 drawGlowBorder(
-                    isFullyVisible = isFullyVisible,
+                    isHighlighted = isFullyVisible || forcedAnimationTrigger != null,
                     progressValue = progress.value,
                     colors = colors
                 )
@@ -131,34 +166,21 @@ fun RepoCard(
         }
     }
 
-    LaunchedEffect(isFullyVisible) {
-        if (isFullyVisible && firstTime) {
-            firstTime = false
-
-            progress.animateTo(
-                targetValue = 1f,
-                animationSpec = tween(
-                    durationMillis = 2500,
-                    easing = LinearEasing
-                )
-            )
-
-            progress.snapTo(0f)
-        } else {
-            firstTime = true
-            progress.snapTo(0f)
+    LaunchedEffect(isFullyVisible, forcedAnimationTrigger) {
+        if ((isFullyVisible && !ignoreVisibilityAnimation) || forcedAnimationTrigger != null) {
+            performAnimation()
         }
     }
 }
 
 private fun ContentDrawScope.drawGlowBorder(
-    isFullyVisible: Boolean,
+    isHighlighted: Boolean,
     progressValue: Float,
     colors: ColorScheme
 ) {
     drawContent()
 
-    if (isFullyVisible) {
+    if (isHighlighted) {
         val width = size.width
         val height = size.height
         val glowWidth = width * 0.35f
@@ -173,12 +195,23 @@ private fun ContentDrawScope.drawGlowBorder(
                     colors.secondary,
                     Color.Transparent
                 ),
-                start = Offset(x - glowWidth, 0f),
-                end = Offset(x, 0f)
+                start = Offset(
+                    x - glowWidth,
+                    0f
+                ),
+                end = Offset(
+                    x,
+                    0f
+                )
             ),
             size = size,
-            cornerRadius = CornerRadius(32f, 32f),
-            style = Stroke(width = stroke)
+            cornerRadius = CornerRadius(
+                32f,
+                32f
+            ),
+            style = Stroke(
+                width = stroke
+            )
         )
     }
 }
