@@ -102,6 +102,12 @@ class SettingsRepositoryImplTest {
         every {
             appSettings.setRepoListEnabledState(any())
         } just Runs
+        every {
+            appSettings.setGlowEffectOnScrollEnabledState(any())
+        } just Runs
+        every {
+            appSettings.setColorStyleState(any())
+        } just Runs
 
         repository
             .observeSettings()
@@ -127,6 +133,49 @@ class SettingsRepositoryImplTest {
 
         verify(exactly = 0) {
             appSettings.setLanguageState(any())
+        }
+    }
+
+    @Test
+    fun `observeSettings updates appSettings glow effect state`() = runTest {
+        val settings = SettingsEntity(glowEffectOnScrollEnabled = false)
+
+        every { dao.observeSettings() } returns flowOf(settings)
+        every { appSettings.setLanguageState(any()) } just Runs
+        every { appSettings.setRepoListEnabledState(any()) } just Runs
+        every { appSettings.setGlowEffectOnScrollEnabledState(any()) } just Runs
+        every { appSettings.setColorStyleState(any()) } just Runs
+
+        repository.observeSettings().first()
+
+        verify(exactly = 1) {
+            appSettings.setGlowEffectOnScrollEnabledState(false)
+        }
+    }
+
+    @Test
+    fun `getGlowEffectEnabled returns appSettings glow effect state`() {
+        val glowEffectState = MutableStateFlow(false)
+        every { appSettings.glowEffectOnScrollEnabled } returns glowEffectState
+
+        assertEquals(glowEffectState, repository.getGlowEffectOnScrollEnabled())
+
+        verify(exactly = 1) {
+            appSettings.glowEffectOnScrollEnabled
+        }
+    }
+
+    @Test
+    fun `saveGlowEffectEnabled updates existing settings`() = runTest {
+        val currentSettings = SettingsEntity(glowEffectOnScrollEnabled = true)
+
+        every { dao.observeSettings() } returns flowOf(currentSettings)
+        coEvery { dao.saveSettings(any()) } just Runs
+
+        repository.saveGlowEffectOnScrollEnabled(false)
+
+        coVerify(exactly = 1) {
+            dao.saveSettings(currentSettings.copy(glowEffectOnScrollEnabled = false))
         }
     }
 

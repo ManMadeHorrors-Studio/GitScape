@@ -65,6 +65,40 @@ class SettingsViewModelTest {
     }
 
     @Test
+    fun `getGlowEffectOnScrollEnabledState returns repository glow state`() {
+        val glowFlow = MutableStateFlow(false)
+
+        every {
+            settingsRepository.getGlowEffectOnScrollEnabled()
+        } returns glowFlow
+
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
+
+        assertEquals(glowFlow, viewModel.getGlowEffectOnScrollEnabledState())
+
+        verify(exactly = 1) {
+            settingsRepository.getGlowEffectOnScrollEnabled()
+        }
+    }
+
+    @Test
+    fun `changeGlowEffectOnScrollEnabled saves selected value`() = runTest {
+        coEvery {
+            settingsRepository.saveGlowEffectOnScrollEnabled(false)
+        } just Runs
+
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
+
+        viewModel.changeGlowEffectOnScrollEnabled(false)
+
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) {
+            settingsRepository.saveGlowEffectOnScrollEnabled(false)
+        }
+    }
+
+    @Test
     fun `changeLanguage saves selected language`() = runTest {
 
         coEvery {
