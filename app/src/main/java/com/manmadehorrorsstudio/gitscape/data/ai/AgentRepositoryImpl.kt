@@ -11,8 +11,8 @@ import ai.koog.agents.core.dsl.extension.onTextMessage
 import ai.koog.agents.core.dsl.extension.onToolCalls
 import ai.koog.agents.core.tools.ToolDescriptor
 import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.agents.features.eventHandler.feature.handleEvents
+import ai.koog.prompt.executor.model.PromptExecutor
 import ai.koog.prompt.message.Message
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
@@ -24,7 +24,7 @@ import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor(
-    private val promptExecutor: MultiLLMPromptExecutor
+    private val promptExecutor: PromptExecutor
 ) : AgentRepository {
     override suspend fun ask(
         messages: List<Message>,
@@ -33,10 +33,7 @@ class AgentRepositoryImpl @Inject constructor(
         onUiCommand: (AgentUiCommand) -> Unit
 
     ): String {
-        val key = BuildConfig.AI_KEY.trim()
-        check(key.isNotEmpty() && key != "null") {
-            "AI API key is not configured."
-        }
+        validateAiKey(BuildConfig.AI_KEY)
 
         val tools = AgentTools(
             getGitHubReadMeUseCase = getGitHubReadMeUseCase,
@@ -71,23 +68,7 @@ class AgentRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun getBasePrompt(messagesCount: Int): String? {
-        return if(messagesCount < 1)
-            listOf(
-                "You are GitScape's repository assistant. Answer only from tool results and never invent repository facts",
-                "If the loaded repositories do not contain the answer, say so",
-                "You have access to the loaded repositories and to the conversation history",
-                "The user may refer to a specific repository without explicitly naming it",
-                "If a question concerns a repository that is not explicitly named, infer the intended repository from the repository or repositories identified in the previous question(s), using the conversation context",
-                "Only use this inference when the context clearly indicates which repository or repositories the user is referring to",
-                "If the intended repository cannot be determined unambiguously, ask the user to clarify",
-                "Always reply in the same language the user used to give you the last question"
-            ).joinToString(".\n")
-        else
-            null
-    }
-
-    private fun gitScapeStrategy(
+    internal fun gitScapeStrategy(
         listReposToolDescriptor: ToolDescriptor
     ) = strategy<List<Message>, String>("gitscape") {
 
@@ -350,4 +331,28 @@ class AgentRepositoryImpl @Inject constructor(
             }
         }
     }
+}
+
+internal fun validateAiKey(value: String) {
+    val key = value.trim()
+
+    check(key.isNotEmpty() && key != "null") {
+        "AI API key is not configured."
+    }
+}
+
+internal  fun getBasePrompt(messagesCount: Int): String? {
+    return if(messagesCount < 1)
+        listOf(
+            "You are GitScape's repository assistant. Answer only from tool results and never invent repository facts",
+            "If the loaded repositories do not contain the answer, say so",
+            "You have access to the loaded repositories and to the conversation history",
+            "The user may refer to a specific repository without explicitly naming it",
+            "If a question concerns a repository that is not explicitly named, infer the intended repository from the repository or repositories identified in the previous question(s), using the conversation context",
+            "Only use this inference when the context clearly indicates which repository or repositories the user is referring to",
+            "If the intended repository cannot be determined unambiguously, ask the user to clarify",
+            "Always reply in the same language the user used to give you the last question"
+        ).joinToString(".\n")
+    else
+        null
 }

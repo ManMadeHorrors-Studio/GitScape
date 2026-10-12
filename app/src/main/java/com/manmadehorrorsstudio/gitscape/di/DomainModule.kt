@@ -4,6 +4,7 @@ import ai.koog.http.client.ktor.KtorKoogHttpClient
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.clients.openai.OpenAILLMClient
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
+import ai.koog.prompt.executor.model.PromptExecutor
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
@@ -43,8 +44,7 @@ object AgentModule {
 
     @Provides
     @Singleton
-    fun providePromptExecutor(): MultiLLMPromptExecutor {
-
+    fun provideMultiLLMPromptExecutor(): MultiLLMPromptExecutor {
         val key = BuildConfig.AI_KEY.trim()
 
         return MultiLLMPromptExecutor(
@@ -61,8 +61,14 @@ object AgentModule {
 
     @Provides
     @Singleton
+    fun providePromptExecutor(
+        multiLLMPromptExecutor: MultiLLMPromptExecutor
+    ): PromptExecutor = multiLLMPromptExecutor
+
+    @Provides
+    @Singleton
     fun provideAgentRepository(
-        promptExecutor: MultiLLMPromptExecutor
+        promptExecutor: PromptExecutor
     ): AgentRepository =
         AgentRepositoryImpl(promptExecutor)
 }

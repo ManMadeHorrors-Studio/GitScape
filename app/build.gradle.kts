@@ -55,6 +55,12 @@ android {
         buildConfig = true
     }
 
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
+
     val GITHUB_PAT = "GITHUB_PAT"
     val AI_KEY = "AI_KEY"
 
@@ -111,6 +117,7 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.koog.test)
 }
 
 tasks.withType<Test> {
