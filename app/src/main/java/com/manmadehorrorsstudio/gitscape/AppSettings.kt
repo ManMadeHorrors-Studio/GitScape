@@ -2,6 +2,7 @@ package com.manmadehorrorsstudio.gitscape
 
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
@@ -19,6 +20,9 @@ class AppSettings @Inject constructor(
     private val _glowEffectOnSCrollEnabled = MutableStateFlow(true)
     val glowEffectOnScrollEnabled = _glowEffectOnSCrollEnabled.asStateFlow()
 
+    private val _themeStyle = MutableStateFlow(ThemeStyle.DEFAULT)
+    val themeStyle = _themeStyle.asStateFlow()
+
     private val _colorStyle = MutableStateFlow(ColorStyle.AZURE_STYLE)
     val colorStyle = _colorStyle.asStateFlow()
 
@@ -34,6 +38,10 @@ class AppSettings @Inject constructor(
 
     fun setColorStyleState(colorStyle: ColorStyle) {
         _colorStyle.value = colorStyle
+    }
+
+    fun setThemeStyleState(themeStyle: ThemeStyle) {
+        _themeStyle.value = themeStyle
     }
 
     fun setGlowEffectOnScrollEnabledState(isEnabled: Boolean) {

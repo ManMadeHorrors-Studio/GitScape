@@ -3,6 +3,7 @@ package com.manmadehorrorsstudio.gitscape.ui.repositories
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsEntity
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,6 +21,9 @@ interface SettingsRepository {
     suspend fun saveRepoListHash(hash: String?)
 
     suspend fun clearRepoList()
+
+    fun getThemeStyle(): StateFlow<ThemeStyle>
+    suspend fun saveThemeStyle(themeStyle: ThemeStyle)
 
     fun getColorStyle(): StateFlow<ColorStyle>
     suspend fun saveColorStyle(colorStyle: ColorStyle)

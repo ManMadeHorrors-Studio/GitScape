@@ -5,6 +5,7 @@ import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage.Companion.fromLanguageCode
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +31,7 @@ class SettingsRepositoryImpl  @Inject constructor(
                 settings?.let { sett ->
                     appSettings.setLanguageState(fromLanguageCode(sett.language))
                     appSettings.setRepoListEnabledState(sett.repoListEnabled)
+                    appSettings.setThemeStyleState(sett.themeStyle)
                     appSettings.setColorStyleState(sett.colorStyle)
                     appSettings.setGlowEffectOnScrollEnabledState(sett.glowEffectOnScrollEnabled)
                 }
@@ -73,6 +75,16 @@ class SettingsRepositoryImpl  @Inject constructor(
 
     override suspend fun clearRepoList() {
         saveRepoListHash(null)
+    }
+
+    override fun getThemeStyle(): StateFlow<ThemeStyle> = appSettings.themeStyle
+
+    override suspend fun saveThemeStyle(themeStyle: ThemeStyle) {
+        dao.observeSettings().firstOrNull()?.let { currentSettings ->
+            dao.saveSettings(
+                currentSettings.copy(themeStyle = themeStyle)
+            )
+        }
     }
 
     override fun getColorStyle(): StateFlow<ColorStyle> = appSettings.colorStyle

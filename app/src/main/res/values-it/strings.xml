@@ -11,6 +11,9 @@
     <string name="SETTINGSVIEW.LIST.LANGUAGE.CONTENTDESCRIPTION">Lingua selezionata</string>
     <string name="SETTINGSVIEW.REPOLIST.ENABLED">Repository locali</string>
     <string name="SETTINGSVIEW.GLOW.ENABLED">Effetto glow allo scorrimento</string>
+    <string name="SETTINGSVIEW.THEME">Tema</string>
+    <string name="SETTINGSVIEW.THEME.LIGHT">Chiaro</string>
+    <string name="SETTINGSVIEW.THEME.DARK">Scuro</string>
     <string name="SETTINGSVIEW.COLORSTYLE">Stile di colore</string>
     <string name="SETTINGSVIEW.COLORSTYLE.AZURE">Azzurro</string>
     <string name="SETTINGSVIEW.COLORSTYLE.GREEN">Verde</string>

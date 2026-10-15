@@ -4,6 +4,7 @@ import com.manmadehorrorsstudio.gitscape.AppSettings
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.TestUtils.unmockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -106,6 +107,9 @@ class SettingsRepositoryImplTest {
             appSettings.setGlowEffectOnScrollEnabledState(any())
         } just Runs
         every {
+            appSettings.setThemeStyleState(any())
+        } just Runs
+        every {
             appSettings.setColorStyleState(any())
         } just Runs
 
@@ -144,12 +148,57 @@ class SettingsRepositoryImplTest {
         every { appSettings.setLanguageState(any()) } just Runs
         every { appSettings.setRepoListEnabledState(any()) } just Runs
         every { appSettings.setGlowEffectOnScrollEnabledState(any()) } just Runs
+        every { appSettings.setThemeStyleState(any()) } just Runs
         every { appSettings.setColorStyleState(any()) } just Runs
 
         repository.observeSettings().first()
 
         verify(exactly = 1) {
             appSettings.setGlowEffectOnScrollEnabledState(false)
+        }
+    }
+
+    @Test
+    fun `observeSettings updates appSettings theme style`() = runTest {
+        val settings = SettingsEntity(themeStyle = ThemeStyle.DARK)
+
+        every { dao.observeSettings() } returns flowOf(settings)
+        every { appSettings.setLanguageState(any()) } just Runs
+        every { appSettings.setRepoListEnabledState(any()) } just Runs
+        every { appSettings.setThemeStyleState(any()) } just Runs
+        every { appSettings.setColorStyleState(any()) } just Runs
+        every { appSettings.setGlowEffectOnScrollEnabledState(any()) } just Runs
+
+        repository.observeSettings().first()
+
+        verify(exactly = 1) {
+            appSettings.setThemeStyleState(ThemeStyle.DARK)
+        }
+    }
+
+    @Test
+    fun `getThemeStyle returns appSettings theme state`() {
+        val themeState = MutableStateFlow(ThemeStyle.LIGHT)
+        every { appSettings.themeStyle } returns themeState
+
+        assertEquals(themeState, repository.getThemeStyle())
+
+        verify(exactly = 1) {
+            appSettings.themeStyle
+        }
+    }
+
+    @Test
+    fun `saveThemeStyle updates existing settings`() = runTest {
+        val currentSettings = SettingsEntity(themeStyle = ThemeStyle.DEFAULT)
+
+        every { dao.observeSettings() } returns flowOf(currentSettings)
+        coEvery { dao.saveSettings(any()) } just Runs
+
+        repository.saveThemeStyle(ThemeStyle.DARK)
+
+        coVerify(exactly = 1) {
+            dao.saveSettings(currentSettings.copy(themeStyle = ThemeStyle.DARK))
         }
     }
 

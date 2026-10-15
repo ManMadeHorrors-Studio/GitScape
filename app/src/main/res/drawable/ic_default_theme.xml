@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <!-- Raggi -->
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 516,23 L 516,126" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 168,162 L 247,238" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 860,162 L 781,238" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 23,506 L 136,506" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 892,506 L 1005,506" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 168,850 L 247,774" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 860,850 L 781,774" />
+
+    <path
+        android:fillColor="#FF0277BD"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="46"
+        android:strokeLineCap="round"
+        android:pathData="M 516,881 L 516,995" />
+
+    <!-- Anello circolare -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF0277BD"
+        android:strokeWidth="62"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M 806,503 C 806,664 675,795 514,795 C 353,795 222,664 222,503 C 222,342 353,211 514,211 C 675,211 806,342 806,503 Z" />
+
+    <!-- Luna crescente -->
+    <path
+        android:fillColor="#FF0277BD"
+        android:pathData="M 520,285
+            C 433,287 357,340 319,412
+            C 282,483 291,570 333,632
+            C 372,689 433,716 498,721
+            C 566,725 630,699 672,654
+            C 700,624 718,590 725,557
+            C 693,585 653,605 608,612
+            C 559,620 510,604 472,573
+            C 435,543 416,501 420,457
+            C 422,414 438,372 466,338
+            C 482,316 501,297 520,285 Z" />
+</vector>

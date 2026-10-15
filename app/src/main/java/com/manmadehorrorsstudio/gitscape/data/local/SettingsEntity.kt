@@ -4,13 +4,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.manmadehorrorsstudio.gitscape.SETTINGS_TABLE_NAME
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 
 @Entity(tableName = SETTINGS_TABLE_NAME)
 data class SettingsEntity(
     @PrimaryKey val id: Int = 0,
     val language: String? = null,
     val repoListEnabled: Boolean = true,
-    val glowEffectOnScrollEnabled: Boolean = true,
     val repoListHash: String? = null,
-    val colorStyle: ColorStyle = ColorStyle.AZURE_STYLE
+    val themeStyle: ThemeStyle = ThemeStyle.DEFAULT,
+    val colorStyle: ColorStyle = ColorStyle.AZURE_STYLE,
+    val glowEffectOnScrollEnabled: Boolean = true
 )

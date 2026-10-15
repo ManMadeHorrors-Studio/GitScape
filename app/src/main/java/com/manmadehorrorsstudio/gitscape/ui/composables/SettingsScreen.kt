@@ -38,6 +38,7 @@ import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 
@@ -49,6 +50,7 @@ fun SettingsScreen(
 ) {
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
     val currentRepoListEnabled by settingsViewModel.getRepoListEnabledState().collectAsState()
+    val currentThemeStyle by settingsViewModel.getThemeStyle().collectAsState()
     val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
     val currentGlowEffectOnScrollEnabled by settingsViewModel.getGlowEffectOnScrollEnabledState().collectAsState()
 
@@ -60,7 +62,9 @@ fun SettingsScreen(
         currentLanguage = currentLanguage,
         currentRepoListEnabledLabel = localizedString(R.string.SETTINGSVIEW_REPOLIST_ENABLED),
         currentRepoListEnabled = currentRepoListEnabled,
+        currentThemeStyle = currentThemeStyle,
         currentColorStyle = currentColorStyle,
+        themeStyleLabel = localizedString(R.string.SETTINGSVIEW_THEME),
         glowEffectOnScrollEnabledLabel = localizedString(R.string.SETTINGSVIEW_GLOW_ENABLED),
         currentGlowEffectOnScrollEnabled = currentGlowEffectOnScrollEnabled,
         versionString = getVersionString(),
@@ -73,6 +77,9 @@ fun SettingsScreen(
         },
         onColorStyleSelected = { colorStyle ->
             settingsViewModel.changeColorStyle(colorStyle)
+        },
+        onThemeStyleSelected = { themeStyle ->
+            settingsViewModel.changeThemeStyle(themeStyle)
         },
         onGlowEffectOnScrollEnabledSelected = { isEnabled ->
             settingsViewModel.changeGlowEffectOnScrollEnabled(isEnabled)
@@ -90,12 +97,15 @@ private fun SettingsScreenContent(
     currentRepoListEnabledLabel: String,
     currentRepoListEnabled: Boolean,
     currentColorStyle: ColorStyle,
+    themeStyleLabel: String,
+    currentThemeStyle: ThemeStyle,
     glowEffectOnScrollEnabledLabel: String,
     currentGlowEffectOnScrollEnabled: Boolean,
     versionString: String,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit,
+    onThemeStyleSelected: (ThemeStyle) -> Unit,
     onColorStyleSelected: (ColorStyle) -> Unit,
     onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit
 ) {
@@ -198,6 +208,23 @@ private fun SettingsScreenContent(
             Spacer(modifier = Modifier.height(30.dp))
 
             ExpandableSelector(
+                currentItem = currentThemeStyle,
+                items = ThemeStyle.entries,
+                label = themeStyleLabel,
+                contDesc = themeStyleLabel,
+                itemText = { themeStyle ->
+                    localizedString(themeStyle.description)
+                },
+                itemImage = { themeStyle ->
+                    themeStyle.icon
+                },
+                itemColor = { colors.primary },
+                onItemSelected = onThemeStyleSelected
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            ExpandableSelector(
                 currentItem = currentColorStyle,
                 items = ColorStyle.entries,
                 label = localizedString(R.string.SETTINGSVIEW_COLORSTYLE),
@@ -288,10 +315,13 @@ private fun SettingsScreenPreview() {
             glowEffectOnScrollEnabledLabel = "Scroll glow effect",
             currentGlowEffectOnScrollEnabled = true,
             currentColorStyle = ColorStyle.AZURE_STYLE,
+            currentThemeStyle = ThemeStyle.DEFAULT,
+            themeStyleLabel = "Theme",
             versionString = "Version Debug 666 (6.6.6)",
             onBackClick = {},
             onLanguageSelected = {},
             onRepoListEnabledSelected = {},
+            onThemeStyleSelected = {},
             onGlowEffectOnScrollEnabledSelected = {},
             onColorStyleSelected = {}
         )

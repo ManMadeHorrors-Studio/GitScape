@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.manmadehorrorsstudio.gitscape.ui.composables.GitScapeNavigation
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,7 +37,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val isDarkTheme = isSystemInDarkTheme()
+            val selectedThemeStyle = settingsRepository.getThemeStyle().collectAsState().value
+            val isDarkTheme = when (selectedThemeStyle) {
+                ThemeStyle.DEFAULT -> isSystemInDarkTheme()
+                ThemeStyle.LIGHT -> false
+                ThemeStyle.DARK -> true
+            }
 
             GitScapeTheme(
                 isDarkTheme = isDarkTheme,

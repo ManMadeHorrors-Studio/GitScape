@@ -9,6 +9,7 @@ import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
 import com.manmadehorrorsstudio.gitscape.data.local.LocalGitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.data.local.migrationsList
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.Binds
@@ -40,6 +41,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             GITSCAPE_DATABASE
         )
+            .addMigrations(*migrationsList)
             .build()
     }
 

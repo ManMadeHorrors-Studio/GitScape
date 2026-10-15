@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape
 
-import ai.koog.prompt.executor.clients.google.GoogleModels
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
 import androidx.compose.ui.unit.dp
 
 //Remote
@@ -19,8 +19,8 @@ const val GITHUB_GET_README = "repos/{$GITHUB_OWNER}/{$GITHUB_REPO}/readme"
 //DB
 
 const val GITSCAPE_DATABASE = "gitscape_database"
-const val SETTINGS_TABLE_NAME = "settings_table_name"
-const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table_name"
+const val SETTINGS_TABLE_NAME = "settings_table"
+const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table"
 
 //Navigation
 

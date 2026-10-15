@@ -1,6 +1,7 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
+import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import io.mockk.Runs
@@ -61,6 +62,40 @@ class SettingsViewModelTest {
 
         verify(exactly = 1) {
             settingsRepository.getLanguage()
+        }
+    }
+
+    @Test
+    fun `getThemeStyle returns repository theme state`() {
+        val themeFlow = MutableStateFlow(ThemeStyle.LIGHT)
+
+        every {
+            settingsRepository.getThemeStyle()
+        } returns themeFlow
+
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
+
+        assertEquals(themeFlow, viewModel.getThemeStyle())
+
+        verify(exactly = 1) {
+            settingsRepository.getThemeStyle()
+        }
+    }
+
+    @Test
+    fun `changeThemeStyle saves selected theme`() = runTest {
+        coEvery {
+            settingsRepository.saveThemeStyle(ThemeStyle.DARK)
+        } just Runs
+
+        val viewModel = SettingsViewModel(settingsRepository, localGitHubRepository)
+
+        viewModel.changeThemeStyle(ThemeStyle.DARK)
+
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) {
+            settingsRepository.saveThemeStyle(ThemeStyle.DARK)
         }
     }
 
