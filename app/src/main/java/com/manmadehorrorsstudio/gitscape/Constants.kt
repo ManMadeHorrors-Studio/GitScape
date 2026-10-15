@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape
 
-import ai.koog.prompt.executor.clients.openai.OpenAIModels
+import ai.koog.prompt.executor.clients.google.GoogleModels
 import androidx.compose.ui.unit.dp
 
 //Remote
