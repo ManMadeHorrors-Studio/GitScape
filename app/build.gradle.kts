@@ -113,7 +113,8 @@ dependencies {
     implementation(libs.koogHttpClientKtor)
     // Uncomment the implementation for the LLM provider you want to use
     implementation(libs.koog.google)
-    /*implementation(libs.koog.anthropic)
+    /*implementation(libs.koog.openai)
+    implementation(libs.koog.anthropic)
     implementation(libs.koog.deepseek)
     implementation(libs.koog.openrouter)
     implementation(libs.koog.mistralai)
