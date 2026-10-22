@@ -2,7 +2,6 @@ package com.manmadehorrorsstudio.gitscape.data.ai
 import ai.koog.agents.core.tools.reflect.ToolFromCallable
 import ai.koog.agents.core.tools.reflect.asTool
 import ai.koog.agents.testing.tools.getMockExecutor
-import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import kotlin.test.assertFalse
 
 class AgentRepositoryImplTest {
 
@@ -90,11 +88,6 @@ class AgentRepositoryImplTest {
 
     @Test
     fun `ask loads repositories and returns the final answer`() = runTest {
-        // La validazione della chiave viene già testata separatamente.
-        assertFalse(
-            BuildConfig.AI_KEY.isBlank() ||
-                    BuildConfig.AI_KEY.trim() == "null"
-        )
 
         val marker = "TEST_REPO_MARKER"
         val expectedAnswer = "Risposta finale del test"
@@ -139,7 +132,8 @@ class AgentRepositoryImplTest {
         }
 
         val repository = AgentRepositoryImpl(
-            promptExecutor = mockExecutor
+            promptExecutor = mockExecutor,
+            aiKey = "chiave_ai"
         )
 
         val result = repository.ask(

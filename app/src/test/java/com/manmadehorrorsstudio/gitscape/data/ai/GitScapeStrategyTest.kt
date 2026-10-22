@@ -71,7 +71,8 @@ class GitScapeStrategyTest {
 
         // La strategia da testare è quella effettiva di GitScape.
         val repository = AgentRepositoryImpl(
-            promptExecutor = mockk(relaxed = true)
+            promptExecutor = mockk(relaxed = true),
+            aiKey = "chiave_ai"
         )
 
         val agent = AIAgent(

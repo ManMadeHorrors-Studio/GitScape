@@ -43,50 +43,55 @@ object AgentModule {
 
     @Provides
     @Singleton
-    fun provideMultiLLMPromptExecutor(): MultiLLMPromptExecutor {
-        val key = BuildConfig.AI_KEY.trim()
+    fun provideAiKey(): String = BuildConfig.AI_KEY.trim()
+
+    @Provides
+    @Singleton
+    fun provideMultiLLMPromptExecutor(
+        aiKey: String
+    ): MultiLLMPromptExecutor {
 
         return MultiLLMPromptExecutor(
             // Gemini
             GoogleLLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = KtorKoogHttpClient.Factory()
             )/*,
             Uncomment the implementation for the LLM provider you want to use
             // OpenAI
             OpenAILLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = KtorKoogHttpClient.Factory()
             ),
             // Claude
             AnthropicLLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = KtorKoogHttpClient.Factory()
             ),
             // DeepSeek
             DeepSeekLLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = httpFactory
             ),
             // OpenRouter
             OpenRouterLLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = httpFactory
             ),
             // Mistral
             MistralAILLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = httpFactory
             ),
             //DashScope Qwen
             DashscopeLLMClient(
-                apiKey = key,
+                apiKey = aiKey,
                 httpClientFactory = httpFactory
             ),
             //Ollama
             OllamaClient(
                 baseUrl = URL_SERVER,
-                httpClientFactory = httpFactory,
+                httpClientFactory = httpFactory
             )*/
         )
     }
@@ -100,9 +105,13 @@ object AgentModule {
     @Provides
     @Singleton
     fun provideAgentRepository(
-        promptExecutor: PromptExecutor
+        promptExecutor: PromptExecutor,
+        aiKey: String
     ): AgentRepository =
-        AgentRepositoryImpl(promptExecutor)
+        AgentRepositoryImpl(
+            promptExecutor = promptExecutor,
+            aiKey = aiKey
+        )
 }
 
 @Module

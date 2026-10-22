@@ -14,7 +14,6 @@ import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.prompt.executor.model.PromptExecutor
 import ai.koog.prompt.message.Message
-import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
@@ -25,7 +24,8 @@ import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor(
-    private val promptExecutor: PromptExecutor
+    private val promptExecutor: PromptExecutor,
+    private val aiKey: String
 ) : AgentRepository {
     override suspend fun ask(
         messages: List<Message>,
@@ -34,7 +34,7 @@ class AgentRepositoryImpl @Inject constructor(
         onUiCommand: (AgentUiCommand) -> Unit
 
     ): String {
-        validateAiKey(BuildConfig.AI_KEY)
+        validateAiKey(aiKey)
 
         val gitScapeAgentTools = GitScapeAgentTools(
             getGitHubReadMeUseCase = getGitHubReadMeUseCase,
