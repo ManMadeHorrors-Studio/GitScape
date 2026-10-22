@@ -1,0 +1,3 @@
+## Updates
+
+- Set release build
