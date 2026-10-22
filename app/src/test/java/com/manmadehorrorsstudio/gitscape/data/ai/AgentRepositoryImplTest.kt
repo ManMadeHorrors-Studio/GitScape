@@ -3,6 +3,7 @@ import ai.koog.agents.core.tools.reflect.ToolFromCallable
 import ai.koog.agents.core.tools.reflect.asTool
 import ai.koog.agents.testing.tools.getMockExecutor
 import com.manmadehorrorsstudio.gitscape.BuildConfig
+import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import io.mockk.every
@@ -112,15 +113,15 @@ class AgentRepositoryImplTest {
         val readMeUseCase = mockk<GetGitHubReadMeUseCase>(relaxed = true)
 
         // Serve a costruire il tool usato per configurare la risposta simulata.
-        val toolsForMock = AgentTools(
+        val toolsForMock = GitScapeAgentTools(
             getGitHubReadMeUseCase = readMeUseCase,
             repositories = repositories,
             onUiCommand = {}
         )
 
-        val listReposTool = AgentTools::list_repos.asTool(
+        val listReposTool = GitScapeAgentTools::list_repos.asTool(
             thisRef = toolsForMock,
-            name = "list_repos"
+            name = LIST_REPOS_NAME
         )
 
         val mockExecutor = getMockExecutor {

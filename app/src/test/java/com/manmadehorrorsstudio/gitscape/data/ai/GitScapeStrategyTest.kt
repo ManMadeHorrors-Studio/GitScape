@@ -5,6 +5,7 @@ import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.core.tools.reflect.ToolFromCallable
 import ai.koog.agents.core.tools.reflect.asTool
 import ai.koog.agents.testing.tools.getMockExecutor
+import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import io.mockk.every
@@ -35,7 +36,7 @@ class GitScapeStrategyTest {
         every { repo.description } returns "Test repository"
         every { repo.ownerLogin } returns "test-owner"
 
-        val agentTools = AgentTools(
+        val gitScapeAgentTools = GitScapeAgentTools(
             getGitHubReadMeUseCase = mockk(relaxed = true),
             repositories = listOf(repo),
             onUiCommand = {}
@@ -43,13 +44,13 @@ class GitScapeStrategyTest {
 
         // Registriamo i tool reali dell'applicazione.
         val toolRegistry = ToolRegistry {
-            tools(agentTools)
+            tools(gitScapeAgentTools)
         }
 
         // Recuperiamo il tool registrato da Koog.
-        val listReposTool = AgentTools::list_repos.asTool(
-            thisRef = agentTools,
-            name = "list_repos"
+        val listReposTool = GitScapeAgentTools::list_repos.asTool(
+            thisRef = gitScapeAgentTools,
+            name = LIST_REPOS_NAME
         )
 
         // Mock del modello: prima chiama list_repos,
