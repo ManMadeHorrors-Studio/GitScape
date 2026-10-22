@@ -18,7 +18,7 @@ junitPlatform = "1.10.3"
 mockk = "1.14.11"
 kotlinxCoroutinesTest = "1.8.1"
 
-agp = "9.0.1"
+agp = "9.4.0"
 kotlin = "2.4.20"
 ksp = "2.3.6"
 
