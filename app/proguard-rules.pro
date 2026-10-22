@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Ktor's debug detector references JVM management APIs that are not available on Android.
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn java.lang.management.RuntimeMXBean
+
+-keep class com.manmadehorrorsstudio.gitscape.data.ai.GitScapeAgentTools {*;}
+
+-keep interface ai.koog.agents.core.tools.reflect.ToolSet {*;}
+
+-keep class kotlin.coroutines.Continuation

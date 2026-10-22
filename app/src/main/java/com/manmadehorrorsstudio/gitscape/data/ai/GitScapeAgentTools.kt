@@ -3,6 +3,7 @@ package com.manmadehorrorsstudio.gitscape.data.ai
 import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.agents.core.tools.annotations.Tool
 import ai.koog.agents.core.tools.reflect.ToolSet
+import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
@@ -10,13 +11,13 @@ import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import com.squareup.moshi.Moshi
 
 
-class AgentTools(
+class GitScapeAgentTools(
     private val getGitHubReadMeUseCase: GetGitHubReadMeUseCase,
     private val repositories: List<GitHubRepo>,
     private val onUiCommand: (AgentUiCommand) -> Unit
 ) : ToolSet {
 
-    @Tool
+    @Tool(customName = LIST_REPOS_NAME)
     @LLMDescription("Provides the repositories required for your tasks")
     fun list_repos(): String {
         val result = repositories.asSequence()
@@ -62,17 +63,17 @@ class AgentTools(
     @Tool
     @LLMDescription(
         "Retrieves the README content of a specific list of repositories. " +
-                "Use this tool only when you need more specific information about one or more " +
-                "repositories than the information already provided by list_repos. " +
-                "For example, use it when you need detailed repository information from the " +
-                "README content to answer the user's question. " +
-                "Do not use this tool when the available repository metadata is sufficient. " +
-                "You can request information for up to 10 repositories at a time."
+            "Use this tool only when you need more specific information about one or more " +
+            "repositories than the information already provided by list_repos. " +
+            "For example, use it when you need detailed repository information from the " +
+            "README content to answer the user's question. " +
+            "Do not use this tool when the available repository metadata is sufficient. " +
+            "You can request information for up to 10 repositories at a time."
     )
     suspend fun get_repos_readme(
         @LLMDescription(
             "List of repository IDs to retrieve more specific information for. " +
-                    "Provide at most 10 repository IDs."
+                "Provide at most 10 repository IDs."
         )
         repo_ids: List<String>
     ): String {

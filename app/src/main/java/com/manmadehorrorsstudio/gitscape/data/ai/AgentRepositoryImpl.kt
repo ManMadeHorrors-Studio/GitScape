@@ -15,6 +15,7 @@ import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.prompt.executor.model.PromptExecutor
 import ai.koog.prompt.message.Message
 import com.manmadehorrorsstudio.gitscape.BuildConfig
+import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
 import com.manmadehorrorsstudio.gitscape.LLM_MODEL
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
@@ -35,25 +36,23 @@ class AgentRepositoryImpl @Inject constructor(
     ): String {
         validateAiKey(BuildConfig.AI_KEY)
 
-        val tools = AgentTools(
+        val gitScapeAgentTools = GitScapeAgentTools(
             getGitHubReadMeUseCase = getGitHubReadMeUseCase,
             repositories = repositories,
             onUiCommand = onUiCommand
         )
 
         val toolRegistry = ToolRegistry {
-            tools(tools)
+            tools(gitScapeAgentTools)
         }
 
         val listReposDescriptor =
-            toolRegistry.getTool("list_repos").descriptor
+            toolRegistry.getTool(LIST_REPOS_NAME).descriptor
 
         val agent = AIAgent(
             promptExecutor = promptExecutor,
             llmModel = LLM_MODEL,
-            toolRegistry = ToolRegistry {
-                tools(tools)
-            },
+            toolRegistry = toolRegistry,
             systemPrompt = getBasePrompt(messages.size),
             maxIterations = 20,
             strategy = gitScapeStrategy(

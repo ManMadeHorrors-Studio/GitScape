@@ -90,6 +90,7 @@ class AgentViewModel @Inject constructor(
                         }
                     }
                     .onFailure { error ->
+                        gitScapeLog("Agent error", error)
                         _agentState.update {
                             it.copy(
                                 isLoading = false,

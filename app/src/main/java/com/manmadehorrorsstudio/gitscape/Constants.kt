@@ -43,3 +43,5 @@ const val DYNAMIC_COLOR = true
 
 //Set here the LLM provider you want to use
 val LLM_MODEL = GoogleModels.Gemini3_7Flash
+
+const val LIST_REPOS_NAME = "list_repos"

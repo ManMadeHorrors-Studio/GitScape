@@ -2,7 +2,6 @@ package com.manmadehorrorsstudio.gitscape.domain.models
 
 import com.squareup.moshi.JsonClass
 import java.security.MessageDigest
-import kotlin.reflect.full.memberProperties
 
 @JsonClass(generateAdapter = true)
 data class GitHubRepo(
@@ -16,15 +15,22 @@ data class GitHubRepo(
 )
 
 fun List<GitHubRepo>.calculateHash(): String {
-    val memberProperties = GitHubRepo::class.memberProperties
     val canonicalData = buildString {
-        this@calculateHash.forEach { repo ->
-            for (proprieta in memberProperties) {
-                append("${proprieta.name}-${proprieta.get(repo) ?: "null"}")
-            }
+        fun appendField(field: String) {
+            append("${field.length}:$field-")
+        }
 
+        this@calculateHash.forEach { repo ->
+            appendField(repo.id)
+            appendField(repo.name)
+            appendField(repo.primaryLanguage ?: "null")
+            appendField(repo.stars.toString())
+            appendField(repo.htmlUrl ?: "null")
+            appendField(repo.description ?: "null")
+            appendField(repo.ownerLogin ?: "null")
         }
     }
+
     val bytes = MessageDigest.getInstance("SHA-256").digest(canonicalData.toByteArray(Charsets.UTF_8))
     return bytes.joinToString("") { "%02x".format(it) }
 }
