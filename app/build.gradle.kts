@@ -8,11 +8,34 @@ plugins {
     alias(libs.plugins.google.hilt)
 }
 
+private val keysProperties = Properties().apply {
+    val keysFile = rootProject.file("keys.properties")
+    if (keysFile.exists()) {
+        keysFile.inputStream().use(::load)
+    }
+}
+
+private fun getSecretValue(key: String): String {
+    return keysProperties.getProperty(key)
+        ?: System.getenv(key)
+        ?: error(
+            """
+            Missing configuration value: $key
+            
+            Either:
+            - define '$key' inside keys.properties
+            - or expose it as an environment variable (e.g. Jenkins Credentials).
+            """.trimIndent()
+        )
+}
+
 android {
     namespace = "com.manmadehorrorsstudio.gitscape"
     compileSdk {
         version = release(36)
     }
+
+    val releaseSigningConfig = "release"
 
     defaultConfig {
         applicationId = "com.manmadehorrorsstudio.gitscape"
@@ -23,6 +46,35 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        signingConfigs {
+            create(releaseSigningConfig) {
+                storeFile = file(getSecretValue("KEYSTORE_FILE"))
+                storePassword = getSecretValue("KEYSTORE_PASSWORD")
+                keyAlias = getSecretValue("KEY_ALIAS")
+                keyPassword = getSecretValue("KEY_PASSWORD")
+            }
+        }
+
+        buildConfigField(
+            "String",
+            "RELEASE_SIGNING_CONFIG",
+            "\"$releaseSigningConfig\""
+        )
+
+        val GITHUB_PAT = "GITHUB_PAT"
+        val AI_KEY = "AI_KEY"
+
+        buildConfigField(
+            "String",
+            GITHUB_PAT,
+            "\"${getLocalProperty(GITHUB_PAT)}\""
+        )
+        buildConfigField(
+            "String",
+            AI_KEY,
+            "\"${getLocalProperty(AI_KEY)}\""
+        )
     }
 
     buildTypes {
@@ -33,6 +85,7 @@ android {
             isShrinkResources = false
         }
         release {
+            signingConfig = signingConfigs.getByName(releaseSigningConfig)
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
@@ -59,22 +112,6 @@ android {
         unitTests {
             isReturnDefaultValues = true
         }
-    }
-
-    val GITHUB_PAT = "GITHUB_PAT"
-    val AI_KEY = "AI_KEY"
-
-    defaultConfig {
-        buildConfigField(
-            "String",
-            GITHUB_PAT,
-            "\"${getLocalProperty(GITHUB_PAT)}\""
-        )
-        buildConfigField(
-            "String",
-            AI_KEY,
-            "\"${getLocalProperty(AI_KEY)}\""
-        )
     }
 }
 

@@ -13,7 +13,7 @@ The following credentials are required to run GitScape:
 
 GitScape uses the GitHub REST API to retrieve your user profile, list repositories, and read repository README files. To enable these features, you must create a **Fine-grained personal access token** with the minimum required permissions.
 
-### 1. Generate a Fine-grained PAT
+### Generate a Fine-grained PAT
 
 1. Open [GitHub Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens/new).
 2. Enter a token name, such as `GitScape`, and choose an expiration date.
@@ -33,11 +33,11 @@ GitScape uses the GitHub REST API to retrieve your user profile, list repositori
 
 > **Note:** If you need to access repositories owned by an organization, you may need to select that organization as the resource owner. Organization approval may also be required.
 
-### 2. Configure the AI Agent
+### Configure the AI Agent
 
 An API key for the configured LLM provider is required. GitScape uses Google Gemini as its default provider, with the model configured through `LLM_MODEL` in `Constants.kt`.
 
-### 3. Alternative LLM Provider
+### Alternative LLM Provider
 
 GitScape uses **Google Gemini** by default, but Koog integrations are also available for the following LLM providers:
 
@@ -62,9 +62,9 @@ Only the Gemini integration is enabled by default. The other provider integratio
 
 Each cloud provider requires its own valid API credentials. Adding a provider does not automatically enable fallback: the selected model and its corresponding client configuration determine which provider handles requests.
 
-### 4. Configure GitScape
+### Configure local properties
 
-In your local.properties file add the following lines:
+In your `local.properties` file add the following lines:
 
 
 GITHUB_PAT=YOUR_GITHUB_PAT_TOKEN
@@ -73,6 +73,19 @@ AI_KEY=YOUR_AI_API_KEY
 
 
 Do not commit your token or AI key to version control.
+
+### Configure release keys
+
+If you want to build the app in release mode, create a file named `keys.properties` in the project root add the following lines:
+
+
+KEYSTORE_FILE=Path of your keystore file
+KEYSTORE_PASSWORD=Password of your keystore file
+KEY_ALIAS=Alias of your key in the keystore file
+KEY_PASSWORD=Password of your key in the keystore file
+
+
+Do not commit your Play Store keys to version control.
 
 ### Security
 
