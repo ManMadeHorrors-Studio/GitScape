@@ -46,7 +46,7 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
                 )
                 val repoListViewModel: RepoListViewModel = hiltViewModel(parentEntry)
 
-                RepoListScreen(
+                DashboardScreen(
                     repoListViewModel = repoListViewModel,
                     innerPadding = innerPadding,
                     onSettingsClick = {

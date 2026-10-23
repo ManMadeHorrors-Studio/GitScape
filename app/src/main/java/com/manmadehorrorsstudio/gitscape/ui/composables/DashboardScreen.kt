@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.merge
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RepoListScreen(
+fun DashboardScreen(
     repoListViewModel: RepoListViewModel,
     innerPadding: PaddingValues,
     onSettingsClick: () -> Unit
