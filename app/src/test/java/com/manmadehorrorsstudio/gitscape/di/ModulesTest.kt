@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.di
 
-import com.manmadehorrorsstudio.gitscape.GITHUB_BASE_PATH
+import com.manmadehorrorsstudio.gitscape.GITHUB_API_BASE_PATH
 import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
 import com.manmadehorrorsstudio.gitscape.data.local.AppDatabase
 import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
@@ -76,7 +76,7 @@ class ModulesTest {
         assertNotNull(api)
         val retrofit = Proxy.getInvocationHandler(api).findFieldOfType(Retrofit::class.java) as? Retrofit
         assertNotNull(retrofit)
-        assertEquals("https://$GITHUB_BASE_PATH/", retrofit!!.baseUrl().toString())
+        assertEquals("https://$GITHUB_API_BASE_PATH/", retrofit!!.baseUrl().toString())
     }
 
     @Test

@@ -11,7 +11,14 @@ const val GITHUB_REPO = "repo"
 
 //URLs
 
-const val GITHUB_BASE_PATH = "api.github.com"
+const val GITHUB_BASE_PATH = "github.com"
+
+//Auth
+const val GITHUB_LOGIN_PATH = "login/device/code"
+const val GITHUB_GET_TOKEN_PATH = "login/oauth/access_token"
+
+//Repo
+const val GITHUB_API_BASE_PATH = "api.$GITHUB_BASE_PATH"
 const val GITHUB_GET_REPOS_PATH = "user/repos"
 const val GITHUB_GET_USER_PATH = "user"
 const val GITHUB_GET_README = "repos/{$GITHUB_OWNER}/{$GITHUB_REPO}/readme"
@@ -45,3 +52,7 @@ const val DYNAMIC_COLOR = true
 val LLM_MODEL = GoogleModels.Gemini3_7Flash
 
 const val LIST_REPOS_NAME = "list_repos"
+
+//GitHub
+
+const val GITHUB_CLIENT_ID = "Iv23linPm3YUYyuhPuhm"

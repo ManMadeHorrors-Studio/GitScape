@@ -289,7 +289,7 @@ GitScape follows a layered Android architecture:
 
 GitScape uses a custom OkHttp `GitHubAuthInterceptor` to centralize GitHub API authentication and request configuration.
 
-The interceptor checks the host of each outgoing request before adding authentication headers. **The GitHub Personal Access Token (PAT) is attached only when the request host matches `GITHUB_BASE_PATH`.** Requests targeting other hosts are forwarded unchanged, without the GitHub authentication headers.
+The interceptor checks the host of each outgoing request before adding authentication headers. **The GitHub Personal Access Token (PAT) is attached only when the request host matches `GITHUB_API_BASE_PATH`.** Requests targeting other hosts are forwarded unchanged, without the GitHub authentication headers.
 
 This host-based check helps prevent accidental exposure of the PAT to unrelated third-party services, particularly if additional API integrations are introduced in the future.
 

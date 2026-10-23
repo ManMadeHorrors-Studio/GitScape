@@ -1,7 +1,7 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.BuildConfig
-import com.manmadehorrorsstudio.gitscape.GITHUB_BASE_PATH
+import com.manmadehorrorsstudio.gitscape.GITHUB_API_BASE_PATH
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -11,7 +11,7 @@ class GitHubAuthInterceptor : Interceptor {
 
         val request = chain.request()
 
-        return if (request.url.host.equals(GITHUB_BASE_PATH, ignoreCase = true)) {
+        return if (request.url.host.equals(GITHUB_API_BASE_PATH, ignoreCase = true)) {
 
             val authenticatedRequest = request.newBuilder()
                 .header(

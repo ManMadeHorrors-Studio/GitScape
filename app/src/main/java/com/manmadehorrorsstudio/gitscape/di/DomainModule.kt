@@ -10,7 +10,11 @@ import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.data.ai.AgentRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
+import com.manmadehorrorsstudio.gitscape.data.remote.AuthApis
+import com.manmadehorrorsstudio.gitscape.data.remote.AuthRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.domain.repositories.AuthRepository
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthDeviceUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
@@ -33,6 +37,21 @@ object RepositoryModule {
         return GitHubRepositoryImpl(
             api,
             readMeCache
+        )
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AuthRepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        api: AuthApis
+    ): AuthRepository {
+        return AuthRepositoryImpl(
+            api
         )
     }
 }
@@ -137,5 +156,12 @@ object UseCaseModule {
         repository: GitHubRepository
     ): GetGitHubReadMeUseCase {
         return GetGitHubReadMeUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetAuthDeviceUseCase(
+        repository: AuthRepository
+    ): GetAuthDeviceUseCase {
+        return GetAuthDeviceUseCase(repository)
     }
 }

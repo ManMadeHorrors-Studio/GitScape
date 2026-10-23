@@ -1,6 +1,8 @@
 package com.manmadehorrorsstudio.gitscape.di
 
+import com.manmadehorrorsstudio.gitscape.GITHUB_API_BASE_PATH
 import com.manmadehorrorsstudio.gitscape.GITHUB_BASE_PATH
+import com.manmadehorrorsstudio.gitscape.data.remote.AuthApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubAuthInterceptor
 import com.manmadehorrorsstudio.gitscape.data.remote.loggingInterceptor
@@ -40,10 +42,23 @@ object NetworkModule {
         okHttpClient: OkHttpClient
     ): GitHubApis {
         return Retrofit.Builder()
-            .baseUrl("https://$GITHUB_BASE_PATH/")
+            .baseUrl("https://$GITHUB_API_BASE_PATH/")
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create())
         .build()
         .create(GitHubApis::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApi(
+        okHttpClient: OkHttpClient
+    ): AuthApis {
+        return Retrofit.Builder()
+            .baseUrl("https://$GITHUB_BASE_PATH/")
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create())
+            .build()
+            .create(AuthApis::class.java)
     }
 }
