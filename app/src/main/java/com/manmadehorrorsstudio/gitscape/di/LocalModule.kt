@@ -9,6 +9,7 @@ import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
 import com.manmadehorrorsstudio.gitscape.data.local.LocalGitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.data.local.TokensDao
 import com.manmadehorrorsstudio.gitscape.data.local.migrationsList
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
@@ -57,6 +58,13 @@ object DatabaseModule {
         database: AppDatabase
     ): GitHubDao {
         return database.getGitHubDao()
+    }
+
+    @Provides
+    fun provideTokensDao(
+        database: AppDatabase
+    ): TokensDao {
+        return database.getTokensDao()
     }
 }
 
