@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.domain.models
 
-data class Tokens(
+data class AuthTokens(
     val githubUserId: String,
     val accessToken: String,
     val refreshToken: String?,

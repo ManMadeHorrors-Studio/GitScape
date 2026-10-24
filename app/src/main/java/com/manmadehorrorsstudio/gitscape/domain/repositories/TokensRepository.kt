@@ -1,10 +1,10 @@
 package com.manmadehorrorsstudio.gitscape.domain.repositories
 
-import com.manmadehorrorsstudio.gitscape.domain.models.Tokens
+import com.manmadehorrorsstudio.gitscape.domain.models.AuthTokens
 
 interface TokensRepository {
-    suspend fun getTokens(): Tokens?
-    suspend fun saveTokens(tokens: Tokens)
-    suspend fun replaceTokens(tokens: Tokens)
+    suspend fun getTokens(): AuthTokens?
+    suspend fun saveTokens(authTokens: AuthTokens)
+    suspend fun replaceTokens(authTokens: AuthTokens)
     suspend fun deleteTokens()
 }
