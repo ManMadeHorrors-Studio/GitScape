@@ -7,5 +7,5 @@ import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 class GetGitHubReadMeUseCase (
     private val repository: GitHubRepository
 ) {
-    suspend operator fun invoke(gitHubRepo: GitHubRepo,): GitHubReadMe = repository.getGitHubReadMe(gitHubRepo)
+    suspend operator fun invoke(gitHubRepo: GitHubRepo): GitHubReadMe = repository.getGitHubReadMe(gitHubRepo)
 }

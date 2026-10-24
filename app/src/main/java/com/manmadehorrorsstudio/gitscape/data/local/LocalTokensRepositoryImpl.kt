@@ -3,12 +3,12 @@ package com.manmadehorrorsstudio.gitscape.data.local
 import com.manmadehorrorsstudio.gitscape.data.mappers.toDomain
 import com.manmadehorrorsstudio.gitscape.data.mappers.toEntity
 import com.manmadehorrorsstudio.gitscape.domain.models.AuthTokens
-import com.manmadehorrorsstudio.gitscape.domain.repositories.TokensRepository
+import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalTokensRepository
 import javax.inject.Inject
 
-class TokensRepositoryImpl @Inject constructor(
+class LocalTokensRepositoryImpl @Inject constructor(
     private val tokensDao: TokensDao
-) : TokensRepository {
+) : LocalTokensRepository {
 
     override suspend fun getTokens(): AuthTokens? {
         return tokensDao.getTokens()?.toDomain()
