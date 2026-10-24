@@ -7,22 +7,22 @@ import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalTokensReposito
 import javax.inject.Inject
 
 class LocalTokensRepositoryImpl @Inject constructor(
-    private val tokensDao: TokensDao
+    private val authTokensDao: AuthTokensDao
 ) : LocalTokensRepository {
 
     override suspend fun getTokens(): AuthTokens? {
-        return tokensDao.getTokens()?.toDomain()
+        return authTokensDao.getTokens()?.toDomain()
     }
 
     override suspend fun saveTokens(authTokens: AuthTokens) {
-        tokensDao.saveTokens(authTokens.toEntity())
+        authTokensDao.saveTokens(authTokens.toEntity())
     }
 
     override suspend fun replaceTokens(authTokens: AuthTokens) {
-        tokensDao.replaceTokens(authTokens.toEntity())
+        authTokensDao.replaceTokens(authTokens.toEntity())
     }
 
     override suspend fun deleteTokens() {
-        tokensDao.deleteAllTokens()
+        authTokensDao.deleteAllTokens()
     }
 }

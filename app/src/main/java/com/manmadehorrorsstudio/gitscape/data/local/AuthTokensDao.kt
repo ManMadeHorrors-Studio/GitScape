@@ -8,19 +8,19 @@ import androidx.room.Transaction
 import com.manmadehorrorsstudio.gitscape.TOKENS_TABLE_NAME
 
 @Dao
-interface TokensDao {
+interface AuthTokensDao {
 
     @Query("SELECT * FROM $TOKENS_TABLE_NAME LIMIT 1")
-    suspend fun getTokens(): TokensEntity?
+    suspend fun getTokens(): AuthTokensEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveTokens(tokens: TokensEntity)
+    suspend fun saveTokens(tokens: AuthTokensEntity)
 
     @Query("DELETE FROM $TOKENS_TABLE_NAME")
     suspend fun deleteAllTokens()
 
     @Transaction
-    suspend fun replaceTokens(tokens: TokensEntity) {
+    suspend fun replaceTokens(tokens: AuthTokensEntity) {
         deleteAllTokens()
         saveTokens(tokens)
     }
@@ -29,7 +29,7 @@ interface TokensDao {
     @Query("SELECT * FROM $TOKENS_TABLE_NAME WHERE githubUserId = :githubUserId")
     suspend fun getTokensByUserId(
         githubUserId: String
-    ): TokensEntity?
+    ): AuthTokensEntity?
 
     @Query("DELETE FROM $TOKENS_TABLE_NAME WHERE githubUserId = :githubUserId")
     suspend fun deleteTokensByUserId(
