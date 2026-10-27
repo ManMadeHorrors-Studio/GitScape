@@ -6,32 +6,40 @@ GitScape is an Android application for browsing, searching, and understanding Gi
 
 The following credentials are required to run GitScape:
 
-- GitHub PAT token
+- GitHub account credentials
 - AI API key
 
-### GitHub Personal Access Token (PAT) Setup
+### GitHub Authentication
 
-GitScape uses the GitHub REST API to retrieve your user profile, list repositories, and read repository README files. To enable these features, you must create a **Fine-grained personal access token** with the minimum required permissions.
+GitScape uses a **GitHub OAuth App** and the **Device Flow** to authenticate users securely. This allows you to sign in with your GitHub account without manually generating or configuring a Personal Access Token (PAT).
 
-### Generate a Fine-grained PAT
+Once authenticated, GitScape uses the GitHub REST API to retrieve your user profile, list your repositories, and read repository README files.
 
-1. Open [GitHub Fine-grained personal access tokens](https://github.com/settings/personal-access-tokens/new).
-2. Enter a token name, such as `GitScape`, and choose an expiration date.
-3. Under **Resource owner**, select the account that owns the repositories you want to access.
-4. Under **Repository access**, choose one of the following:
-   - **All repositories** to allow access to all repositories owned by the selected account.
-   - **Only select repositories** to restrict access to specific repositories.
-5. Under **Repository permissions**, configure the following permissions:
+### Sign in with GitHub
 
-| Permission | Access | Purpose |
-|---|---|---|
-| **Metadata** | Read-only | Required to list repositories. This permission is granted automatically when creating a fine-grained token. |
-| **Contents** | Read-only | Required to read repository README files. |
+1. Launch GitScape and start the GitHub sign-in process.
+2. GitScape displays a device code and a button to copy it to your clipboard and open the browser.
+3. Press the button to open GitHub.
+4. Sign in to GitHub, if prompted, paste the code and authorize GitScape.
+5. Return to GitScape. The app completes the authentication process automatically.
 
-6. Leave all other permissions unset.
-7. Click **Generate token** and copy the token. GitHub will not display the complete token again.
+Once authentication is complete, GitScape can access the repositories permitted by your GitHub account and the authorization granted to the app.
 
-> **Note:** If you need to access repositories owned by an organization, you may need to select that organization as the resource owner. Organization approval may also be required.
+### Token Management
+
+GitScape manages OAuth tokens automatically:
+
+- **Access token:** Used to authenticate GitHub API requests.
+- **Refresh token:** Used to obtain a new access token when the current one is approaching expiration.
+- **Automatic session restoration:** GitScape attempts to restore your session when you reopen the app, without requiring you to sign in again as long as your saved tokens remain valid.
+
+If your refresh token expires or becomes invalid, you may need to authenticate with GitHub again.
+
+### Repository Access
+
+GitScape can access repositories that your GitHub account is authorized to access, subject to the permissions granted to the GitHub App and any applicable organization policies.
+
+For private repositories, you must authorize the app with an account that has access to those repositories. Organization policies or approval requirements may apply.
 
 ### Configure the AI Agent
 
@@ -66,13 +74,9 @@ Each cloud provider requires its own valid API credentials. Adding a provider do
 
 In your `local.properties` file add the following lines:
 
-
-GITHUB_PAT=YOUR_GITHUB_PAT_TOKEN
-
 AI_KEY=YOUR_AI_API_KEY
 
-
-Do not commit your token or AI key to version control.
+Do not commit your AI key to version control.
 
 ### Configure release keys
 
@@ -305,9 +309,7 @@ Centralizing this logic in an OkHttp interceptor avoids duplicating authenticati
 
 ### AI Integration
 
-During implementation, I encountered integration difficulties with the Google AI SDK when configuring and passing the API key. The suggested Firebase-based approach required additional project-specific configuration that I considered inappropriate to ask users to perform just to run the application.
-
-I therefore chose **Koog** as the AI agent framework. This choice allowed me to implement the agent and its tool-calling logic independently of a specific LLM provider, while supporting different providers through a common abstraction.
+ **Koog** is used to implement the AI agent framework. This choice allowed me to implement the agent and its tool-calling logic independently of a specific LLM provider, while supporting different providers through a common abstraction.
 
 This approach also improves maintainability and extensibility: adding or replacing an LLM provider in the future can be done with limited impact on the rest of the application, keeping the agent's domain tools and application logic largely unchanged.
 
