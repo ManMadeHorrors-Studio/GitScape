@@ -60,7 +60,9 @@ class ModulesTest {
 
     @Test
     fun `NetworkModule provides auth interceptor and client with expected interceptors`() {
-        val authInterceptor = NetworkModule.provideGitHubAuthInterceptor()
+        val authInterceptor = NetworkModule.provideGitHubAuthInterceptor(
+            NetworkModule.provideAuthTokenCache()
+        )
         val client = NetworkModule.provideOkHttpClient(authInterceptor)
 
         assertNotNull(authInterceptor)

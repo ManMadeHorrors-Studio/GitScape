@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
-import com.manmadehorrorsstudio.gitscape.BuildConfig
+import com.manmadehorrorsstudio.gitscape.data.local.AuthCache
 import com.manmadehorrorsstudio.gitscape.GITHUB_API_BASE_PATH
 import com.manmadehorrorsstudio.gitscape.GITHUB_GET_USER_PATH
 import io.mockk.every
@@ -20,10 +20,12 @@ class GitHubAuthInterceptorTest {
     private lateinit var interceptor: GitHubAuthInterceptor
     private lateinit var chain: Interceptor.Chain
     private lateinit var response: Response
+    private val tockenMocked = "tocken_mocked"
 
     @BeforeEach
     fun setUp() {
-        interceptor = GitHubAuthInterceptor()
+        val authCache = AuthCache().apply { updateAccessToken(token = tockenMocked) }
+        interceptor = GitHubAuthInterceptor(authCache)
         chain = mockk()
         response = mockk()
     }
@@ -54,7 +56,7 @@ class GitHubAuthInterceptorTest {
         val authenticatedRequest = capturedRequest.captured
 
         assertEquals(
-            "Bearer ${BuildConfig.GITHUB_PAT}",
+            "Bearer $tockenMocked",
             authenticatedRequest.header("Authorization")
         )
 
