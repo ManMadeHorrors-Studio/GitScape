@@ -56,4 +56,4 @@ const val LIST_REPOS_NAME = "list_repos"
 
 //GitHub
 
-const val GITHUB_CLIENT_ID = "Iv23linPm3YUYyuhPuhm"
+const val GITHUB_CLIENT_ID = "Ov23li2SvvtJY0bZCSeL"

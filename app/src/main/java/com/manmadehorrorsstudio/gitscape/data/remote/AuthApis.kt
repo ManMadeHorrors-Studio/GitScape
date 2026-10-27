@@ -17,7 +17,7 @@ interface AuthApis {  //These apis have github.com as base path. @FormUrlEncoded
     @Headers("Accept: application/json") //forces the response in json
     suspend fun requestDeviceCode(
         @Field("client_id") clientId: String = GITHUB_CLIENT_ID,
-        @Field("scope") scope: String = "offline_access"
+        @Field("scope") scope: String = "repo read:user"
     ): AuthDeviceCodeDTO
 
     @FormUrlEncoded

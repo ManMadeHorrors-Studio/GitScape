@@ -30,7 +30,7 @@
     <string name="GENERIC.BACK">Back</string>
     <string name="GENERIC.ERROR.TITLE">Warning</string>
     <string name="GENERIC.ERROR.OK" translatable="false">OK</string>
-    <string name="GENERIC.ERROR.CANCEL" translatable="false">Cancel</string>
+    <string name="GENERIC.ERROR.CANCEL">Cancel</string>
     <string name="SEARCH.CLEAR">Clear</string>
     <string name="SEARCH.VOICE">Ricerca vocale</string>
     <string name="SEARCH.HINT.GENERIC">Search…</string>
@@ -39,5 +39,19 @@
     <string name="AGENTSHEET.INPUT_HINT">Ask about your repositories</string>
     <string name="AGENTSHEET.CHAT.YOU">You:</string>
     <string name="AGENTSHEET.CHAT.AI" translatable="false">AI: </string>
+    <string name="AUTH.WELCOME.STEP1">Welcome to GitScape!\nTo use the app you need to login with your GitHub account</string>
+    <string name="AUTH.WELCOME.BUTTON1" translatable="false">Login</string>
+    <string name="AUTH.WELCOME.STEP2">Open the browser by pressing the button below, login with your GitHub account and when prompted, enter the code:</string>
+    <string name="AUTH.WELCOME.BUTTON2">Copy the code and open browser</string>
+    <string name="AUTH.WELCOME.BROWSING">Waiting for browser response…</string>
+    <string name="AUTH.WELCOME.SUCCESS">Authentication successful!</string>
+    <string name="AUTH.WELCOME.SUCCESS.BUTTON">Let\'s start!</string>
+    <string name="AUTH.WELCOME.TIMEOUT">Authentication timed out, please try again</string>
+    <string name="AUTH.WELCOME.ERROR.BUTTON">Retry</string>
+    <string name="AUTH.ERROR.DENIED">You refused the authorization</string>
+    <string name="AUTH.ERROR.EXPIRED">The verification code has expired</string>
+    <string name="AUTH.ERROR.DIFFERENT_USER">The user ID is different from the one in the local storage; repeat the login</string>
+    <string name="AUTH.ERROR.INVALID_TOKEN">The tokens are expired or have been revoked; repeat the login</string>
+    <string name="AUTH.ERROR.GENERIC">Error during authentication, please try again</string>
 
 </resources>

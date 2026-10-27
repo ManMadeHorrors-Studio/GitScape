@@ -15,9 +15,11 @@ import com.manmadehorrorsstudio.gitscape.data.remote.AuthRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AuthRepository
 import com.manmadehorrorsstudio.gitscape.domain.repositories.GitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthDeviceUseCase
+import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthTokensUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
+import com.manmadehorrorsstudio.gitscape.domain.usecases.RefreshAuthTokensUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -163,5 +165,19 @@ object UseCaseModule {
         repository: AuthRepository
     ): GetAuthDeviceUseCase {
         return GetAuthDeviceUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetAuthTokensUseCase(
+        repository: AuthRepository
+    ): GetAuthTokensUseCase {
+        return GetAuthTokensUseCase(repository)
+    }
+
+    @Provides
+    fun provideRefreshAuthTokensUseCase(
+        repository: AuthRepository
+    ): RefreshAuthTokensUseCase {
+        return RefreshAuthTokensUseCase(repository)
     }
 }

@@ -31,5 +31,18 @@
     <string name="AGENTSHEET.INPUT_HINT">Chiedi dei tuoi repository</string>
     <string name="AGENTSHEET.THINKING">L\'AI sta pensando…</string>
     <string name="AGENTSHEET.CHAT.YOU">Tu:</string>
+    <string name="AUTH.WELCOME.STEP1">Benvenuto in GitScape!\nPer poter utilizzare l\'app è necessario loggarti col tuo account GitHub</string>
+    <string name="AUTH.WELCOME.STEP2">Apri il browser premendo il tasto sottostante, loggati con il tuo account GitHub e quando ti sarà richiesto inserisci il codice:</string>
+    <string name="AUTH.WELCOME.BUTTON2">Copia il codice e apri il browser</string>
+    <string name="AUTH.WELCOME.BROWSING">Attendendo la risposta del browser…</string>
+    <string name="AUTH.WELCOME.SUCCESS">Autenticazione avvenuta con successo!</string>
+    <string name="AUTH.WELCOME.SUCCESS.BUTTON">Iniziamo!</string>
+    <string name="AUTH.WELCOME.TIMEOUT">Autenticazione in timeout, riprova</string>
+    <string name="AUTH.WELCOME.ERROR.BUTTON">Riprova</string>
+    <string name="AUTH.ERROR.DENIED">Hai rifiutato l\'autorizzazione</string>
+    <string name="AUTH.ERROR.EXPIRED">Il codice di verifica è scaduto</string>
+    <string name="AUTH.ERROR.DIFFERENT_USER">Lo user ID è diverso da quello memorizzato; rifare il login</string>
+    <string name="AUTH.ERROR.INVALID_TOKEN">I token sono scaduti o sono stati revocati; rifare il login</string>
+    <string name="AUTH.ERROR.GENERIC">Errore durante l\'autenticazione, riprova</string>
 
 </resources>

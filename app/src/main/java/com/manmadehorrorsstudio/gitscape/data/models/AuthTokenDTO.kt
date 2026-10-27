@@ -12,7 +12,7 @@ data class AuthTokenDTO(
     val refreshToken: String? = null,
 
     @Json(name = "expires_in")
-    val expiresIn: Long? = null,
+    val accessTokenExpiresIn: Long? = null,
 
     @Json(name = "refresh_token_expires_in")
     val refreshTokenExpiresIn: Long? = null,
@@ -28,3 +28,7 @@ data class AuthTokenDTO(
     @Json(name = "error_description")
     val errorDescription: String? = null
 )
+
+fun AuthTokenDTO.isValid(): Boolean {
+    return !accessToken.isNullOrBlank() && !refreshToken.isNullOrBlank()
+}
