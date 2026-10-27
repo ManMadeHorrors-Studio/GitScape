@@ -2,6 +2,7 @@ package com.manmadehorrorsstudio.gitscape.di
 
 import com.manmadehorrorsstudio.gitscape.GITHUB_API_BASE_PATH
 import com.manmadehorrorsstudio.gitscape.GITHUB_BASE_PATH
+import com.manmadehorrorsstudio.gitscape.data.local.AuthCache
 import com.manmadehorrorsstudio.gitscape.data.remote.AuthApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubAuthInterceptor
@@ -21,8 +22,16 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGitHubAuthInterceptor(): GitHubAuthInterceptor {
-        return GitHubAuthInterceptor()
+    fun provideAuthTokenCache(): AuthCache {
+        return AuthCache()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubAuthInterceptor(
+        authCache: AuthCache
+    ): GitHubAuthInterceptor {
+        return GitHubAuthInterceptor(authCache)
     }
 
     @Provides
