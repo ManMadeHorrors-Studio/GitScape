@@ -11,7 +11,7 @@ data class AuthTokensEntity(
 
     val accessToken: String,
 
-    val refreshToken: String?,
+    val refreshToken: String,
 
     val accessTokenExpiresAt: Long?,
 

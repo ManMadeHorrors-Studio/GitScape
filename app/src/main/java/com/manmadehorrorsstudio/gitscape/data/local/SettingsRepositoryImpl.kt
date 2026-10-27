@@ -73,7 +73,7 @@ class SettingsRepositoryImpl  @Inject constructor(
         }
     }
 
-    override suspend fun clearRepoList() {
+    override suspend fun clearRepoHash() {
         saveRepoListHash(null)
     }
 

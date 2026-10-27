@@ -1,6 +1,6 @@
 package com.manmadehorrorsstudio.gitscape.data.local
 
-import com.manmadehorrorsstudio.gitscape.data.mappers.toDomain
+import com.manmadehorrorsstudio.gitscape.data.mappers.mapToDomain
 import com.manmadehorrorsstudio.gitscape.data.mappers.toEntity
 import com.manmadehorrorsstudio.gitscape.domain.models.AuthTokens
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalTokensRepository
@@ -11,7 +11,7 @@ class LocalTokensRepositoryImpl @Inject constructor(
 ) : LocalTokensRepository {
 
     override suspend fun getTokens(): AuthTokens? {
-        return authTokensDao.getTokens()?.toDomain()
+        return authTokensDao.getTokens()?.mapToDomain()
     }
 
     override suspend fun saveTokens(authTokens: AuthTokens) {

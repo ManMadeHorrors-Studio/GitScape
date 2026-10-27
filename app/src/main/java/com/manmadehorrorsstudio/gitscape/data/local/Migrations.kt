@@ -28,7 +28,7 @@ val migrationsList = arrayOf<Migration>(
             CREATE TABLE IF NOT EXISTS $TOKENS_TABLE_NAME (
                 `githubUserId` TEXT NOT NULL,
                 `accessToken` TEXT NOT NULL,
-                `refreshToken` TEXT,
+                `refreshToken` TEXT NOT NULL,
                 `accessTokenExpiresAt` INTEGER,
                 `refreshTokenExpiresAt` INTEGER,
                 PRIMARY KEY(`githubUserId`)

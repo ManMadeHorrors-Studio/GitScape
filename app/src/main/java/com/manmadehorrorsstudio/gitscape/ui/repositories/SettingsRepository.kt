@@ -20,7 +20,7 @@ interface SettingsRepository {
     suspend fun getRepoListHash(): String?
     suspend fun saveRepoListHash(hash: String?)
 
-    suspend fun clearRepoList()
+    suspend fun clearRepoHash()
 
     fun getThemeStyle(): StateFlow<ThemeStyle>
     suspend fun saveThemeStyle(themeStyle: ThemeStyle)
