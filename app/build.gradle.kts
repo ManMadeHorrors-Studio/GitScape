@@ -62,14 +62,8 @@ android {
             "\"$releaseSigningConfig\""
         )
 
-        val GITHUB_PAT = "GITHUB_PAT"
         val AI_KEY = "AI_KEY"
 
-        buildConfigField(
-            "String",
-            GITHUB_PAT,
-            "\"${getLocalProperty(GITHUB_PAT)}\""
-        )
         buildConfigField(
             "String",
             AI_KEY,
