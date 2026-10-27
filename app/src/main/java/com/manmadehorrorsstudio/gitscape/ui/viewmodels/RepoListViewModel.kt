@@ -8,7 +8,6 @@ import com.manmadehorrorsstudio.gitscape.domain.models.GitHubUser
 import com.manmadehorrorsstudio.gitscape.domain.models.calculateHash
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubRepoListUseCase
-import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.models.RepoListState
 import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
@@ -27,7 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class RepoListViewModel @Inject constructor(
     private val getGitHubRepoListUseCase: GetGitHubRepoListUseCase,
-    private val getGitHubUserUseCase: GetGitHubUserUseCase,
     private val localGitHubRepository: LocalGitHubRepository,
     private val settingsRepository: SettingsRepository
 ) : ViewModel() {
@@ -38,28 +36,24 @@ class RepoListViewModel @Inject constructor(
     private val _userState = MutableStateFlow<GitHubUser?>(null)
     val userState: StateFlow<GitHubUser?> = _userState.asStateFlow()
 
-    fun getGlowEffectOnScrollEnabledState() = settingsRepository.getGlowEffectOnScrollEnabled()
-
     private val _repoListEvents = Channel<UIEvents>(Channel.CONFLATED)
     val repoListEvents = _repoListEvents.receiveAsFlow()
-
-    init {
-        refreshRepoListScreen()
-    }
 
     fun refreshRepoListScreen() {
         upDateRepoList(emptyList())
         startLoading()
         viewModelScope.launch {
-            val userDeferred = if (_userState.value == null)
+            /*val userDeferred = if (_userState.value == null)
                 async { loadUser() }
             else
-                null
+                null*/
             val repoDeferred = async { loadRepositories() }
-            userDeferred?.await()
+            //userDeferred?.await()
             repoDeferred.await()
         }
     }
+
+    fun getGlowEffectOnScrollEnabledState() = settingsRepository.getGlowEffectOnScrollEnabled()
 
     private suspend fun loadRepositories() {
         val hashFromLocal = settingsRepository.getRepoListHash()
@@ -105,18 +99,6 @@ class RepoListViewModel @Inject constructor(
             }
     }
 
-    private suspend fun loadUser() {
-        runCatching { getGitHubUserUseCase() }
-            .onSuccess { user ->
-                gitScapeLog("loadUser result: $user")
-                _userState.value = user
-            }
-            .onFailure { exception ->
-                gitScapeLog("loadUser error", exception as? Exception)
-                _userState.value = null
-            }
-    }
-
     private fun startLoading() {
         _repoListState.update { it.copy(isLoading = true) }
     }
@@ -130,7 +112,7 @@ class RepoListViewModel @Inject constructor(
                 upDateRepoList(emptyList())
                 gitScapeLog("updateRepoListFromLocal error", e)
                 localGitHubRepository.clearGitHubRepositories()
-                settingsRepository.clearRepoList()
+                settingsRepository.clearRepoHash()
                 _repoListEvents.send(
                     UIEvents.ShowError(
                         message = R.string.REPOLISTVIEW_ERRORS_REPOS_CORRUPTED_LOCAL
