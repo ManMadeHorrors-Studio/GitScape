@@ -53,7 +53,7 @@ fun AuthSection (
                 text = userCode,
                 color = colors.primary,
                 style = types.bodyLarge,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
         }
 
@@ -62,7 +62,10 @@ fun AuthSection (
             Button(
                 onClick = { authAdvanceStep() }
             ) {
-                Text(text = localizedString(bm))
+                Text(
+                    text = localizedString(bm),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
