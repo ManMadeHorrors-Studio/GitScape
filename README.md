@@ -13,7 +13,7 @@ The following credentials are required to run GitScape:
 
 GitScape uses a **GitHub OAuth App** and the **Device Flow** to authenticate users securely. This allows you to sign in with your GitHub account without manually generating or configuring a Personal Access Token (PAT).
 
-Once authenticated, GitScape uses the GitHub REST API to retrieve your user profile, list your repositories, and read repository README files.
+Once authenticated, GitScape uses the GitHub REST API to retrieve information about your user profile and repositories.
 
 ### Sign in with GitHub
 
