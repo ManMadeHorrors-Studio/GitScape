@@ -5,5 +5,8 @@ sealed interface UIEvents {
         val message: Int?,
         val onAlertConfirm: (() -> Unit)? = null
     ) : UIEvents
+
     data class PointToRepo(val id: String) : UIEvents
+    data class CallOpenBrowser(val url: String?, val stringToCopy: String?) : UIEvents
+    data object CallRefreshRepo : UIEvents
 }

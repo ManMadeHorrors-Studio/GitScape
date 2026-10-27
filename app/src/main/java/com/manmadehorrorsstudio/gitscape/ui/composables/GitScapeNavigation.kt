@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.manmadehorrorsstudio.gitscape.MAIN_NAVIGATION_GROUP
 import com.manmadehorrorsstudio.gitscape.NavigationScreen
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AuthViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.RepoListViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 
@@ -44,9 +45,11 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
                     backStackEntry,
                     MAIN_NAVIGATION_GROUP
                 )
+                val authViewModel: AuthViewModel = hiltViewModel(parentEntry)
                 val repoListViewModel: RepoListViewModel = hiltViewModel(parentEntry)
 
                 DashboardScreen(
+                    authViewModel = authViewModel,
                     repoListViewModel = repoListViewModel,
                     innerPadding = innerPadding,
                     onSettingsClick = {

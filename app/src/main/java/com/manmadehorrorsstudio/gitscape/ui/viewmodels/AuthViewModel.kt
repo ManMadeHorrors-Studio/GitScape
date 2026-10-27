@@ -58,7 +58,7 @@ class AuthViewModel @Inject constructor(
         collectAccessToken()
     }
 
-    fun advanceStep() {
+    fun authAdvanceStep() {
         when ( _authState.value.authStatus) {
             AuthStatus.STEP1 -> {
                 startLoading()

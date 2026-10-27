@@ -19,6 +19,7 @@ import com.manmadehorrorsstudio.gitscape.R
 
 @Composable
 fun RepoListToolbar(
+    showAiAndRefreshButtons: Boolean,
     onAIClick: () -> Unit,
     onRefreshClick: () -> Unit,
     onSettingsClick: () -> Unit
@@ -30,25 +31,28 @@ fun RepoListToolbar(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ToolButton(
-            onClick = onAIClick,
-            contentDescription = R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION,
-            painter = R.drawable.ai_icon
-        )
+        if (showAiAndRefreshButtons)
+            ToolButton(
+                onClick = onAIClick,
+                contentDescription = R.string.REPOLISTVIEW_BUTTON_AI_CONTENTDESCRIPTION,
+                painter = R.drawable.ai_icon
+            )
 
         Spacer(
             modifier = Modifier.weight(1f)
         )
 
-        ToolButton(
-            onClick = onRefreshClick,
-            contentDescription = R.string.REPOLISTVIEW_BUTTON_REFRESH_CONTENTDESCRIPTION,
-            imageVector = Icons.Default.Refresh
-        )
+        if (showAiAndRefreshButtons) {
+            ToolButton(
+                onClick = onRefreshClick,
+                contentDescription = R.string.REPOLISTVIEW_BUTTON_REFRESH_CONTENTDESCRIPTION,
+                imageVector = Icons.Default.Refresh
+            )
 
-        Spacer(
-            modifier = Modifier.width(15.dp)
-        )
+            Spacer(
+                modifier = Modifier.width(15.dp)
+            )
+        }
 
         ToolButton(
             onClick = onSettingsClick,
@@ -62,6 +66,7 @@ fun RepoListToolbar(
 @Composable
 fun RepoListToolbarPreview() {
     RepoListToolbar(
+        true,
         {},
         {},
         {}
