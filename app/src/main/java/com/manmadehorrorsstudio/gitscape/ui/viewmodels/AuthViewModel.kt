@@ -23,6 +23,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -49,10 +50,13 @@ class AuthViewModel @Inject constructor(
     val authState: StateFlow<AuthState> =
         _authState.asStateFlow()
 
+    private val _isForeground = MutableStateFlow(true)
+
     private val _authEvents = Channel<UIEvents>(Channel.CONFLATED)
     val authEvents = _authEvents.receiveAsFlow()
 
-    private var authTokensJob: Job? = null
+    private var authTokensJob: Job? = null  //When the app goes in background the job is canceled, because in recent devices the internet connection is limited in background apps, and that causes the API calls to fail
+    private var checkDeviceCodeAndCollectForegroundJob: Job? = null
 
     init {
         collectAccessToken()
@@ -68,7 +72,6 @@ class AuthViewModel @Inject constructor(
                 checkAuthDeviceCodeNotExpiredThenCallAuthTokens()
             }
             AuthStatus.BROWSING -> {
-                authTokensJob?.cancel()
                 clearState()
             }
             AuthStatus.SUCCESS -> {
@@ -111,11 +114,17 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun startLoading() {
-        _authState.update { authS ->
-            authS.copy(
-                isLoading = true
-            )
+    fun onForegroundChanged(foreground: Boolean) {
+        _isForeground.value = foreground
+    }
+
+    private suspend fun collectForeground() {
+        _isForeground.collectLatest { fore ->
+            gitScapeLog("collectForeground: $fore")
+            if (fore)
+                callAuthTokens()
+            else
+                authTokensJob?.cancel()
         }
     }
 
@@ -174,6 +183,8 @@ class AuthViewModel @Inject constructor(
                 isLoading = false
             )
         }
+        authTokensJob?.cancel()
+        checkDeviceCodeAndCollectForegroundJob?.cancel()
     }
 
     private suspend fun loadUserAndTestAccessToken(authTokens: AuthTokens, tokensFromLocal: Boolean) {
@@ -278,38 +289,46 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private suspend fun callAuthTokens() {
-        _authState.value.authDeviceCode?.let { authDevice ->
-            runCatching {
-                getAuthTokensUseCase(
-                    deviceCode = authDevice.deviceCode,
-                    deviceCodeExpiresAt = authDevice.expiresAt,
-                    initialInterval = authDevice.interval
-                )
-            }
-                .onSuccess { authTokens ->
-                    gitScapeLog("callAuthTokens result: $authTokens")
-                    loadUserAndTestAccessToken(authTokens, false)
+    private fun callAuthTokens() {
+        authTokensJob = viewModelScope.launch {
+            _authState.value.authDeviceCode?.let { authDevice ->
+                runCatching {
+                    getAuthTokensUseCase(
+                        deviceCode = authDevice.deviceCode,
+                        deviceCodeExpiresAt = authDevice.expiresAt,
+                        initialInterval = authDevice.interval
+                    )
                 }
-                .onFailure { exception ->
-                    gitScapeLog("callAuthTokens error", exception as? Exception)
+                    .onSuccess { authTokens ->
+                        gitScapeLog("callAuthTokens result: $authTokens")
+                        loadUserAndTestAccessToken(authTokens, false)
+                        checkDeviceCodeAndCollectForegroundJob?.cancel()
+                    }
+                    .onFailure { exception ->
+                        gitScapeLog("callAuthTokens error", exception as? Exception)
+                        when {
+                            exception !is CancellationException -> {
+                                exception.message?.toIntOrNull()?.let {
+                                    _authEvents.send(
+                                        UIEvents.ShowError(
+                                            message = exception.message?.toIntOrNull()
+                                                ?: R.string.AUTH_ERROR_GENERIC
+                                        )
+                                    )
+                                }
+                                clearState()
+                            }
 
-                    if (exception !is CancellationException) {
-                        exception.message?.toIntOrNull()?.let {
-                            _authEvents.send(
-                                UIEvents.ShowError(
-                                    message = exception.message?.toIntOrNull() ?: R.string.AUTH_ERROR_GENERIC
-                                )
-                            )
+                            _isForeground.value -> //If we are in foreground and the error is CancellationException, that means that the user pressed the cancel button
+                                clearState()
                         }
                     }
-                    clearState()
-                }
+            }
         }
     }
 
     private fun checkAuthDeviceCodeNotExpiredThenCallAuthTokens() {
-        authTokensJob = viewModelScope.launch {
+        checkDeviceCodeAndCollectForegroundJob = viewModelScope.launch {
             _authState.value.authDeviceCode?.expiresAt?.let { expiresAt ->
                 if (expiresAt < System.currentTimeMillis()) {
                     clearState()
@@ -320,7 +339,7 @@ class AuthViewModel @Inject constructor(
                     )
                 } else {
                     waitForBrowser()
-                    callAuthTokens()
+                    collectForeground()
                 }
             }
         }
@@ -339,6 +358,14 @@ class AuthViewModel @Inject constructor(
                 stringToCopy = _authState.value.authDeviceCode?.userCode
             )
         )
+    }
+
+    private fun startLoading() {
+        _authState.update { authS ->
+            authS.copy(
+                isLoading = true
+            )
+        }
     }
 
     private fun Long?.isNotExpired(): Boolean {
