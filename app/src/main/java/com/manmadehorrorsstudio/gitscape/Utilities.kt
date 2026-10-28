@@ -5,13 +5,20 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.net.toUri
 
-fun gitScapeLog(message: String, errorMessage: Throwable? = null) {
+fun gitScapeLog(
+    message: String,
+    errorMessage: Throwable? = null,
+    info: Boolean = false
+) {
     val GITSCAPEDEBUGTAG = "GITSCAPEDEBUGTAG"
     if (!BuildConfig.BUILD_TYPE.equals(BuildConfig.RELEASE_SIGNING_CONFIG, true))
         errorMessage?.message?.letNotEmpty{ em ->
             Log.e(GITSCAPEDEBUGTAG, "$message\n$em")
         } ?: run {
-            Log.d(GITSCAPEDEBUGTAG, message)
+            if(info)
+                Log.i(GITSCAPEDEBUGTAG, message)
+            else
+                Log.d(GITSCAPEDEBUGTAG, message)
         }
 }
 
