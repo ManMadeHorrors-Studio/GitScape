@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -49,12 +50,14 @@ fun AuthSection (
         }
 
         authState.authDeviceCode?.userCode?.let { userCode ->
-            Text(
-                text = userCode,
-                color = colors.primary,
-                style = types.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+            SelectionContainer {
+                Text(
+                    text = userCode,
+                    color = colors.primary,
+                    style = types.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         authState.authStatus.buttonMessage?.let { bm ->
