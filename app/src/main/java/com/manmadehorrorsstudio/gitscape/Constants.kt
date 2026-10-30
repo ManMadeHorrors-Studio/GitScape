@@ -30,6 +30,13 @@ const val SETTINGS_TABLE_NAME = "settings_table"
 const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table"
 const val TOKENS_TABLE_NAME = "tokens_table"
 
+//Tokens expiration safety time
+
+const val AUTHDEVICECODE_SAFETY_TIME = 60L
+const val ACCESSTOKEN_SAFETY_TIME = 3600L
+const val REFRESHTOKEN_SAFETY_TIME = 86400L
+
+
 //Navigation
 
 const val MAIN_NAVIGATION_GROUP = "MAIN_NAVIGATION_GROUP"

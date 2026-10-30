@@ -7,6 +7,7 @@ import com.manmadehorrorsstudio.gitscape.domain.models.AuthDeviceCode
 import com.manmadehorrorsstudio.gitscape.domain.models.AuthTokens
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AuthRepository
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.isNotExpired
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthError
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class AuthRepositoryImpl @Inject constructor(
 
         var pending = 0
 
-        while (System.currentTimeMillis() < deviceCodeExpiresAt) {
+        while (deviceCodeExpiresAt.isNotExpired()) {
             delay((intervalSeconds * 1000).milliseconds)
 
             val response: AuthTokenDTO = api.pollAccessToken(

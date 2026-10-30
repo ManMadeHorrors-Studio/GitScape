@@ -1,6 +1,9 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
+import com.manmadehorrorsstudio.gitscape.ACCESSTOKEN_SAFETY_TIME
 import com.manmadehorrorsstudio.gitscape.R
+import com.manmadehorrorsstudio.gitscape.REFRESHTOKEN_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.addCurrentTime
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.TestUtils.unmockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.data.local.AuthCache
@@ -13,12 +16,12 @@ import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthDeviceUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthTokensUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.RefreshAuthTokensUseCase
+import com.manmadehorrorsstudio.gitscape.ui.models.AuthError
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthStatus
 import com.manmadehorrorsstudio.gitscape.ui.models.UIEvents
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -94,7 +97,13 @@ class AuthViewModelTest {
 
     @Test
     fun `valid local access token validates matching user and requests repository refresh`() = runTest {
-        val tokens = AuthTokens("user-id", "access", "refresh", 0, 0)
+        val tokens = AuthTokens(
+            "user-id",
+            "access",
+            "refresh",
+            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
+            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+        )
         val user = GitHubUser("user-id", "name", null, null)
         coEvery { local.getTokens() } returns tokens
         coEvery { getUser() } returns user
@@ -110,7 +119,13 @@ class AuthViewModelTest {
 
     @Test
     fun `local token belonging to another user resets authentication and emits error`() = runTest {
-        val tokens = AuthTokens("different-id", "access", "refresh", 0, 0)
+        val tokens = AuthTokens(
+            "different-id",
+            "access",
+            "refresh",
+            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
+            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+        )
         coEvery { local.getTokens() } returns tokens
         coEvery { getUser() } returns GitHubUser("actual-id", "name", null, null)
 
@@ -121,14 +136,26 @@ class AuthViewModelTest {
 
         assertEquals(AuthStatus.STEP1, vm.authState.value.authStatus)
         assertTrue(event is UIEvents.ShowError)
-        assertEquals(R.string.AUTH_ERROR_DIFFERENT_USER, (event as UIEvents.ShowError).message)
+        assertEquals(AuthError.DIFFERENT_USER.message, (event as UIEvents.ShowError).message)
         assertEquals(null, authCache.getAccessToken())
     }
 
     @Test
     fun `expired access token refreshes tokens and saves them with the current user`() = runTest {
-        val oldTokens = AuthTokens("old-id", "expired-access", "refresh", Long.MAX_VALUE, 0)
-        val refreshed = AuthTokens("", "new-access", "new-refresh", 1, 2)
+        val oldTokens = AuthTokens(
+            "old-id",
+            "expired-access",
+            "refresh",
+            0,
+            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
+        )
+        val refreshed = AuthTokens(
+            "",
+            "new-access",
+            "new-refresh",
+            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME),
+            120L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+        )
         val user = GitHubUser("user-id", "name", null, null)
         coEvery { local.getTokens() } returns oldTokens
         coEvery { refresh("refresh") } returns refreshed
@@ -139,7 +166,15 @@ class AuthViewModelTest {
 
         assertEquals(AuthStatus.SUCCESS, vm.authState.value.authStatus)
         coVerify { refresh("refresh") }
-        coVerify { local.saveTokens(AuthTokens("user-id", "new-access", "new-refresh", 1, 2)) }
+        coVerify {
+            local.saveTokens(
+                match {
+                    it.githubUserId == "user-id" &&
+                        it.accessToken == "new-access" &&
+                        it.refreshToken == "new-refresh"
+                }
+            )
+        }
     }
 
     @Test

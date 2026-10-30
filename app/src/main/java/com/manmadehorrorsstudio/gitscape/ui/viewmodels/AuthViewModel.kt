@@ -12,6 +12,7 @@ import com.manmadehorrorsstudio.gitscape.domain.usecases.GetAuthTokensUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubUserUseCase
 import com.manmadehorrorsstudio.gitscape.domain.usecases.RefreshAuthTokensUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.isNotExpired
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthError
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthState
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthStatus
@@ -329,18 +330,16 @@ class AuthViewModel @Inject constructor(
 
     private fun checkAuthDeviceCodeNotExpiredThenCallAuthTokens() {
         checkDeviceCodeAndCollectForegroundJob = viewModelScope.launch {
-            _authState.value.authDeviceCode?.expiresAt?.let { expiresAt ->
-                if (expiresAt < System.currentTimeMillis()) {
-                    clearState()
-                    _authEvents.send(
-                        UIEvents.ShowError(
-                            message = R.string.AUTH_WELCOME_TIMEOUT
-                        )
+            if (_authState.value.authDeviceCode?.expiresAt.isNotExpired()) {
+                waitForBrowser()
+                collectForeground()
+            } else {
+                clearState()
+                _authEvents.send(
+                    UIEvents.ShowError(
+                        message = R.string.AUTH_WELCOME_TIMEOUT
                     )
-                } else {
-                    waitForBrowser()
-                    collectForeground()
-                }
+                )
             }
         }
     }
@@ -366,11 +365,5 @@ class AuthViewModel @Inject constructor(
                 isLoading = true
             )
         }
-    }
-
-    private fun Long?.isNotExpired(): Boolean {
-        return this?.let {
-            it < System.currentTimeMillis()
-        } == true
     }
 }

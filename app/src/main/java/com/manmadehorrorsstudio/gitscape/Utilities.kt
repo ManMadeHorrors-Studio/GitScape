@@ -22,14 +22,6 @@ fun gitScapeLog(
         }
 }
 
-inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
-    return if (this.isNullOrEmpty()) {
-        null
-    } else {
-        block(this)
-    }
-}
-
 fun openBrowser(urlString: String?, context: Context?) {
     urlString?.let { url ->
         context?.let { ctx ->
@@ -41,3 +33,19 @@ fun openBrowser(urlString: String?, context: Context?) {
         } ?: gitScapeLog("openBrowser", Exception("Missing context"))
     } ?: gitScapeLog("openBrowser", Exception("Missing url"))
 }
+
+inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
+    return if (this.isNullOrEmpty()) {
+        null
+    } else {
+        block(this)
+    }
+}
+
+fun Long?.isNotExpired(): Boolean {
+    return this?.let {
+        it > (System.currentTimeMillis() / 1000)
+    } == true
+}
+
+fun Long?.addCurrentTime(safetyTime: Long): Long? = this?.let { (System.currentTimeMillis() / 1000) + it - safetyTime }

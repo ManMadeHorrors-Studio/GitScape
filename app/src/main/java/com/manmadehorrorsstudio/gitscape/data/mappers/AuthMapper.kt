@@ -1,5 +1,9 @@
 package com.manmadehorrorsstudio.gitscape.data.mappers
 
+import com.manmadehorrorsstudio.gitscape.ACCESSTOKEN_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.AUTHDEVICECODE_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.REFRESHTOKEN_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.addCurrentTime
 import com.manmadehorrorsstudio.gitscape.data.local.AuthTokensEntity
 import com.manmadehorrorsstudio.gitscape.data.models.AuthDeviceCodeDTO
 import com.manmadehorrorsstudio.gitscape.data.models.AuthTokenDTO
@@ -11,7 +15,7 @@ fun AuthDeviceCodeDTO.mapToDomain(): AuthDeviceCode =
         deviceCode = deviceCode.orEmpty(),
         userCode = userCode.orEmpty(),
         verificationUri = verificationUri.orEmpty(),
-        expiresAt = expiresIn?.let {System.currentTimeMillis() + it * 1_000} ?: -1,
+        expiresAt = expiresIn?.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME) ?: -1,
         interval = interval ?: -1
     )
 
@@ -29,8 +33,8 @@ fun AuthTokenDTO.mapToDomain(githubUserId: String): AuthTokens =
         githubUserId = githubUserId,
         accessToken = accessToken.orEmpty(),    //cannot be null because AuthTokenDTO with null accessToken are filtered out in AuthRepositoryImpl
         refreshToken = refreshToken.orEmpty(),  //cannot be null because AuthTokenDTO with null refreshToken are filtered out in AuthRepositoryImpl
-        accessTokenExpiresAt = accessTokenExpiresIn,
-        refreshTokenExpiresIn
+        accessTokenExpiresAt = accessTokenExpiresIn?.addCurrentTime(ACCESSTOKEN_SAFETY_TIME),
+        refreshTokenExpiresAt = refreshTokenExpiresIn?.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
     )
 
 fun AuthTokens.toEntity(): AuthTokensEntity =
@@ -41,4 +45,3 @@ fun AuthTokens.toEntity(): AuthTokensEntity =
         accessTokenExpiresAt = accessTokenExpiresAt,
         refreshTokenExpiresAt = refreshTokenExpiresAt
     )
-

@@ -12,7 +12,7 @@ data class AuthDeviceCodeDTO(
     @Json(name = "verification_uri")
     val verificationUri: String? = null,
     @Json(name = "expires_in")
-    val expiresIn: Int? = null,
+    val expiresIn: Long? = null,
     val interval: Int? = null
 )
 

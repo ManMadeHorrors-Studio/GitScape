@@ -22,7 +22,6 @@ data class AuthTokenDTO(
 
     val scope: String? = null,
 
-    //questi 2 secondo me non ci sono
     val error: String? = null,
 
     @Json(name = "error_description")
