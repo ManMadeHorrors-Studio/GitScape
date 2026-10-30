@@ -24,6 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -37,14 +39,17 @@ import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
+import com.manmadehorrorsstudio.gitscape.ui.models.AuthStatus
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
 import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
+import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AuthViewModel
 
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
+    authViewModel: AuthViewModel,
     innerPadding: PaddingValues,
     onBackClick: () -> Unit
 ) {
@@ -53,6 +58,7 @@ fun SettingsScreen(
     val currentThemeStyle by settingsViewModel.getThemeStyle().collectAsState()
     val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
     val currentGlowEffectOnScrollEnabled by settingsViewModel.getGlowEffectOnScrollEnabledState().collectAsState()
+    val authState by authViewModel.authState.collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -67,6 +73,7 @@ fun SettingsScreen(
         themeStyleLabel = localizedString(R.string.SETTINGSVIEW_THEME),
         glowEffectOnScrollEnabledLabel = localizedString(R.string.SETTINGSVIEW_GLOW_ENABLED),
         currentGlowEffectOnScrollEnabled = currentGlowEffectOnScrollEnabled,
+        userRegistered = authState.authStatus == AuthStatus.VALIDATED || authState.authStatus == AuthStatus.OFFLINE,
         versionString = getVersionString(),
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
@@ -83,6 +90,11 @@ fun SettingsScreen(
         },
         onGlowEffectOnScrollEnabledSelected = { isEnabled ->
             settingsViewModel.changeGlowEffectOnScrollEnabled(isEnabled)
+        },
+        onClearUserConfirmed = {
+            authViewModel.setNoUserRegistered()
+            authViewModel.clearState()
+            onBackClick()
         }
     )
 }
@@ -101,16 +113,19 @@ private fun SettingsScreenContent(
     currentThemeStyle: ThemeStyle,
     glowEffectOnScrollEnabledLabel: String,
     currentGlowEffectOnScrollEnabled: Boolean,
+    userRegistered: Boolean,
     versionString: String,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
     onRepoListEnabledSelected: (Boolean) -> Unit,
     onThemeStyleSelected: (ThemeStyle) -> Unit,
     onColorStyleSelected: (ColorStyle) -> Unit,
-    onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit
+    onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit,
+    onClearUserConfirmed: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
+    val showSettingsAlert = remember { mutableStateOf<Pair<Int?, (() -> Unit)?>?>(null) }
 
     Column(
         modifier = Modifier
@@ -186,7 +201,6 @@ private fun SettingsScreenContent(
                         onRepoListEnabledSelected(!currentRepoListEnabled)
                     }
             ) {
-
                 Text(
                     text = currentRepoListEnabledLabel,
                     color = colors.primary,
@@ -271,6 +285,36 @@ private fun SettingsScreenContent(
                 )
             }
 
+            if (userRegistered) {
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showSettingsAlert.value =
+                                Pair(R.string.SETTINGSVIEW_CLEAR_USER_WARNING, onClearUserConfirmed)
+                        }
+                ) {
+                    Text(
+                        text = localizedString(R.string.SETTINGSVIEW_CLEAR_USER_DESCRIPTION),
+                        color = colors.primary,
+                        style = types.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(modifier = Modifier.width(5.dp))
+
+                    IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
+                }
+            }
+
+            AlertMessage(errorAlert = showSettingsAlert)
+
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
@@ -314,6 +358,7 @@ private fun SettingsScreenPreview() {
             currentRepoListEnabled = true,
             glowEffectOnScrollEnabledLabel = "Scroll glow effect",
             currentGlowEffectOnScrollEnabled = true,
+            userRegistered = true,
             currentColorStyle = ColorStyle.AZURE_STYLE,
             currentThemeStyle = ThemeStyle.DEFAULT,
             themeStyleLabel = "Theme",
@@ -323,7 +368,8 @@ private fun SettingsScreenPreview() {
             onRepoListEnabledSelected = {},
             onThemeStyleSelected = {},
             onGlowEffectOnScrollEnabledSelected = {},
-            onColorStyleSelected = {}
+            onColorStyleSelected = {},
+            onClearUserConfirmed = {}
         )
     }
 }

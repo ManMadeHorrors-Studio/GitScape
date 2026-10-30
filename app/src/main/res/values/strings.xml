@@ -27,6 +27,8 @@
     <string name="SETTINGSVIEW.SETTING.LANGUAGE.ENGLISH" translatable="false">English</string>
     <string name="SETTINGSVIEW.SETTING.LANGUAGE.ITALIAN" translatable="false">Italiano</string>
     <string name="SETTINGSVIEW.VERSION">Version</string>
+    <string name="SETTINGSVIEW.CLEAR_USER.DESCRIPTION">Clear user</string>
+    <string name="SETTINGSVIEW.CLEAR_USER.WARNING">Clearing the user would delete all login tokens and local repositories.\nA new login in GitHub would be required.\nOther settings will not change</string>
     <string name="GENERIC.BACK">Back</string>
     <string name="GENERIC.ERROR.TITLE">Warning</string>
     <string name="GENERIC.ERROR.OK" translatable="false">OK</string>

@@ -119,6 +119,29 @@ class AuthViewModel @Inject constructor(
         _isForeground.value = foreground
     }
 
+    fun clearState() {
+        authCache.clearCache()
+        _authState.update { authS ->
+            authS.copy(
+                authDeviceCode = null,
+                gitHubUser = null,
+                authStatus = AuthStatus.STEP1,
+                isLoading = false
+            )
+        }
+        authTokensJob?.cancel()
+        checkDeviceCodeAndCollectForegroundJob?.cancel()
+    }
+
+    fun setNoUserRegistered() {
+        viewModelScope.launch {
+            settingsRepository.clearRepoHash()
+            localGitHubRepository.clearGitHubRepositories()
+            authCache.clearCache()
+            localTokensRepository.deleteTokens()
+        }
+    }
+
     private suspend fun collectForeground() {
         _isForeground.collectLatest { fore ->
             gitScapeLog("collectForeground: $fore")
@@ -164,28 +187,6 @@ class AuthViewModel @Inject constructor(
                 )
             )
         }
-    }
-
-    private fun setNoUserRegistered() {
-        viewModelScope.launch {
-            settingsRepository.clearRepoHash()
-            localGitHubRepository.clearGitHubRepositories()
-            authCache.clearCache()
-            localTokensRepository.deleteTokens()
-        }
-    }
-
-    private fun clearState() {
-        authCache.clearCache()
-        _authState.update { authS ->
-            authS.copy(
-                authDeviceCode = null,
-                authStatus = AuthStatus.STEP1,
-                isLoading = false
-            )
-        }
-        authTokensJob?.cancel()
-        checkDeviceCodeAndCollectForegroundJob?.cancel()
     }
 
     private suspend fun loadUserAndTestAccessToken(authTokens: AuthTokens, tokensFromLocal: Boolean) {

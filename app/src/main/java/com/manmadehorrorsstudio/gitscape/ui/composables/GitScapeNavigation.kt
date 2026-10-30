@@ -88,6 +88,7 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
 
                 SettingsScreen(
                     settingsViewModel = settingsViewModel,
+                    authViewModel = authViewModel,
                     innerPadding = innerPadding,
                     onBackClick = {
                         gitScapeLog("Tapped SettingsScreen onBackClick")

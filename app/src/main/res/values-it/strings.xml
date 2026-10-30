@@ -21,6 +21,8 @@
     <string name="SETTINGSVIEW.COLORSTYLE.PINK">Rosa</string>
     <string name="SETTINGSVIEW.COLORSTYLE.YELLOW">Giallo</string>
     <string name="SETTINGSVIEW.VERSION">Versione</string>
+    <string name="SETTINGSVIEW.CLEAR_USER.DESCRIPTION">Cancella utente</string>
+    <string name="SETTINGSVIEW.CLEAR_USER.WARNING">La cancellazione dell\'utente eliminerà tutti i token di accesso e i repository locali.\nSarà necessario effettuare nuovamente l\'accesso a GitHub.\nLe altre impostazioni rimarranno invariate.</string>
     <string name="GENERIC.BACK">Indietro</string>
     <string name="GENERIC.ERROR.TITLE">Attenzione</string>
     <string name="GENERIC.ERROR.CANCEL">Annulla</string>
