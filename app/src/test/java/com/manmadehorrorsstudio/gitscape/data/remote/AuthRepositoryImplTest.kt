@@ -1,6 +1,9 @@
 package com.manmadehorrorsstudio.gitscape.data.remote
 
 import com.manmadehorrorsstudio.gitscape.AUTHDEVICECODE_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_ACCESS_TOKEN_DURATION_SECONDS
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_REFRESH_TOKEN_DURATION_SECONDS
 import com.manmadehorrorsstudio.gitscape.TestUtils.mockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.TestUtils.unmockGitScapeLog
 import com.manmadehorrorsstudio.gitscape.addCurrentTime
@@ -34,7 +37,7 @@ class AuthRepositoryImplTest {
 
     @Test
     fun `request device maps valid response with epoch expiry`() = runTest {
-        coEvery { api.requestDeviceCode() } returns AuthDeviceCodeDTO("d", "u", "url", 60L, 1)
+        coEvery { api.requestDeviceCode() } returns AuthDeviceCodeDTO("d", "u", "url", MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS, 1)
 
         val result = repository.requestAuthDeviceCode()
 
@@ -54,7 +57,7 @@ class AuthRepositoryImplTest {
 
     @Test
     fun `refresh maps valid response using epoch expiration`() = runTest {
-        coEvery { api.refreshAccessToken("r") } returns AuthTokenDTO("a", "rt", 10L, 20L)
+        coEvery { api.refreshAccessToken("r") } returns AuthTokenDTO("a", "rt", MOCK_ACCESS_TOKEN_DURATION_SECONDS, MOCK_REFRESH_TOKEN_DURATION_SECONDS)
 
         val result = repository.refreshAccessToken("r")
 
@@ -76,12 +79,12 @@ class AuthRepositoryImplTest {
     fun `poll pending then succeeds`() = runTest {
         coEvery { api.pollAccessToken("d") } returnsMany listOf(
             AuthTokenDTO(error = "authorization_pending"),
-            AuthTokenDTO("a", "r", 10L, 20L)
+            AuthTokenDTO("a", "r", MOCK_ACCESS_TOKEN_DURATION_SECONDS, MOCK_REFRESH_TOKEN_DURATION_SECONDS)
         )
 
         val result = repository.awaitAccessToken(
             "d",
-            10L.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!,
+            MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!,
             0
         )
 
@@ -95,18 +98,18 @@ class AuthRepositoryImplTest {
         assertEquals(
             AuthError.DENIED.message,
             runCatching {
-                repository.awaitAccessToken("d", 1L.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
+                repository.awaitAccessToken("d", MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
             }.exceptionOrNull()?.message?.toIntOrNull()
         )
 
         coEvery { api.pollAccessToken(any()) } returns AuthTokenDTO(error = "expired_token")
         assert(runCatching {
-            repository.awaitAccessToken("d", 1L.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
+            repository.awaitAccessToken("d", MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
         }.exceptionOrNull() is IllegalStateException)
 
         coEvery { api.pollAccessToken(any()) } returns AuthTokenDTO(error = "other", errorDescription = "bad")
         assertEquals("bad", runCatching {
-            repository.awaitAccessToken("d", 1L.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
+            repository.awaitAccessToken("d", MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS.addCurrentTime(AUTHDEVICECODE_SAFETY_TIME)!!, 0)
         }.exceptionOrNull()?.message)
     }
 

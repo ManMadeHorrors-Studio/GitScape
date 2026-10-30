@@ -1,6 +1,8 @@
 package com.manmadehorrorsstudio.gitscape.ui.viewmodels
 
 import com.manmadehorrorsstudio.gitscape.ACCESSTOKEN_SAFETY_TIME
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_ACCESS_TOKEN_DURATION_SECONDS
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_REFRESH_TOKEN_DURATION_SECONDS
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.REFRESHTOKEN_SAFETY_TIME
 import com.manmadehorrorsstudio.gitscape.addCurrentTime
@@ -101,8 +103,8 @@ class AuthViewModelTest {
             "user-id",
             "access",
             "refresh",
-            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
-            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+            MOCK_ACCESS_TOKEN_DURATION_SECONDS.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
+            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
         )
         val user = GitHubUser("user-id", "name", null, null)
         coEvery { local.getTokens() } returns tokens
@@ -123,8 +125,8 @@ class AuthViewModelTest {
             "different-id",
             "access",
             "refresh",
-            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
-            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+            MOCK_ACCESS_TOKEN_DURATION_SECONDS.addCurrentTime(ACCESSTOKEN_SAFETY_TIME)!!,
+            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
         )
         coEvery { local.getTokens() } returns tokens
         coEvery { getUser() } returns GitHubUser("actual-id", "name", null, null)
@@ -147,14 +149,14 @@ class AuthViewModelTest {
             "expired-access",
             "refresh",
             0,
-            60L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
+            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
         )
         val refreshed = AuthTokens(
             "",
             "new-access",
             "new-refresh",
             60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME),
-            120L.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
         )
         val user = GitHubUser("user-id", "name", null, null)
         coEvery { local.getTokens() } returns oldTokens

@@ -9,6 +9,10 @@ import io.mockk.unmockkStatic
 
 object TestUtils {
 
+    const val MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS = 120L
+    const val MOCK_ACCESS_TOKEN_DURATION_SECONDS = 7200L
+    const val MOCK_REFRESH_TOKEN_DURATION_SECONDS = 172800L
+
     val mockedUser = GitHubUser(
         id = "666",
         userName = "Man Made Horrors Studio",

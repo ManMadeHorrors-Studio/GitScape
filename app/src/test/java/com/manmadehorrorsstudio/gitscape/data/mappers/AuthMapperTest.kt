@@ -1,5 +1,8 @@
 package com.manmadehorrorsstudio.gitscape.data.mappers
 
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_ACCESS_TOKEN_DURATION_SECONDS
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_REFRESH_TOKEN_DURATION_SECONDS
+import com.manmadehorrorsstudio.gitscape.TestUtils.MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS
 import com.manmadehorrorsstudio.gitscape.addCurrentTime
 import com.manmadehorrorsstudio.gitscape.isNotExpired
 import com.manmadehorrorsstudio.gitscape.data.local.AuthTokensEntity
@@ -13,7 +16,7 @@ import org.junit.jupiter.api.Test
 class AuthMapperTest {
     @Test
     fun `device dto maps values to epoch seconds`() {
-        val result = AuthDeviceCodeDTO("device", "user", "https://verify", 60L, 5).mapToDomain()
+        val result = AuthDeviceCodeDTO("device", "user", "https://verify", MOCK_AUTH_DEVICE_CODE_DURATION_SECONDS, 5).mapToDomain()
 
         assertEquals("device", result.deviceCode)
         assertEquals("user", result.userCode)
@@ -35,7 +38,7 @@ class AuthMapperTest {
 
     @Test
     fun `token dto converts expiration durations to epoch seconds`() {
-        val result = AuthTokenDTO("access", "refresh", 10L, 20L).mapToDomain("id")
+        val result = AuthTokenDTO("access", "refresh", MOCK_ACCESS_TOKEN_DURATION_SECONDS, MOCK_REFRESH_TOKEN_DURATION_SECONDS).mapToDomain("id")
 
         assertEquals("id", result.githubUserId)
         assertEquals("access", result.accessToken)
