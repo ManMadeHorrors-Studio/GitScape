@@ -1,3 +1,4 @@
 ## Updates
 
-- Fixed authentication when the app is in background
+- Fixed tokens expire time
+- Added clear user button in SettingsScreen
