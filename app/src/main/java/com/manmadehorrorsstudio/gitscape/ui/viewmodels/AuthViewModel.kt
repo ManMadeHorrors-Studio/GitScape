@@ -157,7 +157,7 @@ class AuthViewModel @Inject constructor(
             runCatching {refreshAuthTokensUseCase(localTokens.refreshToken)}
                 .onSuccess { authTokens ->
                     gitScapeLog("callAuthTokens result: $authTokens")
-                    loadUserAndTestAccessToken(authTokens, false)
+                    loadUserAndTestAccessToken(authTokens, true)
                 }
                 .onFailure { exception ->
                     gitScapeLog("callAuthTokens error", exception)
