@@ -161,22 +161,16 @@ class AuthViewModel @Inject constructor(
                 }
                 .onFailure { exception ->
                     gitScapeLog("callAuthTokens error", exception)
-
-                    if (exception is HttpException) {
-                        val errorBody = exception.response()
-                            ?.errorBody()
-                            ?.string()
-                        if (errorBody == AuthError.INVALID_REFRESH_TOKEN.type) {
-                            setNoUserRegistered()
-                            clearState()
-                            _authEvents.send(
-                                UIEvents.ShowError(
-                                    message = AuthError.INVALID_REFRESH_TOKEN.message
-                                )
+                    if (exception is HttpException && exception.response()?.errorBody()?.string() == AuthError.INVALID_REFRESH_TOKEN.type) {
+                        setNoUserRegistered()
+                        clearState()
+                        _authEvents.send(
+                            UIEvents.ShowError(
+                                message = AuthError.INVALID_REFRESH_TOKEN.message
                             )
-                        } else
-                            offlineMode()
-                    }
+                        )
+                    } else
+                        offlineMode()
                 }
         } else {
             setNoUserRegistered()
