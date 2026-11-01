@@ -29,6 +29,7 @@ fun <T> ExpandableSelector(
     itemText: @Composable (T) -> String,
     itemImage: (T) -> Int,
     itemColor: ((T) -> Color)? = null,
+    selectedItemColor: Color? = null,
     onItemSelected: (T) -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -60,7 +61,7 @@ fun <T> ExpandableSelector(
                     .clearAndSetSemantics{}
             )
 
-            IconSettingsItem(itemImage(currentItem), 40, itemColor?.invoke(currentItem))
+            IconSettingsItem(itemImage(currentItem), 40, selectedItemColor ?: itemColor?.invoke(currentItem))
         }
 
         if (expanded) {
