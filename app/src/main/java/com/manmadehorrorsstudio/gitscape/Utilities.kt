@@ -3,7 +3,10 @@ package com.manmadehorrorsstudio.gitscape
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.annotation.DrawableRes
 import androidx.core.net.toUri
+import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
+import com.manmadehorrorsstudio.gitscape.ui.models.LlmLogos
 
 fun gitScapeLog(
     message: String,
@@ -49,3 +52,10 @@ fun Long?.isNotExpired(): Boolean {
 }
 
 fun Long?.addCurrentTime(safetyTime: Long): Long? = this?.let { (System.currentTimeMillis() / 1000) + it - safetyTime }
+
+@DrawableRes
+fun LlmConfiguration?.getLogo(): Int =
+    LlmLogos.entries.firstOrNull{ logo ->
+        logo.id.equals(this?.llmProvider?.id, true)
+    }?.logo
+        ?: R.drawable.ai_icon
