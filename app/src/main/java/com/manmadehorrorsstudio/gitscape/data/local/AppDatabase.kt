@@ -7,12 +7,15 @@ import androidx.room.RoomDatabase
     entities = [
         SettingsEntity::class,
         GitHubRepoEntity::class,
-        AuthTokensEntity::class
+        AuthTokensEntity::class,
+        LlmConfigurationEntity::class,
+        LlmFavouriteEntity::class
     ],
-    version = 3
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getSettingsDao(): SettingsDao
     abstract fun getGitHubDao(): GitHubDao
     abstract fun getTokensDao(): AuthTokensDao
+    abstract fun getLlmConfigurationDao(): LlmConfigurationDao
 }

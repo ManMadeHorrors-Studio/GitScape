@@ -1,6 +1,5 @@
 package com.manmadehorrorsstudio.gitscape
 
-import ai.koog.prompt.executor.clients.google.GoogleModels
 import androidx.compose.ui.unit.dp
 
 //Remote
@@ -29,6 +28,8 @@ const val GITSCAPE_DATABASE = "gitscape_database"
 const val SETTINGS_TABLE_NAME = "settings_table"
 const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table"
 const val TOKENS_TABLE_NAME = "tokens_table"
+const val LLM_CONFIGURATION_TABLE_NAME = "llm_configuration_table"
+const val LLM_FAVOURITES_TABLE_NAME = "llm_favourites_table"
 
 //Tokens expiration safety time
 
@@ -55,9 +56,6 @@ val SPACER_HEIGHT_SIZE = 20.dp
 const val DYNAMIC_COLOR = true
 
 //AI
-
-//Set here the LLM provider you want to use
-val LLM_MODEL = GoogleModels.Gemini3_7Flash
 
 const val LIST_REPOS_NAME = "list_repos"
 

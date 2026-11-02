@@ -8,6 +8,7 @@ import com.manmadehorrorsstudio.gitscape.data.local.AppDatabase
 import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
 import com.manmadehorrorsstudio.gitscape.data.local.LocalGitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.LocalTokensRepositoryImpl
+import com.manmadehorrorsstudio.gitscape.data.local.LlmConfigurationDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.AuthTokensDao
@@ -67,6 +68,13 @@ object DatabaseModule {
         database: AppDatabase
     ): AuthTokensDao {
         return database.getTokensDao()
+    }
+
+    @Provides
+    fun provideLlmConfigurationDao(
+        database: AppDatabase
+    ): LlmConfigurationDao {
+        return database.getLlmConfigurationDao()
     }
 }
 
