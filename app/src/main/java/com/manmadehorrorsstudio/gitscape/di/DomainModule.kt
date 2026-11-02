@@ -4,7 +4,6 @@ import ai.koog.http.client.ktor.KtorKoogHttpClient
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
 import ai.koog.prompt.executor.model.PromptExecutor
-import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
@@ -64,12 +63,8 @@ object AgentModule {
 
     @Provides
     @Singleton
-    fun provideAiKey(): String = BuildConfig.AI_KEY.trim()
-
-    @Provides
-    @Singleton
     fun provideMultiLLMPromptExecutor(
-        aiKey: String
+        aiKey: String = "" //TODO aiKey logic
     ): MultiLLMPromptExecutor {
 
         return MultiLLMPromptExecutor(
@@ -127,7 +122,7 @@ object AgentModule {
     @Singleton
     fun provideAgentRepository(
         promptExecutor: PromptExecutor,
-        aiKey: String
+        aiKey: String = "" //TODO aiKey logic
     ): AgentRepository =
         AgentRepositoryImpl(
             promptExecutor = promptExecutor,

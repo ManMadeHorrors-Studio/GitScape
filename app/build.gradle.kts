@@ -61,14 +61,6 @@ android {
             "RELEASE_SIGNING_CONFIG",
             "\"$releaseSigningConfig\""
         )
-
-        val AI_KEY = "AI_KEY"
-
-        buildConfigField(
-            "String",
-            AI_KEY,
-            "\"${getLocalProperty(AI_KEY)}\""
-        )
     }
 
     buildTypes {
@@ -142,10 +134,10 @@ dependencies {
 
     implementation(libs.koog.agents)
     implementation(libs.koogHttpClientKtor)
-    // Uncomment the implementation for the LLM provider you want to use
+    // LLM
     implementation(libs.koog.google)
-    /*implementation(libs.koog.openai)
-    implementation(libs.koog.anthropic)
+    implementation(libs.koog.openai)
+    /*implementation(libs.koog.anthropic)
     implementation(libs.koog.deepseek)
     implementation(libs.koog.openrouter)
     implementation(libs.koog.mistralai)
