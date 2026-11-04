@@ -29,7 +29,6 @@ const val SETTINGS_TABLE_NAME = "settings_table"
 const val GITHUB_REPOSITORIES_TABLE_NAME = "github_repositories_table"
 const val TOKENS_TABLE_NAME = "tokens_table"
 const val LLM_CONFIGURATION_TABLE_NAME = "llm_configuration_table"
-const val LLM_FAVOURITES_TABLE_NAME = "llm_favourites_table"
 
 //Tokens expiration safety time
 
@@ -41,10 +40,12 @@ const val REFRESHTOKEN_SAFETY_TIME = 86400L
 //Navigation
 
 const val MAIN_NAVIGATION_GROUP = "MAIN_NAVIGATION_GROUP"
+const val SETTINGS_NAVIGATION_GROUP = "SETTINGS_NAVIGATION_GROUP"
 
 sealed class NavigationScreen(val route: String) {
     data object RepoList : NavigationScreen("repolist")
     data object Settings : NavigationScreen("settings")
+    data object LlmConfiguration : NavigationScreen("llm_configuration")
 }
 
 //UI
