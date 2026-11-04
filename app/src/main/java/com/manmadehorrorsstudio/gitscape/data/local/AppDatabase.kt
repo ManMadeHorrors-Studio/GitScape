@@ -8,8 +8,7 @@ import androidx.room.RoomDatabase
         SettingsEntity::class,
         GitHubRepoEntity::class,
         AuthTokensEntity::class,
-        LlmConfigurationEntity::class,
-        LlmFavouriteEntity::class
+        LlmConfigurationEntity::class
     ],
     version = 4
 )

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.manmadehorrorsstudio.gitscape.AppSettings
 import com.manmadehorrorsstudio.gitscape.GITSCAPE_DATABASE
+import com.manmadehorrorsstudio.gitscape.data.ai.LlmCache
 import com.manmadehorrorsstudio.gitscape.data.local.AppDatabase
 import com.manmadehorrorsstudio.gitscape.data.local.GitHubDao
 import com.manmadehorrorsstudio.gitscape.data.local.LocalGitHubRepositoryImpl
@@ -12,8 +13,10 @@ import com.manmadehorrorsstudio.gitscape.data.local.LlmConfigurationDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsDao
 import com.manmadehorrorsstudio.gitscape.data.local.SettingsRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.AuthTokensDao
+import com.manmadehorrorsstudio.gitscape.data.local.LocalLlmRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.local.migrationsList
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalGitHubRepository
+import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalLlmRepository
 import com.manmadehorrorsstudio.gitscape.domain.repositories.LocalTokensRepository
 import com.manmadehorrorsstudio.gitscape.ui.repositories.SettingsRepository
 import dagger.Binds
@@ -109,4 +112,21 @@ abstract class LocalTokensModule {
     abstract fun bindLocalTokensRepository(
         implementation: LocalTokensRepositoryImpl
     ): LocalTokensRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object LocalLlmRepositoryModule {
+
+    @Provides
+    @Singleton
+    fun provideLocalLlmRepository(
+        llmConfigurationDao: LlmConfigurationDao,
+        llmCache: LlmCache
+    ): LocalLlmRepository {
+        return LocalLlmRepositoryImpl(
+            dao = llmConfigurationDao,
+            llmCache = llmCache
+        )
+    }
 }

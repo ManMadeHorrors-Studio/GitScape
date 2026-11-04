@@ -5,9 +5,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.manmadehorrorsstudio.gitscape.GITHUB_REPOSITORIES_TABLE_NAME
 import com.manmadehorrorsstudio.gitscape.SETTINGS_TABLE_NAME
 import com.manmadehorrorsstudio.gitscape.TOKENS_TABLE_NAME
-import com.manmadehorrorsstudio.gitscape.LLM_FAVOURITES_TABLE_NAME
 import com.manmadehorrorsstudio.gitscape.LLM_CONFIGURATION_TABLE_NAME
-
 
 val migrationsList = arrayOf<Migration>(
     object : Migration(1, 2) {
@@ -41,36 +39,20 @@ val migrationsList = arrayOf<Migration>(
     },
     object : Migration(3, 4) {
         override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("DROP TABLE IF EXISTS llm_favourites_table")
+            db.execSQL("DROP TABLE IF EXISTS $LLM_CONFIGURATION_TABLE_NAME")
             db.execSQL(
                 """
             CREATE TABLE IF NOT EXISTS $LLM_CONFIGURATION_TABLE_NAME (
-                `id` INTEGER NOT NULL,
                 `providerId` TEXT NOT NULL,
-                `providerDisplayName` TEXT NOT NULL,
                 `aiKey` TEXT,
                 `selectedModelId` TEXT,
-                `selectedModelProviderId` TEXT,
-                `selectedModelProviderDisplayName` TEXT,
-                `selectedModelCapabilities` TEXT,
-                `selectedModelContextLength` INTEGER,
-                `selectedModelMaxOutputTokens` INTEGER,
-                PRIMARY KEY(`id`)
+                `selected` INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY(`providerId`)
             )
             """.trimIndent()
             )
-            db.execSQL(
-                """
-            CREATE TABLE IF NOT EXISTS $LLM_FAVOURITES_TABLE_NAME (
-                `configurationId` INTEGER NOT NULL,
-                `modelId` TEXT NOT NULL,
-                PRIMARY KEY(`configurationId`, `modelId`),
-                FOREIGN KEY(`configurationId`) REFERENCES $LLM_CONFIGURATION_TABLE_NAME(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
-            )
-            """.trimIndent()
-            )
-            db.execSQL(
-                "CREATE INDEX IF NOT EXISTS `index_${LLM_FAVOURITES_TABLE_NAME}_configurationId` ON $LLM_FAVOURITES_TABLE_NAME (`configurationId`)"
-            )
+
         }
     }
 )
