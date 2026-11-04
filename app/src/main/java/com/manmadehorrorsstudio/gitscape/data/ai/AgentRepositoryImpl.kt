@@ -13,10 +13,12 @@ import ai.koog.agents.core.tools.ToolDescriptor
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.prompt.executor.model.PromptExecutor
+import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.Message
 import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
-import com.manmadehorrorsstudio.gitscape.LLM_MODEL
+import com.manmadehorrorsstudio.gitscape.data.local.LlmKoogModels.Companion.getRequiredLlmKoogModel
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
@@ -24,8 +26,7 @@ import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
 
 class AgentRepositoryImpl @Inject constructor(
-    private val promptExecutor: PromptExecutor,
-    private val aiKey: String
+    private val llmCache: LlmCache
 ) : AgentRepository {
     override suspend fun ask(
         messages: List<Message>,
@@ -34,37 +35,39 @@ class AgentRepositoryImpl @Inject constructor(
         onUiCommand: (AgentUiCommand) -> Unit
 
     ): String {
-        validateAiKey(aiKey)
-
-        val gitScapeAgentTools = GitScapeAgentTools(
-            getGitHubReadMeUseCase = getGitHubReadMeUseCase,
-            repositories = repositories,
-            onUiCommand = onUiCommand
-        )
-
-        val toolRegistry = ToolRegistry {
-            tools(gitScapeAgentTools)
-        }
-
-        val listReposDescriptor =
-            toolRegistry.getTool(LIST_REPOS_NAME).descriptor
-
-        val agent = AIAgent(
-            promptExecutor = promptExecutor,
-            llmModel = LLM_MODEL,
-            toolRegistry = toolRegistry,
-            systemPrompt = getBasePrompt(messages.size),
-            maxIterations = 20,
-            strategy = gitScapeStrategy(
-                listReposToolDescriptor = listReposDescriptor
+        return getValidatedModelAndExecutor(
+            llmCache.getSelectedLlmConfiguration(),
+            llmCache.getLlmExecutor()
+        ) { (model, executor) ->
+            val gitScapeAgentTools = GitScapeAgentTools(
+                getGitHubReadMeUseCase = getGitHubReadMeUseCase,
+                repositories = repositories,
+                onUiCommand = onUiCommand
             )
-        ) {
-            logAgentEvents()
-        }
 
-        return agent.run(
-            agentInput = messages
-        )
+            val toolRegistry = ToolRegistry {
+                tools(gitScapeAgentTools)
+            }
+
+            val listReposDescriptor =
+                toolRegistry.getTool(LIST_REPOS_NAME).descriptor
+
+            val agent = AIAgent(
+                promptExecutor = executor,
+                llmModel = model,
+                toolRegistry = toolRegistry,
+                systemPrompt = getBasePrompt(messages.size),
+                maxIterations = 20,
+                strategy = gitScapeStrategy(
+                    listReposToolDescriptor = listReposDescriptor
+                )
+            ) {
+                logAgentEvents()
+            }
+            agent.run(
+                agentInput = messages
+            )
+        }
     }
 
     internal fun gitScapeStrategy(
@@ -332,12 +335,23 @@ class AgentRepositoryImpl @Inject constructor(
     }
 }
 
-internal fun validateAiKey(value: String) {
-    val key = value.trim()
+internal suspend fun <R> getValidatedModelAndExecutor(
+    llmConfiguration: LlmConfiguration?,
+    promptExecutor: PromptExecutor?,
+    block: suspend (Pair<LLModel, PromptExecutor>) -> R
+): R {
+    val selectedModel = getRequiredLlmKoogModel(llmConfiguration)
 
-    check(key.isNotEmpty() && key != "null") {
-        "AI API key is not configured."
+    when {
+        llmConfiguration == null -> IllegalArgumentException("configurazione null")
+        llmConfiguration.aiKey?.isBlank() == true -> IllegalArgumentException("chiave null")
+        selectedModel == null -> IllegalArgumentException("Modello non trovato")
+        promptExecutor == null -> IllegalArgumentException("promptExecutor null")
+        else -> null
+    }?.let { exception ->
+        throw exception
     }
+    return block(Pair(selectedModel!!, promptExecutor!!))
 }
 
 internal  fun getBasePrompt(messagesCount: Int): String? {
