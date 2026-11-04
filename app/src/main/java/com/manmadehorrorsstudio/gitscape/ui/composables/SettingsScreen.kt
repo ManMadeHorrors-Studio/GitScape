@@ -31,11 +31,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.NAVIGATION_ICONS_SIZE
 import com.manmadehorrorsstudio.gitscape.R
+import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
+import com.manmadehorrorsstudio.gitscape.getLogo
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
@@ -43,14 +44,17 @@ import com.manmadehorrorsstudio.gitscape.ui.models.AuthStatus
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
 import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
-import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AuthViewModel
+import com.manmadehorrorsstudio.gitscape.ui.viewmodels.LlmConfigurationViewModel
+import kotlin.String
 
 @Composable
 fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel,
+    llmConfigurationViewModel: LlmConfigurationViewModel,
     innerPadding: PaddingValues,
+    onLlmConfigurationClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
     val currentLanguage by settingsViewModel.getLanguageState().collectAsState()
@@ -59,6 +63,7 @@ fun SettingsScreen(
     val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
     val currentGlowEffectOnScrollEnabled by settingsViewModel.getGlowEffectOnScrollEnabledState().collectAsState()
     val authState by authViewModel.authState.collectAsState()
+    val cachedLlmConfigurations by llmConfigurationViewModel.getCachedLlmConfiguration().collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -74,6 +79,10 @@ fun SettingsScreen(
         glowEffectOnScrollEnabledLabel = localizedString(R.string.SETTINGSVIEW_GLOW_ENABLED),
         currentGlowEffectOnScrollEnabled = currentGlowEffectOnScrollEnabled,
         userRegistered = authState.authStatus == AuthStatus.VALIDATED || authState.authStatus == AuthStatus.OFFLINE,
+        aiLabel = localizedString(R.string.SETTINGSVIEW_SETTING_AI_LLM),
+        aiContentDescription = localizedString(R.string.SETTINGSVIEW_SETTING_AI_LLM),
+        currentLlm = cachedLlmConfigurations.firstOrNull{ it.selected },
+        llmModelSettingList = cachedLlmConfigurations,
         versionString = getVersionString(),
         onBackClick = onBackClick,
         onLanguageSelected = { language ->
@@ -95,6 +104,10 @@ fun SettingsScreen(
             authViewModel.setNoUserRegistered()
             authViewModel.clearState()
             onBackClick()
+        },
+        onLlmSelected = { llmConfiguration ->
+            llmConfigurationViewModel.setLlmInConfiguration(llmConfiguration)
+            onLlmConfigurationClick()
         }
     )
 }
@@ -114,6 +127,10 @@ private fun SettingsScreenContent(
     glowEffectOnScrollEnabledLabel: String,
     currentGlowEffectOnScrollEnabled: Boolean,
     userRegistered: Boolean,
+    aiLabel: String,
+    aiContentDescription: String,
+    currentLlm: LlmConfiguration?,
+    llmModelSettingList: List<LlmConfiguration>,
     versionString: String,
     onBackClick: () -> Unit,
     onLanguageSelected: (AppLanguage) -> Unit,
@@ -121,7 +138,8 @@ private fun SettingsScreenContent(
     onThemeStyleSelected: (ThemeStyle) -> Unit,
     onColorStyleSelected: (ColorStyle) -> Unit,
     onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit,
-    onClearUserConfirmed: () -> Unit
+    onClearUserConfirmed: () -> Unit,
+    onLlmSelected: (LlmConfiguration?) -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
@@ -311,6 +329,29 @@ private fun SettingsScreenContent(
 
                     IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
                 }
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                ExpandableSelector(
+                    currentItem = currentLlm,
+                    items = llmModelSettingList,
+                    label = aiLabel,
+                    contDesc = aiContentDescription,
+                    itemText = { llmConfiguration ->
+                        llmConfiguration?.llmProvider?.display ?: localizedString(R.string.SETTINGSVIEW_SETTING_AI_UNSELECTED)
+                    },
+                    itemImage = { llmConfiguration ->
+                        llmConfiguration.getLogo()
+                    },
+                    selectedItemColor =
+                        if (currentLlm != null)
+                            null
+                        else
+                            colors.primary,
+                    onItemSelected = { llmConfiguration ->
+                        onLlmSelected(llmConfiguration)
+                    }
+                )
             }
 
             AlertMessage(errorAlert = showSettingsAlert)
@@ -341,7 +382,7 @@ private fun getVersionString(): String {
     return versionString
 }
 
-@Preview
+/*@Preview
 @Composable
 private fun SettingsScreenPreview() {
     GitScapeTheme(
@@ -372,4 +413,4 @@ private fun SettingsScreenPreview() {
             onClearUserConfirmed = {}
         )
     }
-}
+}*/
