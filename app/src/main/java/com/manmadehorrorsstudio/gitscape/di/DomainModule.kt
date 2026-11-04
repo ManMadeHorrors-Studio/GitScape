@@ -1,14 +1,11 @@
 package com.manmadehorrorsstudio.gitscape.di
 
-import ai.koog.http.client.ktor.KtorKoogHttpClient
-import ai.koog.prompt.executor.clients.google.GoogleLLMClient
-import ai.koog.prompt.executor.llms.MultiLLMPromptExecutor
-import ai.koog.prompt.executor.model.PromptExecutor
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubApis
 import com.manmadehorrorsstudio.gitscape.data.remote.GitHubRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.data.ai.AgentRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.data.ai.GitHubReadMeCache
+import com.manmadehorrorsstudio.gitscape.data.ai.LlmCache
 import com.manmadehorrorsstudio.gitscape.data.remote.AuthApis
 import com.manmadehorrorsstudio.gitscape.data.remote.AuthRepositoryImpl
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AuthRepository
@@ -59,74 +56,26 @@ object AuthRepositoryModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
+object LlmCacheModule {
+
+    @Provides
+    @Singleton
+    fun provideLlmCache(): LlmCache {
+        return LlmCache()
+    }
+}
+
+    @Module
+@InstallIn(SingletonComponent::class)
 object AgentModule {
 
     @Provides
     @Singleton
-    fun provideMultiLLMPromptExecutor(
-        aiKey: String = "" //TODO aiKey logic
-    ): MultiLLMPromptExecutor {
-
-        return MultiLLMPromptExecutor(
-            // Gemini
-            GoogleLLMClient(
-                apiKey = aiKey,
-                httpClientFactory = KtorKoogHttpClient.Factory()
-            )/*,
-            Uncomment the implementation for the LLM provider you want to use
-            // OpenAI
-            OpenAILLMClient(
-                apiKey = aiKey,
-                httpClientFactory = KtorKoogHttpClient.Factory()
-            ),
-            // Claude
-            AnthropicLLMClient(
-                apiKey = aiKey,
-                httpClientFactory = KtorKoogHttpClient.Factory()
-            ),
-            // DeepSeek
-            DeepSeekLLMClient(
-                apiKey = aiKey,
-                httpClientFactory = httpFactory
-            ),
-            // OpenRouter
-            OpenRouterLLMClient(
-                apiKey = aiKey,
-                httpClientFactory = httpFactory
-            ),
-            // Mistral
-            MistralAILLMClient(
-                apiKey = aiKey,
-                httpClientFactory = httpFactory
-            ),
-            //DashScope Qwen
-            DashscopeLLMClient(
-                apiKey = aiKey,
-                httpClientFactory = httpFactory
-            ),
-            //Ollama
-            OllamaClient(
-                baseUrl = URL_SERVER,
-                httpClientFactory = httpFactory
-            )*/
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun providePromptExecutor(
-        multiLLMPromptExecutor: MultiLLMPromptExecutor
-    ): PromptExecutor = multiLLMPromptExecutor
-
-    @Provides
-    @Singleton
     fun provideAgentRepository(
-        promptExecutor: PromptExecutor,
-        aiKey: String = "" //TODO aiKey logic
+        llmCache: LlmCache
     ): AgentRepository =
         AgentRepositoryImpl(
-            promptExecutor = promptExecutor,
-            aiKey = aiKey
+            llmCache = llmCache
         )
 }
 
