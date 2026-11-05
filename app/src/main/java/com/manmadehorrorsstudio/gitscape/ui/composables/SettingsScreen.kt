@@ -309,34 +309,6 @@ private fun SettingsScreenContent(
                 )
             }
 
-            if (userRegistered) {
-                Spacer(modifier = Modifier.height(30.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            showSettingsAlert.value =
-                                Pair(R.string.SETTINGSVIEW_CLEAR_USER_WARNING, onClearUserConfirmed)
-                        }
-                ) {
-                    Text(
-                        text = localizedString(R.string.SETTINGSVIEW_CLEAR_USER_DESCRIPTION),
-                        color = colors.primary,
-                        style = types.titleMedium,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    Spacer(modifier = Modifier.width(5.dp))
-
-                    IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
-                }
-            }
-
             Spacer(modifier = Modifier.height(30.dp))
 
             ExpandableSelector(
@@ -386,6 +358,34 @@ private fun SettingsScreenContent(
                 Spacer(modifier = Modifier.width(5.dp))
 
                 IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
+            }
+
+            if (userRegistered) {
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showSettingsAlert.value =
+                                Pair(R.string.SETTINGSVIEW_CLEAR_USER_WARNING, onClearUserConfirmed)
+                        }
+                ) {
+                    Text(
+                        text = localizedString(R.string.SETTINGSVIEW_CLEAR_USER_DESCRIPTION),
+                        color = colors.primary,
+                        style = types.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Spacer(modifier = Modifier.width(5.dp))
+
+                    IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
+                }
             }
 
             AlertMessage(errorAlert = showSettingsAlert)
