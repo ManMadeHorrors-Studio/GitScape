@@ -29,6 +29,8 @@
     <string name="SETTINGSVIEW.VERSION">Version</string>
     <string name="SETTINGSVIEW.CLEAR_USER.DESCRIPTION">Clear user</string>
     <string name="SETTINGSVIEW.CLEAR_USER.WARNING">Clearing the user would delete all login tokens and local repositories.\nA new login in GitHub would be required.\nOther settings will not change</string>
+    <string name="SETTINGSVIEW.CLEAR_LLM.DESCRIPTION">Clear LLM</string>
+    <string name="SETTINGSVIEW.CLEAR_LLM.WARNING">Clearing the LLM settings would delete all AI keys and models selection</string>
     <string name="SETTINGSVIEW.SETTING.AI.LLM" translatable="false">LLM</string>
     <string name="SETTINGSVIEW.SETTING.AI.UNSELECTED">Not selected</string>
     <string name="LLM_SETTINGSVIEW.KEY.HINT">Insert LLM key</string>

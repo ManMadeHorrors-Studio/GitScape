@@ -46,6 +46,11 @@ class LocalLlmRepositoryImpl@Inject constructor(
     override suspend fun saveLlmConfiguration(llmConfiguration: LlmConfiguration) {
         dao.saveLlmConfiguration(llmConfiguration.mapToEntity())
     }
+
+    override suspend fun clearLlmConfigurations() {
+        dao.clearLlmConfiguration()
+        initDao()
+    }
 }
 
 

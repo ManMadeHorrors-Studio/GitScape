@@ -108,6 +108,9 @@ fun SettingsScreen(
         onLlmSelected = { providerId ->
             llmConfigurationViewModel.setLlmInConfiguration(providerId)
             onLlmConfigurationClick()
+        },
+        onClearLlmConfirmed = {
+            llmConfigurationViewModel.clearLlmConfigurations()
         }
     )
 }
@@ -139,7 +142,8 @@ private fun SettingsScreenContent(
     onColorStyleSelected: (ColorStyle) -> Unit,
     onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit,
     onClearUserConfirmed: () -> Unit,
-    onLlmSelected: (String) -> Unit
+    onLlmSelected: (String) -> Unit,
+    onClearLlmConfirmed: () -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
@@ -329,31 +333,57 @@ private fun SettingsScreenContent(
 
                     IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
                 }
+            }
 
-                Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-                ExpandableSelector(
-                    currentItem = currentLlm,
-                    items = llmModelSettingList,
-                    label = aiLabel,
-                    contDesc = aiContentDescription,
-                    itemText = { llmConfiguration ->
-                        llmConfiguration?.llmProvider?.display ?: localizedString(R.string.SETTINGSVIEW_SETTING_AI_UNSELECTED)
-                    },
-                    itemImage = { llmConfiguration ->
-                        llmConfiguration.getLogo()
-                    },
-                    selectedItemColor =
-                        if (currentLlm != null)
-                            null
-                        else
-                            colors.primary,
-                    onItemSelected = { llmConfiguration ->
-                        llmConfiguration?.let { lc ->
-                            onLlmSelected(lc.llmProvider.id)
-                        }
+            ExpandableSelector(
+                currentItem = currentLlm,
+                items = llmModelSettingList,
+                label = aiLabel,
+                contDesc = aiContentDescription,
+                itemText = { llmConfiguration ->
+                    llmConfiguration?.llmProvider?.display ?: localizedString(R.string.SETTINGSVIEW_SETTING_AI_UNSELECTED)
+                },
+                itemImage = { llmConfiguration ->
+                    llmConfiguration.getLogo()
+                },
+                selectedItemColor =
+                    if (currentLlm != null)
+                        null
+                    else
+                        colors.primary,
+                onItemSelected = { llmConfiguration ->
+                    llmConfiguration?.let { lc ->
+                        onLlmSelected(lc.llmProvider.id)
                     }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showSettingsAlert.value =
+                            Pair(R.string.SETTINGSVIEW_CLEAR_LLM_WARNING, onClearLlmConfirmed)
+                    }
+            ) {
+                Text(
+                    text = localizedString(R.string.SETTINGSVIEW_CLEAR_LLM_DESCRIPTION),
+                    color = colors.primary,
+                    style = types.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier.weight(1f)
                 )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                IconSettingsItem(R.drawable.ic_delete, 40, colors.primary)
             }
 
             AlertMessage(errorAlert = showSettingsAlert)

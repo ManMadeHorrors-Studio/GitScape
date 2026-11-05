@@ -10,5 +10,6 @@ interface LocalLlmRepository {
     suspend fun initDao()
     suspend fun observeLlmConfiguration(): Flow<List<LlmConfigurationEntity>>
     suspend fun saveLlmConfiguration(llmConfiguration: LlmConfiguration)
+    suspend fun clearLlmConfigurations()
 }
 

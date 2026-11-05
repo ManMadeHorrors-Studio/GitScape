@@ -23,6 +23,8 @@
     <string name="SETTINGSVIEW.VERSION">Versione</string>
     <string name="SETTINGSVIEW.CLEAR_USER.DESCRIPTION">Cancella utente</string>
     <string name="SETTINGSVIEW.CLEAR_USER.WARNING">La cancellazione dell\'utente eliminerà tutti i token di accesso e i repository locali.\nSarà necessario effettuare nuovamente l\'accesso a GitHub.\nLe altre impostazioni rimarranno invariate.</string>
+    <string name="SETTINGSVIEW.CLEAR_LLM.DESCRIPTION">Cancella LLM</string>
+    <string name="SETTINGSVIEW.CLEAR_LLM.WARNING">La cancellazione delle impostazioni LLM eliminerà tutte le AI key e la selezione dei modelli</string>
     <string name="SETTINGSVIEW.SETTING.AI.UNSELECTED">Non selezionato</string>
     <string name="LLM_SETTINGSVIEW.KEY.HINT">Inserire key LLM</string>
     <string name="LLM_SETTINGSVIEW.KEY.INSERTED">LLM key inserita</string>

@@ -96,6 +96,12 @@ class LlmConfigurationViewModel @Inject constructor(
         }
     }
 
+    fun clearLlmConfigurations() {
+        viewModelScope.launch {
+            localLlmRepository.clearLlmConfigurations()
+        }
+    }
+
     private fun saveConfiguration(llmConfiguration: LlmConfiguration?) {
         llmConfiguration?.let { conf ->
             viewModelScope.launch {
