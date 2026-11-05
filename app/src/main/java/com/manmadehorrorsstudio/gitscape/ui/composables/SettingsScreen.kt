@@ -63,7 +63,7 @@ fun SettingsScreen(
     val currentColorStyle by settingsViewModel.getColorStyle().collectAsState()
     val currentGlowEffectOnScrollEnabled by settingsViewModel.getGlowEffectOnScrollEnabledState().collectAsState()
     val authState by authViewModel.authState.collectAsState()
-    val cachedLlmConfigurations by llmConfigurationViewModel.getCachedLlmConfiguration().collectAsState()
+    val cachedLlmConfigurations by llmConfigurationViewModel.getLlmConfigurationsState().collectAsState()
 
     SettingsScreenContent(
         title = localizedString(R.string.SETTINGSVIEW_TITLE),
@@ -105,8 +105,8 @@ fun SettingsScreen(
             authViewModel.clearState()
             onBackClick()
         },
-        onLlmSelected = { llmConfiguration ->
-            llmConfigurationViewModel.setLlmInConfiguration(llmConfiguration)
+        onLlmSelected = { providerId ->
+            llmConfigurationViewModel.setLlmInConfiguration(providerId)
             onLlmConfigurationClick()
         }
     )
@@ -139,7 +139,7 @@ private fun SettingsScreenContent(
     onColorStyleSelected: (ColorStyle) -> Unit,
     onGlowEffectOnScrollEnabledSelected: (Boolean) -> Unit,
     onClearUserConfirmed: () -> Unit,
-    onLlmSelected: (LlmConfiguration?) -> Unit
+    onLlmSelected: (String) -> Unit
 ) {
     val colors = MaterialTheme.colorScheme
     val types = MaterialTheme.typography
@@ -349,7 +349,9 @@ private fun SettingsScreenContent(
                         else
                             colors.primary,
                     onItemSelected = { llmConfiguration ->
-                        onLlmSelected(llmConfiguration)
+                        llmConfiguration?.let { lc ->
+                            onLlmSelected(lc.llmProvider.id)
+                        }
                     }
                 )
             }

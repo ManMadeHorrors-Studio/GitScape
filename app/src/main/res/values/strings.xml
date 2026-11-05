@@ -31,6 +31,10 @@
     <string name="SETTINGSVIEW.CLEAR_USER.WARNING">Clearing the user would delete all login tokens and local repositories.\nA new login in GitHub would be required.\nOther settings will not change</string>
     <string name="SETTINGSVIEW.SETTING.AI.LLM" translatable="false">LLM</string>
     <string name="SETTINGSVIEW.SETTING.AI.UNSELECTED">Not selected</string>
+    <string name="LLM_SETTINGSVIEW.KEY.HINT">Insert LLM key</string>
+    <string name="LLM_SETTINGSVIEW.KEY.INSERTED">LLM key inserted</string>
+    <string name="LLM_SETTINGSVIEW.KEY.BUTTON.INSERT">Insert</string>
+    <string name="LLM_SETTINGSVIEW.KEY.BUTTON.DELETE">Delete</string>
     <string name="GENERIC.BACK">Back</string>
     <string name="GENERIC.ERROR.TITLE">Warning</string>
     <string name="GENERIC.ERROR.OK" translatable="false">OK</string>

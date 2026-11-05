@@ -24,6 +24,10 @@
     <string name="SETTINGSVIEW.CLEAR_USER.DESCRIPTION">Cancella utente</string>
     <string name="SETTINGSVIEW.CLEAR_USER.WARNING">La cancellazione dell\'utente eliminerà tutti i token di accesso e i repository locali.\nSarà necessario effettuare nuovamente l\'accesso a GitHub.\nLe altre impostazioni rimarranno invariate.</string>
     <string name="SETTINGSVIEW.SETTING.AI.UNSELECTED">Non selezionato</string>
+    <string name="LLM_SETTINGSVIEW.KEY.HINT">Inserire key LLM</string>
+    <string name="LLM_SETTINGSVIEW.KEY.INSERTED">LLM key inserita</string>
+    <string name="LLM_SETTINGSVIEW.KEY.BUTTON.INSERT">Inserisci</string>
+    <string name="LLM_SETTINGSVIEW.KEY.BUTTON.DELETE">Elimina</string>
     <string name="GENERIC.BACK">Indietro</string>
     <string name="GENERIC.ERROR.TITLE">Attenzione</string>
     <string name="GENERIC.ERROR.CANCEL">Annulla</string>
