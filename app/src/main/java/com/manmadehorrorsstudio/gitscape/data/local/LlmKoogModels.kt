@@ -74,15 +74,15 @@ class LlmKoogModels() {
         }
 
         fun getRequiredLlmKoogModel(llmConfiguration: LlmConfiguration?): LLModel? {
-            val selectedModel = getAllLlmKoogModels(llmConfiguration?.llmProvider).firstOrNull { model ->
+            val selectedModel = getAllLlmKoogModels(llmConfiguration?.llmProvider?.id).firstOrNull { model ->
                     model.id == llmConfiguration?.selectedModel
                 }
             gitScapeLog("getRequiredLlmKoogModel modelId=${llmConfiguration?.selectedModel} selectedModel=$selectedModel")
             return selectedModel
         }
 
-        fun getAllLlmKoogModels(llmProvider: LLMProvider?): List<LLModel> {
-            return when (llmProvider?.id) {
+        fun getAllLlmKoogModels(llmProviderId: String?): List<LLModel> {
+            return when (llmProviderId) {
                 LLMProvider.Google.id -> geminiModels
                 LLMProvider.OpenAI.id -> openAiModels
                 else -> emptyList()
