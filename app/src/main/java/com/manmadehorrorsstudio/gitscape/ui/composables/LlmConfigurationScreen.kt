@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,11 +68,9 @@ fun LlmConfigurationScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         selectedLlmConfigurationState?.let { slcs ->
-
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = onBackClick) {
@@ -93,13 +92,15 @@ fun LlmConfigurationScreen(
                 Spacer(modifier = Modifier.size(NAVIGATION_ICONS_SIZE))
             }
 
+            Spacer(modifier = Modifier.height(10.dp))
             HorizontalDivider(color = colors.primary)
+            Spacer(modifier = Modifier.height(20.dp))
 
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 10.dp)
             ) {
                 if (slcs.aiKey == null) {
                     TextField(
@@ -127,7 +128,7 @@ fun LlmConfigurationScreen(
                             unfocusedTextColor = colors.secondary
                         )
                     )
-                    Spacer(modifier = Modifier.size(8.dp))
+                    Spacer(modifier = Modifier.size(20.dp))
                     Button(onClick = {
                         llmConfigurationViewModel.saveAiKey(aiKeyWriting)
                     }) {
@@ -150,16 +151,20 @@ fun LlmConfigurationScreen(
                 }
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            HorizontalDivider(color = colors.primary)
+
             LazyColumn(
                 state = listState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = PaddingValues(vertical = 20.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp)
             ) {
                 items(models, key = { it.id }) { model ->
                     LlmModelItem(
                         model = model,
-                        selected = model.id == slcs.selectedModel,
+                        selected = model.id == slcs.selectedModel && slcs.selected,
                         onModelSelected = { selectedModel ->
                             llmConfigurationViewModel.saveModel(selectedModel)
                         }
