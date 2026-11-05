@@ -45,6 +45,10 @@ inline fun <R> String?.letNotEmpty(block: (String) -> R): R? {
     }
 }
 
+fun String.capitalizeFirst(): String = replaceFirstChar { character ->
+    character.uppercase()
+}
+
 fun Long?.isNotExpired(): Boolean {
     return this?.let {
         it > (System.currentTimeMillis() / 1000)
