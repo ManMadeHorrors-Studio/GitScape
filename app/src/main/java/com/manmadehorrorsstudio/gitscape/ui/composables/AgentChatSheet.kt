@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.SPACER_HEIGHT_SIZE
+import com.manmadehorrorsstudio.gitscape.data.ai.LlmException
 import com.manmadehorrorsstudio.gitscape.ui.managers.localizedString
 import com.manmadehorrorsstudio.gitscape.ui.models.toText
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AgentViewModel
@@ -176,8 +177,13 @@ fun AgentChatSheet(
 
                 agentState.error?.let { err ->
                     item {
+                        val errorText = when {
+                            err is LlmException -> localizedString(err.errorInt)
+                            err.message != null -> err.message!!
+                            else -> localizedString(R.string.AGENTSHEET_ERROR_UNKNOWN)
+                        }
                         Text(
-                            err,
+                            text = errorText,
                             color = colors.error,
                             style = types.labelLarge,
                             modifier = Modifier

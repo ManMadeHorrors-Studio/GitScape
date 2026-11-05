@@ -94,7 +94,7 @@ class AgentViewModel @Inject constructor(
                         _agentState.update {
                             it.copy(
                                 isLoading = false,
-                                error = error.message ?: "Unknown AI error"
+                                error = error
                             )
                         }
                     }

@@ -6,7 +6,7 @@ import ai.koog.prompt.message.MessagePart
 data class AgentState(
     val messages: List<Message> = emptyList(),
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: Throwable? = null
 )
 
 fun Message.toText(): String =

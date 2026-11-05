@@ -34,6 +34,11 @@
     <string name="AGENTSHEET.INPUT_HINT">Chiedi dei tuoi repository</string>
     <string name="AGENTSHEET.THINKING">L\'AI sta pensando…</string>
     <string name="AGENTSHEET.CHAT.YOU">Tu:</string>
+    <string name="AGENTSHEET.ERROR.NO_CONFIGURATION">Configurare il LLM nelle impostazioni</string>
+    <string name="AGENTSHEET.ERROR.NO_KEY">Inserire la AI key nelle impostazioni del LLM</string>
+    <string name="AGENTSHEET.ERROR.NO_MODEL">Selezionare un modello LLM nelle impostazioni</string>
+    <string name="AGENTSHEET.ERROR.NO_EXECUTOR">Errore con il prompt executor</string>
+    <string name="AGENTSHEET.ERROR.UNKNOWN">Errore AI sconosciuto</string>
     <string name="AUTH.WELCOME.STEP1">Benvenuto in GitScape!\nPer poter utilizzare l\'app è necessario loggarti col tuo account GitHub</string>
     <string name="AUTH.WELCOME.STEP2">Apri il browser premendo il tasto sottostante, loggati con il tuo account GitHub e quando ti sarà richiesto inserisci il codice:</string>
     <string name="AUTH.WELCOME.BUTTON2">Copia il codice e apri il browser</string>

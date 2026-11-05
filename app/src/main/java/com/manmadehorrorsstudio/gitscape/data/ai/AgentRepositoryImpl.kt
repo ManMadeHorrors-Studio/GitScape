@@ -22,6 +22,7 @@ import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
 import com.manmadehorrorsstudio.gitscape.domain.repositories.AgentRepository
 import com.manmadehorrorsstudio.gitscape.domain.usecases.GetGitHubReadMeUseCase
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
+import com.manmadehorrorsstudio.gitscape.R
 import com.manmadehorrorsstudio.gitscape.ui.ai.AgentUiCommand
 import javax.inject.Inject
 
@@ -343,10 +344,10 @@ internal suspend fun <R> getValidatedModelAndExecutor(
     val selectedModel = getRequiredLlmKoogModel(llmConfiguration)
 
     when {
-        llmConfiguration == null -> IllegalArgumentException("configurazione null")
-        llmConfiguration.aiKey?.isBlank() == true -> IllegalArgumentException("chiave null")
-        selectedModel == null -> IllegalArgumentException("Modello non trovato")
-        promptExecutor == null -> IllegalArgumentException("promptExecutor null")
+        llmConfiguration == null -> LlmException(R.string.AGENTSHEET_ERROR_NO_CONFIGURATION)
+        llmConfiguration.aiKey?.isBlank() == true -> LlmException(R.string.AGENTSHEET_ERROR_NO_KEY)
+        selectedModel == null -> LlmException(R.string.AGENTSHEET_ERROR_NO_MODEL)
+        promptExecutor == null -> LlmException(R.string.AGENTSHEET_ERROR_NO_EXECUTOR)
         else -> null
     }?.let { exception ->
         throw exception
