@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +44,7 @@ import com.manmadehorrorsstudio.gitscape.ui.models.AppLanguage
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthStatus
 import com.manmadehorrorsstudio.gitscape.ui.models.ColorStyle
 import com.manmadehorrorsstudio.gitscape.ui.models.ThemeStyle
+import com.manmadehorrorsstudio.gitscape.ui.theme.GitScapeTheme
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.SettingsViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AuthViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.LlmConfigurationViewModel
@@ -414,7 +416,7 @@ private fun getVersionString(): String {
     return versionString
 }
 
-/*@Preview
+@Preview
 @Composable
 private fun SettingsScreenPreview() {
     GitScapeTheme(
@@ -429,12 +431,20 @@ private fun SettingsScreenPreview() {
             currentLanguage = AppLanguage.EN,
             currentRepoListEnabledLabel = "Local Repositories",
             currentRepoListEnabled = true,
-            glowEffectOnScrollEnabledLabel = "Scroll glow effect",
-            currentGlowEffectOnScrollEnabled = true,
-            userRegistered = true,
             currentColorStyle = ColorStyle.AZURE_STYLE,
             currentThemeStyle = ThemeStyle.DEFAULT,
             themeStyleLabel = "Theme",
+            aiLabel = "LLM",
+            aiContentDescription = "Select LLM provider",
+            currentLlm = null,
+            llmModelSettingList = LlmConfiguration.getAllLlmConfigurations(
+                aiKey = null,
+                selectedModel = null,
+                selected = false
+            ),
+            glowEffectOnScrollEnabledLabel = "Scroll glow effect",
+            currentGlowEffectOnScrollEnabled = true,
+            userRegistered = true,
             versionString = "Version Debug 666 (6.6.6)",
             onBackClick = {},
             onLanguageSelected = {},
@@ -442,7 +452,9 @@ private fun SettingsScreenPreview() {
             onThemeStyleSelected = {},
             onGlowEffectOnScrollEnabledSelected = {},
             onColorStyleSelected = {},
-            onClearUserConfirmed = {}
+            onClearUserConfirmed = {},
+            onLlmSelected = {},
+            onClearLlmConfirmed = {}
         )
     }
-}*/
+}
