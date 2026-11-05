@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,17 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.ContentDrawScope
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
+import com.manmadehorrorsstudio.gitscape.drawGlowBorder
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.openBrowser
 import kotlinx.coroutines.launch
@@ -171,48 +165,5 @@ fun RepoCard(
         if ((isFullyVisible && !ignoreVisibilityAnimation) || forcedAnimationTrigger != null) {
             performAnimation()
         }
-    }
-}
-
-private fun ContentDrawScope.drawGlowBorder(
-    isHighlighted: Boolean,
-    progressValue: Float,
-    colors: ColorScheme
-) {
-    drawContent()
-
-    if (isHighlighted) {
-        val width = size.width
-        val height = size.height
-        val glowWidth = width * 0.35f
-        val stroke = 2.dp.toPx()
-        val x = progressValue * (width + height * 2)
-
-        drawRoundRect(
-            brush = Brush.linearGradient(
-                colors = listOf(
-                    Color.Transparent,
-                    colors.primary,
-                    colors.secondary,
-                    Color.Transparent
-                ),
-                start = Offset(
-                    x - glowWidth,
-                    0f
-                ),
-                end = Offset(
-                    x,
-                    0f
-                )
-            ),
-            size = size,
-            cornerRadius = CornerRadius(
-                32f,
-                32f
-            ),
-            style = Stroke(
-                width = stroke
-            )
-        )
     }
 }
