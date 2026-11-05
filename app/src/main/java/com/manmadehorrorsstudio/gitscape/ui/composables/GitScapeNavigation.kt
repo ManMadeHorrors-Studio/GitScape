@@ -16,7 +16,6 @@ import androidx.navigation.compose.rememberNavController
 import com.manmadehorrorsstudio.gitscape.MAIN_NAVIGATION_GROUP
 import com.manmadehorrorsstudio.gitscape.SETTINGS_NAVIGATION_GROUP
 import com.manmadehorrorsstudio.gitscape.NavigationScreen
-import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.AuthViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.LlmConfigurationViewModel
 import com.manmadehorrorsstudio.gitscape.ui.viewmodels.RepoListViewModel
@@ -58,10 +57,10 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
         }
 
         navigation(
-            startDestination = NavigationScreen.RepoList.route,
+            startDestination = NavigationScreen.DashboardRoute.route,
             route = MAIN_NAVIGATION_GROUP
         ) {
-            composable(NavigationScreen.RepoList.route) { backStackEntry ->
+            composable(NavigationScreen.DashboardRoute.route) { backStackEntry ->
 
                 val parentEntry = getParentEntry(
                     backStackEntry,
@@ -79,14 +78,13 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
                     }
                 )
             }
-
         }
 
         navigation(
-            startDestination = NavigationScreen.Settings.route,
+            startDestination = NavigationScreen.SettingsRoute.route,
             route = SETTINGS_NAVIGATION_GROUP
         ) {
-            composable(NavigationScreen.Settings.route) { backStackEntry ->
+            composable(NavigationScreen.SettingsRoute.route) { backStackEntry ->
                 val parentEntry = getParentEntry(
                     backStackEntry,
                     SETTINGS_NAVIGATION_GROUP
@@ -100,24 +98,26 @@ fun GitScapeNavigation(innerPadding: PaddingValues) {
                     llmConfigurationViewModel = llmConfigurationViewModel,
                     innerPadding = innerPadding,
                     onLlmConfigurationClick = {
-                        navController.navigate(NavigationScreen.LlmConfiguration.route)
+                        navController.navigate(NavigationScreen.LlmRoute.route)
                     },
                     onBackClick = {
-                        gitScapeLog("Tapped SettingsScreen onBackClick")
                         navController.popBackStack()
                     }
                 )
             }
 
-            composable(NavigationScreen.LlmConfiguration.route) { backStackEntry ->
+            composable(NavigationScreen.LlmRoute.route) { backStackEntry ->
                 val parentEntry = getParentEntry(
                     backStackEntry,
                     SETTINGS_NAVIGATION_GROUP
                 )
                 val llmConfigurationViewModel: LlmConfigurationViewModel = hiltViewModel(parentEntry)
                 LlmConfigurationScreen(
-                    llmConfigurationViewModel = llmConfigurationViewModel
-                )
+                    llmConfigurationViewModel = llmConfigurationViewModel,
+                    innerPadding = innerPadding,
+                ) {
+                    navController.popBackStack()
+                }
             }
         }
     }

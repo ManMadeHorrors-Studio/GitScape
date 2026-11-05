@@ -43,9 +43,9 @@ const val MAIN_NAVIGATION_GROUP = "MAIN_NAVIGATION_GROUP"
 const val SETTINGS_NAVIGATION_GROUP = "SETTINGS_NAVIGATION_GROUP"
 
 sealed class NavigationScreen(val route: String) {
-    data object RepoList : NavigationScreen("repolist")
-    data object Settings : NavigationScreen("settings")
-    data object LlmConfiguration : NavigationScreen("llm_configuration")
+    data object DashboardRoute : NavigationScreen("dashboard")
+    data object SettingsRoute : NavigationScreen("settings")
+    data object LlmRoute : NavigationScreen("llm")
 }
 
 //UI
