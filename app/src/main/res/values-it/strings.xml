@@ -56,6 +56,7 @@
     <string name="AUTH.ERROR.DENIED">Hai rifiutato l\'autorizzazione</string>
     <string name="AUTH.ERROR.EXPIRED">Il codice di verifica è scaduto</string>
     <string name="AUTH.ERROR.DIFFERENT_USER">Lo user ID è diverso da quello memorizzato; rifare il login</string>
+    <string name="AUTH.ERROR.INVALID_DEVICE_CODE">Impossibile ottenere il codice dispositivo richiesto per l\'autenticazione con GitHub; riprova</string>
     <string name="AUTH.ERROR.INVALID_TOKEN">I token sono scaduti o sono stati revocati; rifare il login</string>
     <string name="AUTH.ERROR.GENERIC">Errore durante l\'autenticazione, riprova</string>
 

@@ -66,6 +66,7 @@
     <string name="AUTH.ERROR.DENIED">You refused the authorization</string>
     <string name="AUTH.ERROR.EXPIRED">The verification code has expired</string>
     <string name="AUTH.ERROR.DIFFERENT_USER">The user ID is different from the one in the local storage; repeat the login</string>
+    <string name="AUTH.ERROR.INVALID_DEVICE_CODE">Unable to obtain the device code required for GitHub authentication; try again</string>
     <string name="AUTH.ERROR.INVALID_TOKEN">The tokens are expired or have been revoked; repeat the login</string>
     <string name="AUTH.ERROR.GENERIC">Error during authentication, please try again</string>
 

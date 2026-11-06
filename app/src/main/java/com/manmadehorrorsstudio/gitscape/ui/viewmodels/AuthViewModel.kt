@@ -280,7 +280,15 @@ class AuthViewModel @Inject constructor(
                 }
                 .onFailure { exception ->
                     gitScapeLog("callAuthDevice error", exception as? Exception)
-
+                    clearState()
+                    _authEvents.send(
+                        UIEvents.ShowError(
+                            message = if(exception.message.equals(AuthError.INVALID_DEVICE_CODE.type, true))
+                                    AuthError.INVALID_DEVICE_CODE.message
+                                else
+                                    R.string.AUTH_ERROR_GENERIC
+                        )
+                    )
                 }
         }
     }
@@ -301,17 +309,15 @@ class AuthViewModel @Inject constructor(
                         checkDeviceCodeAndCollectForegroundJob?.cancel()
                     }
                     .onFailure { exception ->
-                        gitScapeLog("callAuthTokens error", exception as? Exception)
+                        gitScapeLog("callAuthTokens error", exception)
                         when {
                             exception !is CancellationException -> {
-                                exception.message?.toIntOrNull()?.let {
-                                    _authEvents.send(
-                                        UIEvents.ShowError(
-                                            message = exception.message?.toIntOrNull()
-                                                ?: R.string.AUTH_ERROR_GENERIC
-                                        )
+                                _authEvents.send(
+                                    UIEvents.ShowError(
+                                        message = exception.message?.toIntOrNull()
+                                            ?: R.string.AUTH_ERROR_GENERIC
                                     )
-                                }
+                                )
                                 clearState()
                             }
 

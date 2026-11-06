@@ -24,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun requestAuthDeviceCode(): AuthDeviceCode  {
         val result = api.requestDeviceCode()
         if (!result.isValid())
-            throw Exception("Invalid auth device code")
+            throw Exception(AuthError.INVALID_DEVICE_CODE.type)
         return result.mapToDomain()
     }
 

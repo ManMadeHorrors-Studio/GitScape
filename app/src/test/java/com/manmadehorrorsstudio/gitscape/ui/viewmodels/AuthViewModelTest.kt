@@ -198,6 +198,31 @@ class AuthViewModelTest {
     )
 
     @Test
+    fun `device code request failure resets state and emits invalid device code error`() = runTest {
+        coEvery { getDevice() } throws IllegalStateException(AuthError.INVALID_DEVICE_CODE.type)
+
+        val vm = createViewModel()
+        advanceUntilIdle()
+        vm.authAdvanceStep()
+        advanceUntilIdle()
+
+        assertEquals(AuthStatus.STEP1, vm.authState.value.authStatus)
+        assertEquals(null, vm.authState.value.authDeviceCode)
+        assertFalse(vm.authState.value.isLoading)
+
+        val event = vm.authEvents.first()
+        assertTrue(event is UIEvents.ShowError)
+        assertEquals(
+            R.string.AUTH_ERROR_INVALID_DEVICE_CODE,
+            (event as UIEvents.ShowError).message
+        )
+        coVerify(exactly = 1) { getDevice() }
+        coVerify(exactly = 1) { local.deleteTokens() }
+        coVerify(exactly = 1) { localGitHub.clearGitHubRepositories() }
+        coVerify(exactly = 1) { settings.clearRepoHash() }
+    }
+
+    @Test
     fun `device authentication opens browser and polls while foreground`() = runTest {
         val device = AuthDeviceCode("device", "user-code", "https://github.com/login/device", Long.MAX_VALUE, 0)
         val tokens = AuthTokens("", "access", "refresh", 1, 2)
