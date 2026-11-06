@@ -10,6 +10,10 @@ import com.manmadehorrorsstudio.gitscape.gitScapeLog
 import com.manmadehorrorsstudio.gitscape.isNotExpired
 import com.manmadehorrorsstudio.gitscape.ui.models.AuthError
 import kotlinx.coroutines.delay
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.ResponseBody.Companion.toResponseBody
+import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -75,11 +79,18 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun refreshAccessToken(refreshToken: String): AuthTokens {
-        val result = api.refreshAccessToken(refreshToken)
+        val result = api.refreshAccessToken(
+            refreshToken = refreshToken
+        )
         if (!result.isValid())
-            throw Exception("Invalid auth device code")
+            throw HttpException(
+                Response.error<Any>(
+                    401,
+                    AuthError.INVALID_REFRESH_TOKEN.type!!.toResponseBody(
+                        "text/plain".toMediaType()
+                    )
+                )
+            )
         return result.mapToDomain("")
     }
-
-
 }
