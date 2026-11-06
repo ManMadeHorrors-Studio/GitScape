@@ -6,7 +6,8 @@ import ai.koog.agents.core.tools.reflect.ToolFromCallable
 import ai.koog.agents.core.tools.reflect.asTool
 import ai.koog.agents.testing.tools.getMockExecutor
 import com.manmadehorrorsstudio.gitscape.LIST_REPOS_NAME
-import com.manmadehorrorsstudio.gitscape.LLM_MODEL
+import ai.koog.prompt.executor.clients.openai.OpenAIModels
+import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
 import com.manmadehorrorsstudio.gitscape.domain.models.GitHubRepo
 import io.mockk.every
 import io.mockk.mockk
@@ -70,14 +71,19 @@ class GitScapeStrategyTest {
         }
 
         // La strategia da testare è quella effettiva di GitScape.
-        val repository = AgentRepositoryImpl(
-            promptExecutor = mockk(relaxed = true),
-            aiKey = "chiave_ai"
+        val llmCache = LlmCache()
+        llmCache.updateLlmConfiguration(
+            LlmConfiguration.OpenAiLlmConfiguration(
+                aiKey = "chiave_ai",
+                selectedModel = OpenAIModels.Chat.GPT4_1Mini.id,
+                selected = true
+            )
         )
+        val repository = AgentRepositoryImpl(llmCache)
 
         val agent = AIAgent(
             promptExecutor = mockExecutor,
-            llmModel = LLM_MODEL,
+            llmModel = OpenAIModels.Chat.GPT4_1Mini,
             toolRegistry = toolRegistry,
             systemPrompt = "Test agent",
             maxIterations = 20,

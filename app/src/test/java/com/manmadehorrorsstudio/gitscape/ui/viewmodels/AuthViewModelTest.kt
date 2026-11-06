@@ -143,21 +143,9 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `expired access token refreshes tokens and saves them with the current user`() = runTest {
-        val oldTokens = AuthTokens(
-            "old-id",
-            "expired-access",
-            "refresh",
-            0,
-            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
-        )
-        val refreshed = AuthTokens(
-            "",
-            "new-access",
-            "new-refresh",
-            60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME),
-            MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
-        )
+    fun `expired access token with matching refreshed user validates authentication`() = runTest {
+        val oldTokens = expiredTokens("user-id")
+        val refreshed = refreshedTokens()
         val user = GitHubUser("user-id", "name", null, null)
         coEvery { local.getTokens() } returns oldTokens
         coEvery { refresh("refresh") } returns refreshed
@@ -166,18 +154,48 @@ class AuthViewModelTest {
         val vm = createViewModel()
         advanceUntilIdle()
 
-        assertEquals(AuthStatus.SUCCESS, vm.authState.value.authStatus)
+        assertEquals(AuthStatus.VALIDATED, vm.authState.value.authStatus)
+        assertEquals(user, vm.authState.value.gitHubUser)
+        assertTrue(vm.authEvents.first() is UIEvents.CallRefreshRepo)
         coVerify { refresh("refresh") }
-        coVerify {
-            local.saveTokens(
-                match {
-                    it.githubUserId == "user-id" &&
-                        it.accessToken == "new-access" &&
-                        it.refreshToken == "new-refresh"
-                }
-            )
-        }
     }
+
+    @Test
+    fun `expired access token with different refreshed user resets authentication`() = runTest {
+        val oldTokens = expiredTokens("old-id")
+        val refreshed = refreshedTokens()
+        coEvery { local.getTokens() } returns oldTokens
+        coEvery { refresh("refresh") } returns refreshed
+        coEvery { getUser() } returns GitHubUser("new-id", "name", null, null)
+
+        val vm = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(AuthStatus.STEP1, vm.authState.value.authStatus)
+        val event = vm.authEvents.first()
+        assertTrue(event is UIEvents.ShowError)
+        assertEquals(
+            AuthError.DIFFERENT_USER.message,
+            (event as UIEvents.ShowError).message
+        )
+        coVerify { local.deleteTokens() }
+    }
+
+    private fun expiredTokens(userId: String) = AuthTokens(
+        userId,
+        "expired-access",
+        "refresh",
+        0,
+        MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)
+    )
+
+    private fun refreshedTokens() = AuthTokens(
+        "",
+        "new-access",
+        "new-refresh",
+        60L.addCurrentTime(ACCESSTOKEN_SAFETY_TIME),
+        MOCK_REFRESH_TOKEN_DURATION_SECONDS.addCurrentTime(REFRESHTOKEN_SAFETY_TIME)!!
+    )
 
     @Test
     fun `device authentication opens browser and polls while foreground`() = runTest {
