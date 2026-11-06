@@ -43,14 +43,22 @@ For private repositories, you must authorize the app with an account that has ac
 
 ### Configure the AI Agent
 
-An API key for the configured LLM provider is required. GitScape uses Google Gemini as its default provider, with the model configured through `LLM_MODEL` in `Constants.kt`.
+To configure the AI agent in the app:
+
+1. Open **Settings** from the repository dashboard.
+2. In the **LLM** section, select the desired LLM provider.
+3. Select an available model for that provider.
+4. Enter the provider's AI API key in the key field.
+5. Press **Insert** to save the key.
+
+The selected provider, model, and API key are stored in the app's local configuration. The agent can be used only after a provider, model, and valid AI API key have been configured.
+
+GitScape supports Google Gemini and OpenAI in the current configuration. Each provider requires its own valid API key.
 
 ### Alternative LLM Provider
 
-GitScape uses **Google Gemini** by default, but Koog integrations are also available for the following LLM providers:
+GitScape actually provides **Google Gemini** and **OpenAI**, but Koog integrations are also available for the following LLM providers:
 
-- **Google Gemini** (enabled by default)
-- **OpenAI**
 - **Anthropic (Claude)**
 - **DeepSeek**
 - **OpenRouter**
@@ -58,25 +66,16 @@ GitScape uses **Google Gemini** by default, but Koog integrations are also avail
 - **Alibaba DashScope (Qwen)**
 - **Ollama** (for models hosted by an accessible Ollama server)
 
-Only the Gemini integration is enabled by default. The other provider integrations are included in the project configuration as commented-out options.
+The other provider integrations are included in the project configuration as commented-out options.
 
 #### Switch to another provider:
 
 1. Uncomment the corresponding dependency in `libs.versions.toml`.
 2. Uncomment the corresponding dependency in `build.gradle.kts`.
 3. Uncomment and configure the desired LLM client in `DomainModule`.
-4. Update the `LLM_MODEL` constant in `Constants` to select a model supported by the chosen provider.
-5. Configure the appropriate AI_KEY in `local.properties`, if required by the provider. For Ollama, configure the server endpoint instead.
-
-Each cloud provider requires its own valid API credentials. Adding a provider does not automatically enable fallback: the selected model and its corresponding client configuration determine which provider handles requests.
-
-### Configure local properties
-
-In your `local.properties` file add the following lines:
-
-AI_KEY=YOUR_AI_API_KEY
-
-Do not commit your AI key to version control.
+4. Add the data class for the desired LLM in `LlmConfiguration`.
+5. Add the prompt executor client for the desired LLM in `updateLlmExecutor` in `LlmCache`
+6. Add the logo for the desired LLM in `LlmLogos`
 
 ### Configure release keys
 
@@ -168,8 +167,12 @@ The following options are available:
 - **Local Repositories:** Enables or disables local repository persistence. When enabled, GitScape stores the latest repository list and its synchronization hash in the Room database, allowing the application to reuse cached data when the network is unavailable or remote loading fails. When disabled, saved repository data and the synchronization hash are cleared.
 - **Color Style:** Allows users to choose the application's accent color from five available styles: Azure, Green, Red, Pink, and Yellow. The selected style affects the color scheme and repository card glow effects.
 - **Scroll Glow Effect:** Enables or disables animated glow effects on repository cards. The animation applies to card visibility, programmatic scrolling, and card-click interactions.
+- **LLM Provider:** Selects the LLM provider used by the AI repository assistant.
+- **LLM Configuration:** Opens the configuration screen for the selected provider, where you can enter or remove its AI API key and select the model to use.
+- **Clear LLM Configuration:** Removes the locally stored LLM configuration and restores the default provider entries. The AI assistant cannot be used until a provider, model, and API key are configured again.
+- **Clear User:** Removes the local GitHub authentication data and cached repositories. This option is available after a successful GitHub login.
 
-Settings are persisted in the Room database and restored when the application starts, ensuring that user preferences are retained between sessions.
+Settings are persisted in the Room database and restored when the application starts, ensuring that user preferences, LLM providers, selected models, and API keys are retained between sessions.
 
 #### Color Styles and Theming
 
