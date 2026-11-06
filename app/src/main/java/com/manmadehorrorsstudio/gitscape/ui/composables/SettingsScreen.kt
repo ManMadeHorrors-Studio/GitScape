@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.manmadehorrorsstudio.gitscape.BuildConfig
 import com.manmadehorrorsstudio.gitscape.NAVIGATION_ICONS_SIZE
 import com.manmadehorrorsstudio.gitscape.R
+import com.manmadehorrorsstudio.gitscape.capitalizeFirst
 import com.manmadehorrorsstudio.gitscape.domain.models.LlmConfiguration
 import com.manmadehorrorsstudio.gitscape.getLogo
 import com.manmadehorrorsstudio.gitscape.gitScapeLog
@@ -411,7 +412,7 @@ private fun getVersionString(): String {
     val versionCode = packageInfo.longVersionCode
     val versionName = packageInfo.versionName
 
-    val versionString = "${localizedString(R.string.SETTINGSVIEW_VERSION)}: ${BuildConfig.BUILD_TYPE.replaceFirstChar { it.uppercase()}} $versionCode ($versionName)"
+    val versionString = "${localizedString(R.string.SETTINGSVIEW_VERSION)}: ${BuildConfig.BUILD_TYPE.capitalizeFirst()} $versionCode ($versionName)"
     gitScapeLog(versionString)
     return versionString
 }
